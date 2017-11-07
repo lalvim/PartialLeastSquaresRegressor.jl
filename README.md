@@ -1,4 +1,4 @@
-# PLS
+# PLS.jl - Partial Least Squares Regressor package
 
 [![Build Status](https://travis-ci.org/filipebraida/PLS.jl.svg?branch=master)](https://travis-ci.org/filipebraida/PLS.jl)
 
