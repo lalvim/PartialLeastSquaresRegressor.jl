@@ -18,19 +18,26 @@ end
 
 ## constructor
 
-function Model{T<:AbstractFloat}(nrows::Int, ncols::Int,
-                               nfactors::Int,
-                               mx::Matrix{T},my::T,
-                               sx::Matrix{T},sy::T,
-                               nfeatures::Int)
+function Model{T<:AbstractFloat}(nrows::Int,
+                                 ncols::Int,
+                                 nfactors::Int,
+                                 mx::Matrix{T},
+                                 my::T,
+                                 sx::Matrix{T},
+                                 sy::T,
+                                 nfeatures::Int)
 
     ## Allocation
-    Model(zeros(T,ncols,nfactors), ## W
+    return Model(zeros(T,ncols,nfactors), ## W
         zeros(T,nrows,nfactors), ## R
-        zeros(T,nfactors),       ## b
+        zeros(T,1,nfactors),       ## b
         zeros(T,ncols,nfactors), ## P
-        nfactors,mx,my,sx,sy,
-        nfeatures)
+        nfactors,
+        mx,
+        my,
+        sx,
+        sy,
+        nfeatures)::Model{T}
 end
 
 ## constants
@@ -44,8 +51,8 @@ function check_plsdata{T<:AbstractFloat}(X::Matrix{T},Y::Vector{T})
         throw(DimensionMismatch("Empty input data (X)."))
     !isempty(Y) ||
         throw(DimensionMismatch("Empty target data (Y)."))
-    size(Y,2) == 1 ||
-        throw(DimensionMismatch("target data (Y) must be equal to 1."))
+    #size(Y,1) == 1 ||
+    #    throw(DimensionMismatch("target data (Y) must be equal to 1."))
     size(X, 1) == size(Y, 1) ||
         throw(DimensionMismatch("Incompatible number of rows of input data (X) and target data (Y)."))
 end
@@ -63,15 +70,37 @@ function check_plsparams(nfactors::Int, ncols::Int)
 end
 
 ## Preprocessing data using z-score statistics. this is due to the fact that if X and Y are z-scored, than X'Y returns for W vector a pearson correlation for each element! :)
-centralize_data{T<:AbstractFloat}(D::DenseMatrix{T}, m::Vector{T}, s::Vector{T})   = (D .-m)./s
-centralize_data{T<:AbstractFloat}(D::Vector{T}, m::T, s::T)                        = (D .-m)./s
+centralize_data{T<:AbstractFloat}(D::DenseMatrix{T}, m::Matrix{T}, s::Matrix{T})   = (D .-m)./s
+centralize_data{T<:AbstractFloat}(D::Vector{T}, m::T, s::T)                        = (D -m)/s
 
-decentralize_data{T<:AbstractFloat}(D::DenseMatrix{T}, m::Vector{T}, s::Vector{T}) = D .*s .+m
-decentralize_data{T<:AbstractFloat}(D::Vector{T}, m::T, s::T)                      = D .*s .+m
+decentralize_data{T<:AbstractFloat}(D::DenseMatrix{T}, m::Matrix{T}, s::Matrix{T}) = D .*s .+m
+decentralize_data{T<:AbstractFloat}(D::Vector{T}, m::T, s::T)                      = D *s +m
+
 
 ## the learning algorithm
-function pls1_trainer{T<:AbstractFloat}(pls::Type{Model},
-                                X::DenseMatrix{T}, Y::Vector{T})
+function pls1_predictor{T<:AbstractFloat}(pls::Model{T},
+                                          X::DenseMatrix{T})
+
+    W,b,P  = pls.W,pls.b,pls.P
+    nfactors = pls.nfactors
+
+    R = zeros(T,nrows,nfactors)
+    Y = zeros(T,nrows,nfactors)
+
+    for i = 1:nfactors
+        R[:,i] = X'W[:,i]
+        Y      = Y + R*b[i]
+        X      = X - R*P[:,i]
+
+    end
+
+    return Y
+
+end
+
+## the learning algorithm
+function pls1_trainer{T<:AbstractFloat}(pls::Model{T},
+                                X::Matrix{T}, Y::Vector{T})
 
     W,R,b,P  = pls.W,pls.R,pls.b,pls.P
     nfactors = pls.nfactors
@@ -83,37 +112,16 @@ function pls1_trainer{T<:AbstractFloat}(pls::Type{Model},
         b[i]   = Rn * Y
         P[:,i] = Rn * X
         X      = X - Rn*P[:,i]
-        Y      = Y - Rn.*b[i]
+        Y      = Y - Rn*b[i]
     end
 
     return pls
 
 end
 
-## the learning algorithm
-function pls1_predictor{T<:AbstractFloat}(pls::Type{Model},
-                                          X::DenseMatrix{T})
-
-    W,b,P  = pls.W,pls.b,pls.P
-    nfactors = pls.nfactors
-
-    R = zeros(T,nrows,nfactors)
-    Y = zeros(T,nrows,nfactors)
-
-    for i = 1:nfactors
-        R[:,i] = X'W[:,i]
-        Y      = Y + R.*b[i]
-        X      = X - R*P[:,i]
-
-    end
-
-    return Y
-
-end
-
 
 ## this function checks for validity of data and calls pls1 regressor
-function fit{T<:AbstractFloat}(X::DenseMatrix{T}, Y::Vector{T}; nfactors::Int=NFACT, copydata::Bool=true)
+function fit{T<:AbstractFloat}(X::Matrix{T}, Y::Vector{T}; nfactors::Int=NFACT, copydata::Bool=true)
 
     check_plsparams(nfactors, size(X,2))
 
@@ -130,7 +138,7 @@ function fit{T<:AbstractFloat}(X::DenseMatrix{T}, Y::Vector{T}; nfactors::Int=NF
 
     Xi =  centralize_data(Xi,pls.mx,pls.sx)
     Yi =  centralize_data(Yi,pls.my,pls.sy)
-
+    println(typeof(pls))
     pls1_trainer(pls,Xi,Yi)
 
     return pls::PLS
@@ -139,7 +147,7 @@ end
 
 
 ## this function checks for validity of data and calls pls1 regressor
-function transform{T<:AbstractFloat}(pls::Type{Model}, X::DenseMatrix{T})
+function transform{T<:AbstractFloat}(pls::Model{T}, X::DenseMatrix{T})
 
 
     check_plsdata(X,pls.nfeatures)
