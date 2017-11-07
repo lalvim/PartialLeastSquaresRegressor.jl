@@ -141,7 +141,7 @@ function fit{T<:AbstractFloat}(X::Matrix{T}, Y::Vector{T}; nfactors::Int=NFACT, 
     println(typeof(pls))
     pls1_trainer(pls,Xi,Yi)
 
-    return pls::PLS
+    return pls::Model
 
 end
 
