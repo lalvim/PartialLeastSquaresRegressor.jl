@@ -2,7 +2,7 @@
 
 #### PLS type
 
-mutable struct PLS{T<:AbstractFloat}
+mutable struct Model{T<:AbstractFloat}
     W::Matrix{T}        # a set of vectors representing correlation weights of input data (X) with the target (Y)
     R::Matrix{T}        # a set of projection vectors of input data (X) into w
     b::Matrix{T}        # a set of scalar values representing a latent value for dependent variables or target (Y)
@@ -17,14 +17,14 @@ end
 
 ## constructor
 
-function PLS{T<:AbstractFloat}(nrows::Int, ncols::Int,
+function Model{T<:AbstractFloat}(nrows::Int, ncols::Int,
                                nfactors::Int,
                                mx::Matrix{T},my::T,
                                sx::Matrix{T},sy::T,
                                nfeatures::Int)
 
     ## Allocation
-    PLS(zeros(T,ncols,nfactors), ## W
+    Model(zeros(T,ncols,nfactors), ## W
         zeros(T,nrows,nfactors), ## R
         zeros(T,nfactors),       ## b
         zeros(T,ncols,nfactors), ## P
@@ -69,7 +69,7 @@ decentralize_data{T<:AbstractFloat}(D::DenseMatrix{T}, m::Vector{T}, s::Vector{T
 decentralize_data{T<:AbstractFloat}(D::Vector{T}, m::T, s::T)                      = D .*s .+m
 
 ## the learning algorithm
-function pls1_trainer{T<:AbstractFloat}(pls::Type{PLS},
+function pls1_trainer{T<:AbstractFloat}(pls::Type{Model},
                                 X::DenseMatrix{T}, Y::Vector{T})
 
     W,R,b,P  = pls.W,pls.R,pls.b,pls.P
@@ -90,7 +90,7 @@ function pls1_trainer{T<:AbstractFloat}(pls::Type{PLS},
 end
 
 ## the learning algorithm
-function pls1_predictor{T<:AbstractFloat}(pls::Type{PLS},
+function pls1_predictor{T<:AbstractFloat}(pls::Type{Model},
                                           X::DenseMatrix{T})
 
     W,b,P  = pls.W,pls.b,pls.P
@@ -121,7 +121,7 @@ function fit{T<:AbstractFloat}(X::DenseMatrix{T}, Y::Vector{T}; nfactors::Int=NF
     Xi =  (copydata ? deepcopy(X) : X)
     Yi =  (copydata ? deepcopy(Y) : Y)
 
-    pls = PLS(size(X,1),size(X,2),
+    pls = Model(size(X,1),size(X,2),
                  nfactors,
                  mean(X,2),mean(Y),
                  std(X,2),std(Y),
@@ -138,7 +138,7 @@ end
 
 
 ## this function checks for validity of data and calls pls1 regressor
-function transform{T<:AbstractFloat}(pls::Type{PLS}, X::DenseMatrix{T})
+function transform{T<:AbstractFloat}(pls::Type{Model}, X::DenseMatrix{T})
 
 
     check_plsdata(X,pls.nfeatures)
