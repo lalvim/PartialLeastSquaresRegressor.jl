@@ -1,6 +1,7 @@
 # Partial Least Squares (PLS1 version)
 
 #### PLS type
+export fit,transform
 
 mutable struct Model{T<:AbstractFloat}
     W::Matrix{T}        # a set of vectors representing correlation weights of input data (X) with the target (Y)
