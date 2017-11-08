@@ -108,11 +108,11 @@ function pls1_trainer{T<:AbstractFloat}(pls::Model{T},
         W[:,i] = X'Y
         W[:,i] /= norm(W[:,i])
         R[:,i] = X*W[:,i]
-        Rn     = R[:,i]/norm(T[:,i])
-        b[i]   = Rn * Y
-        P[:,i] = Rn * X
-        X      = X - Rn*P[:,i]
-        Y      = Y - Rn*b[i]
+        Rn     = R[:,i]/norm(R[:,i])
+        b[i]   = Rn' * Y
+        P[:,i] = Rn' * X
+        X      = X - Rn * P[:,i]
+        Y      = Y - Rn * b[i]
     end
 
     return pls
