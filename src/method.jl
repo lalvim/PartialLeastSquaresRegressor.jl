@@ -85,13 +85,12 @@ function pls1_predictor{T<:AbstractFloat}(pls::Model{T},
     nfactors = pls.nfactors
 
     R = zeros(T,nrows,nfactors)
-    Y = zeros(T,nrows,nfactors)
+    Y = zeros(T,nrows)
 
     for i = 1:nfactors
         R[:,i] = X'W[:,i]
         Y      = Y + R*b[i]
         X      = X - R*P[:,i]
-
     end
 
     return Y
@@ -110,8 +109,8 @@ function pls1_trainer{T<:AbstractFloat}(pls::Model{T},
         R[:,i] = X*W[:,i]
         Rn     = R[:,i]/norm(R[:,i])
         b[i]   = Rn' * Y
-        P[:,i] = Rn' * X
-        X      = X - Rn * P[:,i]
+        P[:,i] = X'Rn
+        X      = X - Rn * P[:,i]'
         Y      = Y - Rn * b[i]
     end
 
