@@ -78,24 +78,6 @@ decentralize_data{T<:AbstractFloat}(D::Vector{T}, m::T, s::T)                   
 
 
 ## the learning algorithm
-function pls1_predictor{T<:AbstractFloat}(pls::Model{T},
-                                          X::DenseMatrix{T})
-
-    W,b,P  = pls.W,pls.b,pls.P
-    nfactors = pls.nfactors
-
-    R = zeros(T,nrows,nfactors)
-    Y = zeros(T,nrows)
-
-    for i = 1:nfactors
-        R[:,i] = X'W[:,i]
-        Y      = Y + R*b[i]
-        X      = X - R*P[:,i]
-    end
-
-    return Y
-
-end
 
 ## the learning algorithm
 function pls1_trainer{T<:AbstractFloat}(pls::Model{T},
@@ -129,32 +111,55 @@ function fit{T<:AbstractFloat}(X::Matrix{T}, Y::Vector{T}; nfactors::Int=NFACT, 
     Xi =  (copydata ? deepcopy(X) : X)
     Yi =  (copydata ? deepcopy(Y) : Y)
 
-    pls = Model(size(X,1),size(X,2),
+    model = Model(size(X,1),size(X,2),
                  nfactors,
-                 mean(X,2),mean(Y),
-                 std(X,2),std(Y),
+                 mean(X,1),mean(Y),
+                 std(X,1),std(Y),
                  size(X,2))
 
-    Xi =  centralize_data(Xi,pls.mx,pls.sx)
-    Yi =  centralize_data(Yi,pls.my,pls.sy)
-    println(typeof(pls))
-    pls1_trainer(pls,Xi,Yi)
+    Xi =  centralize_data(Xi,model.mx,model.sx)
+    Yi =  centralize_data(Yi,model.my,model.sy)
 
-    return pls::Model
+    pls1_trainer(model,Xi,Yi)
+
+    return model
 
 end
 
+function pls1_predictor{T<:AbstractFloat}(model::Model{T},
+                                          X::DenseMatrix{T})
+
+    W,b,P  = model.W,model.b,model.P
+    nfactors = model.nfactors
+    nrows    = size(X,1)
+    R = zeros(T,nrows)
+    Y = zeros(T,nrows)
+
+    for i = 1:nfactors
+        R      = X*W[:,i]
+        R /=norm(R)
+        Y      = Y + R*b[i]
+        X      = X - R*P[:,i]'
+    end
+
+    return Y
+
+end
 
 ## this function checks for validity of data and calls pls1 regressor
-function transform{T<:AbstractFloat}(pls::Model{T}, X::DenseMatrix{T})
+function transform{T<:AbstractFloat}(model::Model{T}, X::Matrix{T}; copydata::Bool=true)
 
 
-    check_plsdata(X,pls.nfeatures)
+    check_plsdata(X,model.nfeatures)
 
     Xi =  (copydata ? deepcopy(X) : X)
 
-    Xi =  centralize_data(Xi,pls.mx,pls.sx)
-
-    return pls1_predictor(pls,Xi,Yi)::Vector{AbstractFloat}
+    Xi =  centralize_data(Xi,model.mx,model.sx)
+    #print(Xi)
+    Yi =  pls1_predictor(model,Xi)
+    #print(Yi)
+    Yi =  decentralize_data(Yi,model.my,model.sy)
+    #print(Yi)
+    return Yi
 
 end
