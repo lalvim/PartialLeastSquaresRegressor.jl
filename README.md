@@ -1,4 +1,4 @@
-# PLS.jl
+PLS.jl
 ======
 
 Partial Least Squares Regressor package
