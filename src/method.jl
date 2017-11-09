@@ -3,7 +3,6 @@
 #### PLS type
 export fit,transform
 
-
 mutable struct Model{T<:AbstractFloat}
     W::Matrix{T}        # a set of vectors representing correlation weights of input data (X) with the target (Y)
     R::Matrix{T}        # a set of projection vectors of input data (X) into w
@@ -82,13 +81,9 @@ centralize_data{T<:AbstractFloat}(D::Vector{T}, m::T, s::T)                     
 decentralize_data{T<:AbstractFloat}(D::Matrix{T}, m::Matrix{T}, s::Matrix{T}) = D .*s .+m
 decentralize_data{T<:AbstractFloat}(D::Vector{T}, m::T, s::T)                      = D *s +m
 
-
-## the learning algorithm
-
 ## the learning algorithm
 function pls1_trainer{T<:AbstractFloat}(model::Model{T},
                                 X::Matrix{T}, Y::Vector{T})
-
     W,R,b,P  = model.W,model.R,model.b,model.P
     nfactors = model.nfactors
     for i = 1:nfactors
@@ -103,7 +98,6 @@ function pls1_trainer{T<:AbstractFloat}(model::Model{T},
     end
 
     return model
-
 end
 
 """
@@ -145,12 +139,10 @@ function fit{T<:AbstractFloat}(X::Matrix{T}, Y::Vector{T};
     pls1_trainer(model,Xi,Yi)
 
     return model
-
 end
 
 function pls1_predictor{T<:AbstractFloat}(model::Model{T},
                                           X::DenseMatrix{T})
-
     W,b,P    = model.W,model.b,model.P
     nfactors = model.nfactors
     nrows    = size(X,1)
@@ -164,7 +156,6 @@ function pls1_predictor{T<:AbstractFloat}(model::Model{T},
     end
 
     return Y
-
 end
 
 """
@@ -178,8 +169,6 @@ A Partial Least Squares predictor.
 function transform{T<:AbstractFloat}(model::Model{T},
                                     X::Matrix{T};
                                     copydata::Bool=true)
-
-    
     check_data(X,model.nfeatures)
 
     Xi =  (copydata ? deepcopy(X) : X)
@@ -189,5 +178,4 @@ function transform{T<:AbstractFloat}(model::Model{T},
     Yi =  decentralize_data(Yi,model.my,model.sy)
 
     return Yi
-
 end
