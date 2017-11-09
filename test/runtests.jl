@@ -4,12 +4,21 @@ using Base.Test
 # write your own tests here
 reload("PLS")
 
-PLS.check_constant_cols([1;1;1])
+
+
 
 @testset "Auxiliary Functions Test" begin
 
     @testset "check constant columns" begin
-	        try PLS.check_constant_cols([1 1; 2 1; 3.0 1]) catch @test true end
+
+		try PLS.check_constant_cols(Matrix([1.0 1;1 2;1 3])) catch @test true end
+		try PLS.check_constant_cols(Matrix([1.0;1;1])) catch @test true end
+		try PLS.check_constant_cols(Matrix([1.0 2 3])) catch @test true end
+		try PLS.check_constant_cols([1.0; 1; 1]) catch @test true end
+
+		@test PLS.check_constant_cols([1.0 1;2 2;3 3])
+		@test PLS.check_constant_cols([1.0;2;3])
+
 	end
 
 	@testset "centralize" begin
@@ -24,7 +33,7 @@ PLS.check_constant_cols([1;1;1])
 
 		Xo        = reshape([1; 2; 3.0],(3,1))
 		Xn        = reshape([-1,0,1.0],(3,1))
-		Xn = PLS.decentralize_data(Xn,mean(Xo,1),std(Xo,1))
+		Xn        = PLS.decentralize_data(Xn,mean(Xo,1),std(Xo,1))
 		@test all(Xn .== [1; 2; 3.0])
 
 	end
@@ -54,8 +63,8 @@ end;
 
 		X        = reshape([1; 2; 3.0],(3,1))
 		Y        = [1; 2; 3.0]
-		@time model = PLS.fit(X,Y,nfactors=1)
-		pred = PLS.transform(model,X)
+		model    = PLS.fit(X,Y,nfactors=1)
+		pred     = PLS.transform(model,X)
 		@test isequal(round.(pred),[1; 2; 3.0])
 
 	end
@@ -63,17 +72,9 @@ end;
 
 	@testset "Constant Values Prediction Tests" begin
 
-		X        = [1 1;2 1;3 1.0]
+		X        = [1 3;2 1;3 2.0]
 		Y        = [1; 1; 1.0]
-		@time model = PLS.fit(X,Y,nfactors=2)
-		pred = PLS.transform(model,X)
-		@test isequal(round.(pred),[1; 1; 1.0])
-
-		X        = reshape([1; 1; 1.0],(3,1))
-		Y        = [1; 1; 1.0]
-		@time model = PLS.fit(X,Y,nfactors=1)
-		pred = PLS.transform(model,X)
-		@test isequal(round.(pred),[1; 1; 1.0])
+		try PLS.fit(X,Y,nfactors=2) catch @test true end
 
 	end
 
@@ -82,14 +83,14 @@ end;
 
 		X        = [1 2; 2 4; 4.0 6]
 		Y        = [2; 4; 6.0]
-		@time model = PLS.fit(X,Y,nfactors=2)
-		pred = PLS.transform(model,X)
+		model    = PLS.fit(X,Y,nfactors=2)
+		pred     = PLS.transform(model,X)
 		@test isequal(round.(pred),[2; 4; 6.0])
 
-		X        = [1 -2; 2 -4; 4.0 -6]
-		Y        = [-2; -4; -6.0]
-		@time model = PLS.fit(X,Y,nfactors=2)
-		pred = PLS.transform(model,X)
+		X           = [1 -2; 2 -4; 4.0 -6]
+		Y           = [-2; -4; -6.0]
+		model       = PLS.fit(X,Y,nfactors=2)
+		pred        = PLS.transform(model,X)
 		@test isequal(round.(pred),[-2; -4; -6.0])
 
 	end
