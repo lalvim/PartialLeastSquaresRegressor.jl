@@ -3,12 +3,13 @@
 #### PLS type
 export fit,transform
 
+
 mutable struct Model{T<:AbstractFloat}
     W::Matrix{T}        # a set of vectors representing correlation weights of input data (X) with the target (Y)
     R::Matrix{T}        # a set of projection vectors of input data (X) into w
     b::Matrix{T}        # a set of scalar values representing a latent value for dependent variables or target (Y)
     P::Matrix{T}        # a set of latent vetors for the input data (X)
-    nfactors::Int     # a scalar value representing the number of latent variables
+    nfactors::Int       # a scalar value representing the number of latent variables
     mx::Matrix{T}       # mean stat after for z-scoring input data (X)
     my::T               # mean stat after for z-scoring target data (Y)
     sx::Matrix{T}       # standard deviation stat after z-scoring input data (X)
@@ -105,8 +106,16 @@ function pls1_trainer{T<:AbstractFloat}(model::Model{T},
 
 end
 
+"""
+    fit(X::Matrix{:<AbstractFloat},Y::Vector{:<AbstractFloat}; nfactors::Int=10,copydata::Bool=true,centralize::Bool=true)
 
-## this function checks for validity of data and calls pls1 regressor
+A Partial Least Squares learning algorithm.
+
+# Arguments
+- `nfactors::Int = 10`: The number of latent variables to explain the data.
+- `copydata::Bool = true`: If you want to use the same input matrix or a copy.
+- `centralize::Bool = true`: If you want to z-score columns. Recommended if not z-scored yet.
+"""
 function fit{T<:AbstractFloat}(X::Matrix{T}, Y::Vector{T};
                               nfactors::Int=NFACT,
                               copydata::Bool=true,
@@ -158,7 +167,14 @@ function pls1_predictor{T<:AbstractFloat}(model::Model{T},
 
 end
 
-## this function checks for validity of data and calls pls1 regressor
+"""
+    transform(model::PLS.Model; X::Matrix{:<AbstractFloat}; copydata::Bool=true)
+
+A Partial Least Squares predictor.
+
+# Arguments
+- `copydata::Bool = true`: If you want to use the same input matrix or a copy.
+"""
 function transform{T<:AbstractFloat}(model::Model{T},
                                     X::Matrix{T};
                                     copydata::Bool=true)
@@ -168,14 +184,11 @@ function transform{T<:AbstractFloat}(model::Model{T},
     check_data(X,model.nfeatures)
 
     Xi =  (copydata ? deepcopy(X) : X)
-    #print(Xi)
     Xi =  (model.centralize ? centralize_data(Xi,model.mx,model.sx) : Xi)
 
-    #print(Xi)
     Yi =  pls1_predictor(model,Xi)
-    #print(Yi)
     Yi =  decentralize_data(Yi,model.my,model.sy)
-    #print(Yi)
+
     return Yi
 
 end
