@@ -6,11 +6,6 @@ reload("PLS")
 
 
 
-
-#@test isequal(round.(pred),[8; 10; 12.0])
-
-
-
 @testset "Auxiliary Functions Test" begin
 
     @testset "check constant columns" begin
@@ -125,7 +120,7 @@ end;
 @testset "Pediction Tests (out of sample)" begin
 
 
-	@testset "Linear Prediction Tests (Ax + b)" begin
+	@testset "Linear Prediction Tests (Ax + b) | A>0" begin
 
 
 		Xtr        = [1 2; 2 4; 4.0 6]
@@ -135,6 +130,35 @@ end;
 		pred     = PLS.transform(model,Xt)
 		@test isequal(round.(pred),[8; 10; 12.0])
 
+
+		Xtr        = [1 2; 2 4; 4.0 6]
+		Ytr        = [4; 6; 8.0]
+		Xt         = [6 8; 8 10; 10.0 12]
+		model    = PLS.fit(Xtr,Ytr,nfactors=2)
+		pred     = PLS.transform(model,Xt)
+		@test isequal(round.(pred),[10; 12; 14.0])
+
+
+	end
+
+	@testset "Linear Prediction Tests (Ax + b) | A<0" begin
+
+
+
+		Xtr        = [1 -2; 2 -4; 4.0 -6]
+		Ytr        = [-2; -4; -6.0]
+		Xt         = [6 -8; 8 -10; 10.0 -12]
+		model    = PLS.fit(Xtr,Ytr,nfactors=2)
+		pred     = PLS.transform(model,Xt)
+		@test isequal(round.(pred),[-8; -10; -12.0])
+
+
+		Xtr        = [1 -2; 2 -4; 4.0 -6]
+		Ytr        = [-4; -6; -8.0]
+		Xt         = [6 -8; 8 -10; 10.0 -12]
+		model    = PLS.fit(Xtr,Ytr,nfactors=2)
+		pred     = PLS.transform(model,Xt)
+		@test isequal(round.(pred),[-10; -12; -14.0])
 
 	end
 
