@@ -118,4 +118,4 @@ end
 		pred     = PLS.transform(model,Xt)
 		@test isequal(round.(pred),[-10; -12; -14.0])
 	end
-end;
+end
