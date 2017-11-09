@@ -1,7 +1,42 @@
-# PLS.jl - Partial Least Squares Regressor package
+PLS.jl
+======
 
-[![Build Status](https://travis-ci.org/lalvim/PLS.jl.svg?branch=master)](https://travis-ci.org/lalvim/PLS.jl)
+Partial Least Squares Regressor package
 
-[![Coverage Status](https://coveralls.io/repos/lalvim/PLS.jl/badge.svg?branch=master&service=github)](https://coveralls.io/github/lalvim/PLS.jl?branch=master)
+| **PackageEvaluator**            | **Build Status**                          |
+|:-------------------------------:|:-----------------------------------------:|
+| [![][pkg-0.6-img]][pkg-0.6-url] | [![][travis-img]][travis-url] [![][codecov-img]][codecov-url] |
 
-[![codecov.io](http://codecov.io/github/lalvim/PLS.jl/coverage.svg?branch=master)](http://codecov.io/github/lalvim/PLS.jl?branch=master)
+[travis-img]: https://travis-ci.org/lalvim/PLS.jl.svg?branch=master
+[travis-url]: https://travis-ci.org/lalvim/PLS.jl
+
+[codecov-img]: http://codecov.io/github/lalvim/PLS.jl/coverage.svg?branch=master
+[codecov-url]: http://codecov.io/github/lalvim/PLS.jl?branch=master
+
+[issues-url]: https://github.com/lalvim/PLS.jl/issues
+
+[pkg-0.6-img]: http://pkg.julialang.org/badges/PLS_0.6.svg
+[pkg-0.6-url]: http://pkg.julialang.org/?pkg=PLS&ver=0.6
+[pkg-0.7-img]: http://pkg.julialang.org/badges/PLS_0.7.svg
+[pkg-0.7-url]: http://pkg.julialang.org/?pkg=PLS&ver=0.7
+
+Install
+=======
+
+    Pkg.add("PLS")
+
+Using
+=====
+
+The blah...
+
+Examples
+========
+
+blah
+
+License
+=======
+
+The PLS.jl is free software: you can redistribute it and/or modify it under the terms of the MIT "Expat"
+License. A copy of this license is provided in ``LICENSE.md``
