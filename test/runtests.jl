@@ -7,6 +7,10 @@ reload("PLS")
 
 
 
+#@test isequal(round.(pred),[8; 10; 12.0])
+
+
+
 @testset "Auxiliary Functions Test" begin
 
     @testset "check constant columns" begin
@@ -57,7 +61,7 @@ reload("PLS")
 end;
 
 
-@testset "Pediction Tests" begin
+@testset "Pediction Tests (in sample)" begin
 
 	@testset "Single Column Prediction Test" begin
 
@@ -70,7 +74,7 @@ end;
 	end
 
 
-	@testset "Constant Values Prediction Tests" begin
+	@testset "Constant Values Prediction Tests (Ax + b) | A=0, b=1 " begin
 
 		X        = [1 3;2 1;3 2.0]
 		Y        = [1; 1; 1.0]
@@ -78,7 +82,7 @@ end;
 
 	end
 
-	@testset "Linear Prediction Tests" begin
+	@testset "Linear Prediction Tests " begin
 
 
 		X        = [1 2; 2 4; 4.0 6]
@@ -94,4 +98,44 @@ end;
 		@test isequal(round.(pred),[-2; -4; -6.0])
 
 	end
+
+	@testset "Linear Prediction Tests (Ax + b)" begin
+
+
+		Xtr        = [1 2; 2 4; 4.0 6]
+		Ytr        = [2; 4; 6.0]
+		Xt         = [6 8; 8 10; 10.0 12] # same sample
+		model    = PLS.fit(Xtr,Ytr,nfactors=2)
+		pred     = PLS.transform(model,Xt)
+		@test isequal(round.(pred),[8; 10; 12.0])
+
+		Xtr        = [1 2; 2 4.0; 4.0 6; 6 8]
+		Ytr        = [2; 4; 6.0; 8]
+		Xt         = [1 2; 2 4.0] # a subsample
+
+		model    = PLS.fit(Xtr,Ytr,nfactors=2,centralize=true)
+		pred     = PLS.transform(model,Xt)
+		@test isequal(round.(pred),[2; 4])
+
+	end
+
+end;
+
+
+@testset "Pediction Tests (out of sample)" begin
+
+
+	@testset "Linear Prediction Tests (Ax + b)" begin
+
+
+		Xtr        = [1 2; 2 4; 4.0 6]
+		Ytr        = [2; 4; 6.0]
+		Xt         = [6 8; 8 10; 10.0 12]
+		model    = PLS.fit(Xtr,Ytr,nfactors=2)
+		pred     = PLS.transform(model,Xt)
+		@test isequal(round.(pred),[8; 10; 12.0])
+
+
+	end
+
 end;

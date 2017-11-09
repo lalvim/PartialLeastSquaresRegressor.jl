@@ -14,6 +14,7 @@ mutable struct Model{T<:AbstractFloat}
     sx::Matrix{T}       # standard deviation stat after z-scoring input data (X)
     sy::T               # standard deviation stat after z-scoring target data (X)
     nfeatures::Int      # number of input (X) features columns
+    centralize::Bool    # store information of centralization of data. if true, tehn it is passed to transform function
 end
 
 ## constructor
@@ -25,7 +26,8 @@ function Model{T<:AbstractFloat}(nrows::Int,
                                  my::T,
                                  sx::Matrix{T},
                                  sy::T,
-                                 nfeatures::Int)
+                                 nfeatures::Int,
+                                 centralize::Bool)
 
     ## Allocation
     return Model(zeros(T,ncols,nfactors), ## W
@@ -37,7 +39,8 @@ function Model{T<:AbstractFloat}(nrows::Int,
         my,
         sx,
         sy,
-        nfeatures)::Model{T}
+        nfeatures,
+        centralize)::Model{T}
 end
 
 ## constants
@@ -68,8 +71,8 @@ function check_params(nfactors::Int, ncols::Int)
 end
 
 ## checks constant columns
-check_constant_cols{T<:AbstractFloat}(X::Matrix{T}) = (i=find(all(X .== X[1,:]',1))) == [] || error("You must remove constant columns $i of input data (X) before train")
-check_constant_cols{T<:AbstractFloat}(Y::Vector{T}) = length(unique(Y)) != 1 || error("Your target values are constant. All values are equal to $(Y[1])")
+check_constant_cols{T<:AbstractFloat}(X::Matrix{T}) = size(X,1)==1 || (i=find(all(X .== X[1,:]',1))) == [] || error("You must remove constant columns $i of input data (X) before train")
+check_constant_cols{T<:AbstractFloat}(Y::Vector{T}) = length(Y)==1 || length(unique(Y)) != 1 || error("Your target values are constant. All values are equal to $(Y[1])")
 
 ## Preprocessing data using z-score statistics. this is due to the fact that if X and Y are z-scored, than X'Y returns for W vector a pearson correlation for each element! :)
 centralize_data{T<:AbstractFloat}(D::Matrix{T}, m::Matrix{T}, s::Matrix{T})   = (D .-m)./s
@@ -82,29 +85,32 @@ decentralize_data{T<:AbstractFloat}(D::Vector{T}, m::T, s::T)                   
 ## the learning algorithm
 
 ## the learning algorithm
-function pls1_trainer{T<:AbstractFloat}(pls::Model{T},
+function pls1_trainer{T<:AbstractFloat}(model::Model{T},
                                 X::Matrix{T}, Y::Vector{T})
 
-    W,R,b,P  = pls.W,pls.R,pls.b,pls.P
-    nfactors = pls.nfactors
+    W,R,b,P  = model.W,model.R,model.b,model.P
+    nfactors = model.nfactors
     for i = 1:nfactors
         W[:,i] = X'Y
-        W[:,i] /= norm(W[:,i])
+        W[:,i] /= norm(W[:,i])#sqrt.(W[:,i]'*W[:,i])
         R[:,i] = X*W[:,i]
-        Rn     = R[:,i]/norm(R[:,i])
-        b[i]   = Rn' * Y
-        P[:,i] = X'Rn
-        X      = X - Rn * P[:,i]'
-        Y      = Y - Rn * b[i]
+        Rn     = R[:,i]'/(R[:,i]'R[:,i]) # change to use function...
+        P[:,i] = Rn*X
+        b[i]   = Rn * Y
+        X      = X - R[:,i] * P[:,i]'
+        Y      = Y - R[:,i] * b[i]
     end
 
-    return pls
+    return model
 
 end
 
 
 ## this function checks for validity of data and calls pls1 regressor
-function fit{T<:AbstractFloat}(X::Matrix{T}, Y::Vector{T}; nfactors::Int=NFACT, copydata::Bool=true)
+function fit{T<:AbstractFloat}(X::Matrix{T}, Y::Vector{T};
+                              nfactors::Int=NFACT,
+                              copydata::Bool=true,
+                              centralize::Bool=true)
 
     check_constant_cols(X)
     check_constant_cols(Y)
@@ -120,10 +126,12 @@ function fit{T<:AbstractFloat}(X::Matrix{T}, Y::Vector{T}; nfactors::Int=NFACT, 
                  nfactors,
                  mean(X,1),mean(Y),
                  std(X,1),std(Y),
-                 size(X,2))
+                 size(X,2),
+                 centralize)
 
-    Xi =  centralize_data(Xi,model.mx,model.sx)
-    Yi =  centralize_data(Yi,model.my,model.sy)
+    Xi =  (centralize ? centralize_data(Xi,model.mx,model.sx) : Xi)
+    Yi =  (centralize ? centralize_data(Yi,model.my,model.sy) : Yi)
+    model.centralize  = (centralize ? true: false)
 
     pls1_trainer(model,Xi,Yi)
 
@@ -142,7 +150,6 @@ function pls1_predictor{T<:AbstractFloat}(model::Model{T},
 
     for i = 1:nfactors
         R      = X*W[:,i]
-        R /=norm(R)
         Y      = Y + R*b[i]
         X      = X - R*P[:,i]'
     end
@@ -152,15 +159,18 @@ function pls1_predictor{T<:AbstractFloat}(model::Model{T},
 end
 
 ## this function checks for validity of data and calls pls1 regressor
-function transform{T<:AbstractFloat}(model::Model{T}, X::Matrix{T}; copydata::Bool=true)
+function transform{T<:AbstractFloat}(model::Model{T},
+                                    X::Matrix{T};
+                                    copydata::Bool=true)
 
     check_constant_cols(X)
 
     check_data(X,model.nfeatures)
 
     Xi =  (copydata ? deepcopy(X) : X)
+    #print(Xi)
+    Xi =  (model.centralize ? centralize_data(Xi,model.mx,model.sx) : Xi)
 
-    Xi =  centralize_data(Xi,model.mx,model.sx)
     #print(Xi)
     Yi =  pls1_predictor(model,Xi)
     #print(Yi)
