@@ -179,8 +179,7 @@ function transform{T<:AbstractFloat}(model::Model{T},
                                     X::Matrix{T};
                                     copydata::Bool=true)
 
-    check_constant_cols(X)
-
+    
     check_data(X,model.nfeatures)
 
     Xi =  (copydata ? deepcopy(X) : X)
