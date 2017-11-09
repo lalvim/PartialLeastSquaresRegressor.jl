@@ -46,25 +46,23 @@ const NFACT = 10        # default number of factors if it is not informed by the
 ## Auxiliary functions
 
 ## checks PLS input data and params
-function check_plsdata{T<:AbstractFloat}(X::Matrix{T},Y::Vector{T})
+function check_data{T<:AbstractFloat}(X::Matrix{T},Y::Vector{T})
     !isempty(X) ||
         throw(DimensionMismatch("Empty input data (X)."))
     !isempty(Y) ||
         throw(DimensionMismatch("Empty target data (Y)."))
-    #size(Y,1) == 1 ||
-    #    throw(DimensionMismatch("target data (Y) must be equal to 1."))
     size(X, 1) == size(Y, 1) ||
         throw(DimensionMismatch("Incompatible number of rows of input data (X) and target data (Y)."))
 end
 
-function check_plsdata{T<:AbstractFloat}(X::Matrix{T},nplscols::Int)
+function check_data{T<:AbstractFloat}(X::Matrix{T},nplscols::Int)
     !isempty(X) ||
         throw(DimensionMismatch("Empty input data (X)."))
     size(X, 2) == nplscols ||
         throw(DimensionMismatch("Incompatible number of columns of input data (X) and original training X columns."))
 end
 
-function check_plsparams(nfactors::Int, ncols::Int)
+function check_params(nfactors::Int, ncols::Int)
     nfactors >= 1 || error("nfactors must be a positive integer.")
     nfactors <= ncols || error("nfactors must be less or equal to the number of columns of input data (X).")
 end
@@ -104,9 +102,9 @@ end
 ## this function checks for validity of data and calls pls1 regressor
 function fit{T<:AbstractFloat}(X::Matrix{T}, Y::Vector{T}; nfactors::Int=NFACT, copydata::Bool=true)
 
-    check_plsparams(nfactors, size(X,2))
+    check_params(nfactors, size(X,2))
 
-    check_plsdata(X, Y)
+    check_data(X, Y)
 
     Xi =  (copydata ? deepcopy(X) : X)
     Yi =  (copydata ? deepcopy(Y) : Y)
@@ -129,7 +127,7 @@ end
 function pls1_predictor{T<:AbstractFloat}(model::Model{T},
                                           X::DenseMatrix{T})
 
-    W,b,P  = model.W,model.b,model.P
+    W,b,P    = model.W,model.b,model.P
     nfactors = model.nfactors
     nrows    = size(X,1)
     R = zeros(T,nrows)
@@ -150,7 +148,7 @@ end
 function transform{T<:AbstractFloat}(model::Model{T}, X::Matrix{T}; copydata::Bool=true)
 
 
-    check_plsdata(X,model.nfeatures)
+    check_data(X,model.nfeatures)
 
     Xi =  (copydata ? deepcopy(X) : X)
 
