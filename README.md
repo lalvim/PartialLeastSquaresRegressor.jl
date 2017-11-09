@@ -44,6 +44,23 @@ Examples
 
     print("[PLS] mae error : $(mean(abs.(Y_test .- Y_pred)))")
 
+What is Implemented
+======
+* PLS.fit - learns from input data and its related single target
+    * X::Matrix{:<AbstractFloat} - A matrix that columns are the features and rows are the samples
+    * Y::Vector{:<AbstractFloat} - A vector with float values.
+    * nfactors::Int = 10 - The number of latent variables to explain the data.
+    * copydata::Bool = true - If you want to use the same input matrix or a copy.
+    * centralize::Bool = true - If you want to z-score columns. Recommended if not z-scored yet.
+* PLS.transform - predicts using the learnt model extracted from fit.
+    * model::PLS.Model - A PLS model learnt from fit.
+    * X::Matrix{:<AbstractFloat} - A matrix that columns are the features and rows are the samples.
+    * copydata::Bool = true - If you want to use the same input matrix or a copy.
+
+What is not ready yet
+=======
+* A version for multiple targets
+* An automatic validation inside fit function
 
 License
 =======
