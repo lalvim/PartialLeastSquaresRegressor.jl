@@ -2,7 +2,6 @@ using PLS
 using Base.Test
 
 @testset "Auxiliary Functions Test" begin
-
     @testset "check constant columns" begin
 		try PLS.check_constant_cols(Matrix([1.0 1;1 2;1 3])) catch @test true end
 		try PLS.check_constant_cols(Matrix([1.0;1;1])) catch @test true end
