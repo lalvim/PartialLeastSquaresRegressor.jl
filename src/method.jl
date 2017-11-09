@@ -67,11 +67,15 @@ function check_params(nfactors::Int, ncols::Int)
     nfactors <= ncols || error("nfactors must be less or equal to the number of columns of input data (X).")
 end
 
+## checks constant columns
+check_constant_cols{T<:AbstractFloat}(X::Matrix{T}) = (i=find(all(X .== X[1,:]',1))) == [] || error("You must remove constant columns $i of input data (X) before train")
+check_constant_cols{T<:AbstractFloat}(Y::Vector{T}) = length(unique(Y)) != 1 || error("Your target values are constant. All values are equal to $(Y[1])")
+
 ## Preprocessing data using z-score statistics. this is due to the fact that if X and Y are z-scored, than X'Y returns for W vector a pearson correlation for each element! :)
-centralize_data{T<:AbstractFloat}(D::DenseMatrix{T}, m::Matrix{T}, s::Matrix{T})   = (D .-m)./s
+centralize_data{T<:AbstractFloat}(D::Matrix{T}, m::Matrix{T}, s::Matrix{T})   = (D .-m)./s
 centralize_data{T<:AbstractFloat}(D::Vector{T}, m::T, s::T)                        = (D -m)/s
 
-decentralize_data{T<:AbstractFloat}(D::DenseMatrix{T}, m::Matrix{T}, s::Matrix{T}) = D .*s .+m
+decentralize_data{T<:AbstractFloat}(D::Matrix{T}, m::Matrix{T}, s::Matrix{T}) = D .*s .+m
 decentralize_data{T<:AbstractFloat}(D::Vector{T}, m::T, s::T)                      = D *s +m
 
 
@@ -101,6 +105,9 @@ end
 
 ## this function checks for validity of data and calls pls1 regressor
 function fit{T<:AbstractFloat}(X::Matrix{T}, Y::Vector{T}; nfactors::Int=NFACT, copydata::Bool=true)
+
+    check_constant_cols(X)
+    check_constant_cols(Y)
 
     check_params(nfactors, size(X,2))
 
@@ -147,6 +154,7 @@ end
 ## this function checks for validity of data and calls pls1 regressor
 function transform{T<:AbstractFloat}(model::Model{T}, X::Matrix{T}; copydata::Bool=true)
 
+    check_constant_cols(X)
 
     check_data(X,model.nfeatures)
 
