@@ -28,12 +28,22 @@ Install
 Using
 =====
 
-The blah...
+using PLS
 
 Examples
 ========
 
-blah
+    using PLS
+
+    X_train        = [1 2; 2 4; 4.0 6]
+    Y_train        = [4; 6; 8.0]
+    X_test         = [6 8; 8 10; 10.0 12]
+
+    model          = PLS.fit(X_train,Y_train,nfactors=2)
+    Y_test         = PLS.transform(model,X_test)
+
+    print("[PLS] mae error : $(mean(abs.(Y_test .- Y_pred)))")
+
 
 License
 =======
