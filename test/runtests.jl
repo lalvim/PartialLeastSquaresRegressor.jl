@@ -1,6 +1,8 @@
 using PLS
+using JLD
 using Base.Test
 
+const MODEL_FILENAME = "pls_model.jld" # jld filename for storing the model
 
 
 @testset "Auxiliary Functions Test" begin
@@ -160,3 +162,23 @@ end;
 	end
 
 end;
+
+
+@testset "Test Saving and Loading Models" begin
+
+
+
+	Xtr        = [1 -2; 2 -4; 4.0 -6]
+	Ytr        = [-2; -4; -6.0]
+	Xt         = [6 -8; 8 -10; 10.0 -12]
+	model1    = PLS.fit(Xtr,Ytr,nfactors=2)
+	pred1     = PLS.transform(model1,Xt)
+
+	PLS.save(model1)
+	model2    = PLS.load()
+	pred2     = PLS.transform(model2,Xt)
+    rm(MODEL_FILENAME)
+	@test all(pred1 .== pred2)
+
+
+end
