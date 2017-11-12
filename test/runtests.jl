@@ -1,6 +1,7 @@
 using PLS
 using JLD
 using Base.Test
+reload("PLS")
 
 const MODEL_FILENAME = "pls_model.jld" # jld filename for storing the model
 
@@ -176,6 +177,7 @@ end;
 
 	PLS.save(model1)
 	model2    = PLS.load()
+
 	pred2     = PLS.transform(model2,Xt)
     rm(MODEL_FILENAME)
 	@test all(pred1 .== pred2)

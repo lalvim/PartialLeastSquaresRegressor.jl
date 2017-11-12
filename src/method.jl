@@ -1,7 +1,10 @@
 # Partial Least Squares (PLS1 version)
+include("utils.jl")
+
 using JLD
 
 export fit,transform,load,save
+
 
 ## constants
 const NFACT          = 10              # default number of factors if it is not informed by the user
@@ -49,57 +52,22 @@ function Model{T<:AbstractFloat}(nrows::Int,
         centralize)::Model{T}
 end
 
-
-## Auxiliary functions
-
 ## Load and Store models (good for production)
-function load(;filename::AbstractString = MODEL_FILENAME, modelname::AbstractString = MODEL_ID)
-    local M::Model
+function load(; filename::AbstractString = MODEL_FILENAME, modelname::AbstractString = MODEL_ID)
+    local M#::Model{Float64}
     jldopen(filename, "r") do file
         M = read(file, modelname)
     end
     M
 end
 
-function save(M::Model; filename::AbstractString = MODEL_FILENAME, modelname::AbstractString = MODEL_ID)
+function save{T<:AbstractFloat}(M::Model{T}; filename::AbstractString = MODEL_FILENAME, modelname::AbstractString = MODEL_ID)
     jldopen(filename, "w") do file
         #addrequire(file, method)
         write(file, modelname, M)
     end
 end
 
-## checks PLS input data and params
-function check_data{T<:AbstractFloat}(X::Matrix{T},Y::Vector{T})
-    !isempty(X) ||
-        throw(DimensionMismatch("Empty input data (X)."))
-    !isempty(Y) ||
-        throw(DimensionMismatch("Empty target data (Y)."))
-    size(X, 1) == size(Y, 1) ||
-        throw(DimensionMismatch("Incompatible number of rows of input data (X) and target data (Y)."))
-end
-
-function check_data{T<:AbstractFloat}(X::Matrix{T},nplscols::Int)
-    !isempty(X) ||
-        throw(DimensionMismatch("Empty input data (X)."))
-    size(X, 2) == nplscols ||
-        throw(DimensionMismatch("Incompatible number of columns of input data (X) and original training X columns."))
-end
-
-function check_params(nfactors::Int, ncols::Int)
-    nfactors >= 1 || error("nfactors must be a positive integer.")
-    nfactors <= ncols || error("nfactors must be less or equal to the number of columns of input data (X).")
-end
-
-## checks constant columns
-check_constant_cols{T<:AbstractFloat}(X::Matrix{T}) = size(X,1)==1 || (i=find(all(X .== X[1,:]',1))) == [] || error("You must remove constant columns $i of input data (X) before train")
-check_constant_cols{T<:AbstractFloat}(Y::Vector{T}) = length(Y)==1 || length(unique(Y)) != 1 || error("Your target values are constant. All values are equal to $(Y[1])")
-
-## Preprocessing data using z-score statistics. this is due to the fact that if X and Y are z-scored, than X'Y returns for W vector a pearson correlation for each element! :)
-centralize_data{T<:AbstractFloat}(D::Matrix{T}, m::Matrix{T}, s::Matrix{T})   = (D .-m)./s
-centralize_data{T<:AbstractFloat}(D::Vector{T}, m::T, s::T)                        = (D -m)/s
-
-decentralize_data{T<:AbstractFloat}(D::Matrix{T}, m::Matrix{T}, s::Matrix{T}) = D .*s .+m
-decentralize_data{T<:AbstractFloat}(D::Vector{T}, m::T, s::T)                      = D *s +m
 
 ## the learning algorithm
 function pls1_trainer{T<:AbstractFloat}(model::Model{T},
