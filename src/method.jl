@@ -113,6 +113,11 @@ function pls1_trainer{T<:AbstractFloat}(model::Model{T},
         Rn     = R[:,i]'/(R[:,i]'R[:,i]) # change to use function...
         P[:,i] = Rn*X
         b[i]   = Rn * Y
+        if b[i] == 0
+           print("PLS converged. No need learning with more than $(i) factors")
+           model.nfactors = i
+           break
+        end
         X      = X - R[:,i] * P[:,i]'
         Y      = Y - R[:,i] * b[i]
     end
