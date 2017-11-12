@@ -44,6 +44,12 @@ Examples
 
     print("[PLS] mae error : $(mean(abs.(Y_test .- Y_pred)))")
 
+    # if you want to save your model
+    PLS.save(model,filename="/tmp/pls_model.jld")
+    # if you want to load back your model
+    model = PLS.load(filename="/tmp/pls_model.jld")
+
+
 What is Implemented
 ======
 * PLS.fit - learns from input data and its related single target
