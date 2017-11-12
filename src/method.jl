@@ -1,8 +1,15 @@
 # Partial Least Squares (PLS1 version)
+using JLD
+
+export fit,transform,load,save
+
+## constants
+const NFACT          = 10              # default number of factors if it is not informed by the user
+const MODEL_FILENAME = "pls_model.jld" # jld filename for storing the model
+const MODEL_ID       = "pls_model"     # if od the model in the filesystem jld data
+
 
 #### PLS type
-export fit,transform
-
 mutable struct Model{T<:AbstractFloat}
     W::Matrix{T}        # a set of vectors representing correlation weights of input data (X) with the target (Y)
     R::Matrix{T}        # a set of projection vectors of input data (X) into w
@@ -18,7 +25,6 @@ mutable struct Model{T<:AbstractFloat}
 end
 
 ## constructor
-
 function Model{T<:AbstractFloat}(nrows::Int,
                                  ncols::Int,
                                  nfactors::Int,
@@ -43,10 +49,24 @@ function Model{T<:AbstractFloat}(nrows::Int,
         centralize)::Model{T}
 end
 
-## constants
-const NFACT = 10        # default number of factors if it is not informed by the user
 
 ## Auxiliary functions
+
+## Load and Store models (good for production)
+function load(;filename::AbstractString = MODEL_FILENAME, modelname::AbstractString = MODEL_ID)
+    local M::Model
+    jldopen(filename, "r") do file
+        M = read(file, modelname)
+    end
+    M
+end
+
+function save(M::Model; filename::AbstractString = MODEL_FILENAME, modelname::AbstractString = MODEL_ID)
+    jldopen(filename, "w") do file
+        #addrequire(file, method)
+        write(file, modelname, M)
+    end
+end
 
 ## checks PLS input data and params
 function check_data{T<:AbstractFloat}(X::Matrix{T},Y::Vector{T})
