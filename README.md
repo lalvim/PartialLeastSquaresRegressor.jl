@@ -1,7 +1,8 @@
 PLS.jl
 ======
 
-Partial Least Squares Regressor package
+A Partial Least Squares Regressor package
+
 
 | **PackageEvaluator**            | **Build Status**                          |
 |:-------------------------------:|:-----------------------------------------:|
@@ -28,7 +29,7 @@ Install
 Using
 =====
 
-using PLS
+    using PLS
 
 Examples
 ========
@@ -67,6 +68,20 @@ What is not ready yet
 =======
 * A version for multiple targets
 * An automatic validation inside fit function
+
+
+References
+=======
+* PLS1 NIPALS Algorithm (this implemented version) http://vision.cse.psu.edu/seminars/talks/PLSpresentation.pdf
+* NIPALS: Nonlinear Iterative Partial Least Squares
+    * Wold, H. (1966). Estimation of principal components and related models
+by iterative least squares. In P.R. Krishnaiaah (Ed.). Multivariate Analysis.
+(pp.391-420) New York: Academic Press.
+* SIMPLS: more efficient, optimal result
+    * Supports multivariate Y
+    * De Jong, S., 1993. SIMPLS: an alternative approach to partial least squares
+regression. Chemometrics and Intelligent Laboratory Systems, 18: 251–
+263
 
 License
 =======
