@@ -1,8 +1,3 @@
-# Partial Least Squares (PLS1 and PLS2 NIPALS version)
-include("utils.jl")
-include("types.jl")
-#using PLSTypes
-#reload("PLSTypes")
 ## constants
 const NFACT          = 10              # default number of factors if it is not informed by the user
 
@@ -159,7 +154,7 @@ A Partial Least Squares predictor.
 # Arguments
 - `copydata::Bool = true`: If you want to use the same input matrix or a copy.
 """
-function transform{T<:AbstractFloat}(model::PLSModel{T},
+function transform{T<:AbstractFloat}(model::PLSModel{T<:AbstractFloat},
                                     X::Matrix{T};
                                     copydata::Bool=true)
     check_data(X,model.nfeatures)
