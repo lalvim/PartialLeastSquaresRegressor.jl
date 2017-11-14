@@ -6,7 +6,7 @@
 ## Auxiliary functions
 
 ## checks PLS input data and params
-function check_data{T<:AbstractFloat}(X::Matrix{T},Y::Vector{T})
+function check_data{T<:AbstractFloat}(X::Matrix{T},Y::Union{Vector{T},Matrix{T}})
     !isempty(X) ||
         throw(DimensionMismatch("Empty input data (X)."))
     !isempty(Y) ||
