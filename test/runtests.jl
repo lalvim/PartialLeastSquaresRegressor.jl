@@ -3,8 +3,42 @@ using JLD
 using Base.Test
 reload("PLS")
 
+@testset "PLS2 Pediction Tests (in sample)" begin
+
+	@testset "Single Column Prediction Test" begin
+
+		X        = reshape([1; 2; 3.0],(3,1))
+		Y        = [1 1; 2 2; 3 3.0]
+		model    = PLS.fit(X,Y,nfactors=1)
+		pred     = PLS.transform(model,X)
+		@test isequal(round.(pred),[1 1; 2 2; 3 3.0])
+
+	end
+
+
+
+
 const MODEL_FILENAME = "pls_model.jld" # jld filename for storing the model
 
+@testset "Test Saving and Loading Models" begin
+
+
+
+	Xtr        = [1 -2; 2 -4; 4.0 -6]
+	Ytr        = [-2; -4; -6.0]
+	Xt         = [6 -8; 8 -10; 10.0 -12]
+	model1    = PLS.fit(Xtr,Ytr,nfactors=2)
+	pred1     = PLS.transform(model1,Xt)
+
+	PLS.save(model1)
+	model2    = PLS.load()
+
+	pred2     = PLS.transform(model2,Xt)
+    rm(MODEL_FILENAME)
+	@test all(pred1 .== pred2)
+
+
+end
 
 @testset "Auxiliary Functions Test" begin
 
@@ -163,24 +197,3 @@ end;
 	end
 
 end;
-
-
-@testset "Test Saving and Loading Models" begin
-
-
-
-	Xtr        = [1 -2; 2 -4; 4.0 -6]
-	Ytr        = [-2; -4; -6.0]
-	Xt         = [6 -8; 8 -10; 10.0 -12]
-	model1    = PLS.fit(Xtr,Ytr,nfactors=2)
-	pred1     = PLS.transform(model1,Xt)
-
-	PLS.save(model1)
-	model2    = PLS.load()
-
-	pred2     = PLS.transform(model2,Xt)
-    rm(MODEL_FILENAME)
-	@test all(pred1 .== pred2)
-
-
-end
