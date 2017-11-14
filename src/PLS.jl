@@ -1,7 +1,13 @@
+# Partial Least Squares (PLS1 and PLS2 NIPALS version)
 module PLS
+
+using JLD
+
+include("utils.jl")
+include("types.jl")
 
 include("method.jl")
 
 dir(path...) = joinpath(dirname(dirname(@__FILE__)),path...)
 
-end # module
+end

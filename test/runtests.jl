@@ -1,8 +1,8 @@
 using PLS
-using JLD
 using Base.Test
-
-const MODEL_FILENAME = "pls_model.jld" # jld filename for storing the model
+#using PLSTypes
+#reload("PLSTypes")
+reload("PLS")
 
 @testset "Test Saving and Loading PLS1 Models" begin
 
@@ -18,7 +18,7 @@ const MODEL_FILENAME = "pls_model.jld" # jld filename for storing the model
 	model2    = PLS.load()
 
 	pred2     = PLS.transform(model2,Xt)
-    rm(MODEL_FILENAME)
+    rm(PLS.MODEL_FILENAME)
 	@test all(pred1 .== pred2)
 
 
@@ -38,7 +38,7 @@ end
 	model2    = PLS.load()
 
 	pred2     = PLS.transform(model2,Xt)
-    rm(MODEL_FILENAME)
+    rm(PLS.MODEL_FILENAME)
 	@test all(pred1 .== pred2)
 
 
