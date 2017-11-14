@@ -35,6 +35,7 @@ mutable struct PLS2Model{T<:AbstractFloat}
     sx::Matrix{T}          # standard deviation stat after z-scoring input data (X)
     sy::Matrix{T}          # standard deviation stat after z-scoring target data (X)
     nfeatures::Int         # number of input (X) features columns
+    ntargetcols::Int       # number of target (Y) columns
     centralize::Bool       # store information of centralization of data. if true, tehn it is passed to transform function
 end
 
@@ -75,6 +76,7 @@ function Model{T<:AbstractFloat}(X::Matrix{T},
             std(X,1),
             std(Y,1),
             ncols,
+            m,
             centralize)
 end
 
@@ -109,6 +111,7 @@ end
 function trainer{T<:AbstractFloat}(model::PLS2Model{T},
                                    X::Matrix{T}, Y::Matrix{T})
     W,b,P,Q  = model.W,model.b,model.P,model.Q
+    model.ntargetcols = size(Y,2)
     nfactors = model.nfactors
 
     for i = 1:nfactors
@@ -140,7 +143,7 @@ function trainer{T<:AbstractFloat}(model::PLS2Model{T},
         if  all(abs.(Y - Yp) .<= 1.0e-3)
             print("PLS2 converged. No need learning with more than $(i) factors")
             model.nfactors = i
-            break
+            return model
         end
 
     end
@@ -209,19 +212,14 @@ end
 function predictor{T<:AbstractFloat}(model::PLS2Model{T},
                                      X::DenseMatrix{T})
 
-    W,Q,b,P    = model.W,model.Q,model.b,model.P
+    W,Q,P    = model.W,model.Q,model.P
     nfactors   = model.nfactors
-    nrows      = size(X,1)
-    Y = zeros(T,nrows)
-
+    Y          = zeros(T,size(X,1),model.ntargetcols)
+    #println("nfactors: ",nfactors)
     for i = 1:nfactors
-
         R      = X*W[:,i]
         X      = X - R * P[:,i]'
-        #c      = Rn'b[:,i]/(R'R)
-        c      = R'b[:,i]
-        Y      = Y + c*R * Q'
-
+        Y      = Y + R * Q[:,i]'
     end
 
     return Y
