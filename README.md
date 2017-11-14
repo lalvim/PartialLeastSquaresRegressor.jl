@@ -36,17 +36,31 @@ Examples
 
     using PLS
 
-    X_train        = [1 2; 2 4; 4.0 6]
+    # learning a single target
+    X_train        = [1 2; 2 4; 4 6.0]
     Y_train        = [4; 6; 8.0]
-    X_test         = [6 8; 8 10; 10.0 12]
+    X_test         = [6 8; 8 10; 10 12.0]
 
     model          = PLS.fit(X_train,Y_train,nfactors=2)
     Y_test         = PLS.transform(model,X_test)
 
-    print("[PLS] mae error : $(mean(abs.(Y_test .- Y_pred)))")
+    print("[PLS1] mae error : $(mean(abs.(Y_test .- Y_pred)))")
+
+
+    # learning multiples targets
+    X_train        = [1 2; 2 4; 4 6.0]
+    Y_train        = [2 4;4 6;6 8.0]
+    X_test         = [6 8; 8 10; 10 12.0]
+
+    model          = PLS.fit(X_train,Y_train,nfactors=2)
+    Y_test         = PLS.transform(model,X_test)
+
+    print("[PLS2] mae error : $(mean(abs.(Y_test .- Y_pred)))")
+
 
     # if you want to save your model
     PLS.save(model,filename="/tmp/pls_model.jld")
+
     # if you want to load back your model
     model = PLS.load(filename="/tmp/pls_model.jld")
 
