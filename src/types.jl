@@ -91,7 +91,7 @@ function load(; filename::AbstractString = MODEL_FILENAME, modelname::AbstractSt
     M
 end
 
-function save{T<:AbstractFloat}(M::Union{PLS1Model{T},PLS2Model{T}}; filename::AbstractString = MODEL_FILENAME, modelname::AbstractString = MODEL_ID)
+function save{T<:AbstractFloat}(M::PLSModel{T}; filename::AbstractString = MODEL_FILENAME, modelname::AbstractString = MODEL_ID)
     jldopen(filename, "w") do file
         write(file, modelname, M)
     end

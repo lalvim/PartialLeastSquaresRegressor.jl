@@ -9,10 +9,10 @@ dir(path...) = joinpath(dirname(dirname(@__FILE__)),path...)
 
 end # module
 
-module PLSTypes
+#module PLSTypes
 
-include("types.jl")
+#include("types.jl")
 
-dir(path...) = joinpath(dirname(dirname(@__FILE__)),path...)
+#dir(path...) = joinpath(dirname(dirname(@__FILE__)),path...)
 
-end # module
+#end # module
