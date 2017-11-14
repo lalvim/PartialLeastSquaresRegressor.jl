@@ -38,8 +38,9 @@ end
 
 (xtrn, ytrn, xtst, ytst) = loaddata()
 
-model    = fit(xtrn, ytrn, nfactors = 3)
-pred     = transform(model, xtst)
+model    = PLS.fit(xtrn, ytrn, nfactors = 3)
+pred     = PLS.transform(model, xtst)
+
 
 println("[PLS] mae error :", mean(abs.(ytst .- pred)))
 
@@ -48,3 +49,7 @@ sol = llsq(xtrn, ytrn)
 a, b = sol[1:end-1], sol[end]
 yp = xtst * a + b
 println("[LLS] mae error :",mean(abs.(ytst .- yp)))
+
+### if you want to save or load model use this
+#PLS.save(model,filename="/tmp/pls_model.jld",modelname="pls_model")
+#model = PLS.load(filename="/tmp/pls_model.jld",modelname="pls_model")
