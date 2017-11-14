@@ -67,7 +67,7 @@ function Model{T<:AbstractFloat}(X::Matrix{T},
     ## Allocation
     return PLS2Model(zeros(T,ncols,nfactors), ## W
             zeros(T,m,nfactors),       ## Q
-            zeros(T,1,nfactors),       ## b
+            zeros(T,n,nfactors),       ## b
             zeros(T,ncols,nfactors),   ## P
             nfactors,
             mean(X,1),
@@ -93,7 +93,7 @@ function trainer{T<:AbstractFloat}(model::PLS1Model{T},
         P[:,i] = Rn*X
         b[i]   = Rn * Y
         if b[i] == 0
-           print("PLS converged. No need learning with more than $(i) factors")
+           print("PLS1 converged. No need learning with more than $(i) factors")
            model.nfactors = i
            break
         end
@@ -108,36 +108,45 @@ end
 ## the learning algorithm: PLS2 - multiple targets
 function trainer{T<:AbstractFloat}(model::PLS2Model{T},
                                    X::Matrix{T}, Y::Matrix{T})
-    W,R,b,P,Q  = model.W,model.R,model.b,model.P,model.Q
+    W,b,P,Q  = model.W,model.b,model.P,model.Q
     nfactors = model.nfactors
 
     for i = 1:nfactors
         b[:,i]    = Y[:,1] #u: arbitrary col. Thus, I set to the first.
         Rold = b[:,i]
+        local R::Vector{T}
         while true
 
-            W[:,i] = X'b[:,i]
+            W[:,i]  = X'b[:,i]
             W[:,i] /= norm(W[:,i])#sqrt.(W[:,i]'*W[:,i])
-            R[:,i] = X*W[:,i]
+            R       = X*W[:,i]
 
-            if  abs(R[:,i] - Rold) <= 1.0e-3
+            Rold      = R
+            Q[:,i]    = Y'R
+            Q[:,i]   /= norm(Q[:,i])
+            b[:,i]    = Y*Q[:,i]
+            if  all(abs.(R - Rold) .<= 1.0e-3)
                 break
             end
 
-            Rold = R[:,i]
-            Q      = Y'R
-            Q      /= norm(Q)
-            u      = Y*Q
         end
-        Rn     = R[:,i]'/(R[:,i]'R[:,i]) # change to use function...
+        Rn     = R'/(R'R) # change to use function...
         P[:,i] = Rn*X
 
-        X      = X - R[:,i] * P[:,i]'
-        c      = Rn'b[:,i]/(R[:,i]'R[:,i])
-        Y      = Y - c*R[:,i] * Q'
+        X      = X - R * P[:,i]'
+        c      = Rn'b[:,i:i]'./(R'R)
+        Yp     = c*R*Q[:,i]'
+        Y      = Y - Yp
+        if  all(abs.(Y - Yp) .<= 1.0e-3)
+            print("PLS2 converged. No need learning with more than $(i) factors")
+            model.nfactors = i
+            break
+        end
+
     end
 
     return model
+
 end
 
 
