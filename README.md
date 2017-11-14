@@ -80,13 +80,13 @@ What is Implemented
 
 What is not ready yet
 =======
-* A version for multiple targets
+* A non linear Kernel PLS
 * An automatic validation inside fit function
 
 
 References
 =======
-* PLS1 NIPALS Algorithm (this implemented version) http://vision.cse.psu.edu/seminars/talks/PLSpresentation.pdf
+* PLS1 and PLS2 NIPALS Algorithm (this implemented version) http://vision.cse.psu.edu/seminars/talks/PLSpresentation.pdf
 * NIPALS: Nonlinear Iterative Partial Least Squares
     * Wold, H. (1966). Estimation of principal components and related models
 by iterative least squares. In P.R. Krishnaiaah (Ed.). Multivariate Analysis.
