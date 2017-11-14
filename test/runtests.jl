@@ -1,7 +1,5 @@
 using PLS
 using Base.Test
-#using PLSTypes
-#reload("PLSTypes")
 reload("PLS")
 
 @testset "Test Saving and Loading PLS1 Models" begin

@@ -154,7 +154,7 @@ A Partial Least Squares predictor.
 # Arguments
 - `copydata::Bool = true`: If you want to use the same input matrix or a copy.
 """
-function transform{T<:AbstractFloat}(model::PLSModel{T<:AbstractFloat},
+function transform{T<:AbstractFloat}(model::PLSModel{T},
                                     X::Matrix{T};
                                     copydata::Bool=true)
     check_data(X,model.nfeatures)
