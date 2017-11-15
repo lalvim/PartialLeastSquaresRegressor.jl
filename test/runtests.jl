@@ -1,6 +1,6 @@
 using PLS
 using Base.Test
-#reload("PLS")
+reload("PLS")
 
 @testset "Test Saving and Loading PLS1 Models" begin
 
@@ -244,8 +244,6 @@ end;
 end
 
 @testset "PLS2 Pediction Tests (out of sample)" begin
-
-
 
 
 	@testset "Linear Prediction Tests (Ax + b) | A>0" begin
