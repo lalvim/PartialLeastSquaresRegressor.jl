@@ -1,9 +1,29 @@
-#module UTILS
 
-
-#export check_data,check_params,check_constant_cols,centralize_data,decentralize_data
 
 ## Auxiliary functions
+# A gaussian kernel function
+@inline function Φ(x::Vector{Float64},
+                    y::Vector{Float64},
+                    w::Float64=1.0)
+    norm  = 1.0 / sqrt(2.0 * pi * w)
+    scale = 1.0 / (2.0 * w^2)
+    return norm * exp(-scale * sum((x.-y).^2))
+end
+# A kernel matrix
+function ΦΦ(X::Matrix{Float64})
+    n = size(X,1)
+    K = zeros(n,n)
+    for i=1:n
+        for j=1:i
+                K[i, j] = Φ(Xc[i, :], Xc[j, :])
+                K[j, i] = K[i, j]
+            K[i, i] = Φ(Xc[i, :], Xc[i, :])
+        end
+    end
+    K
+end
+
+#gaussian_kernel([1.0; 2 ; 20],[1.0; 8; 3])
 
 ## checks PLS input data and params
 function check_data{T<:AbstractFloat}(X::Matrix{T},Y::Union{Vector{T},Matrix{T}})
@@ -37,5 +57,3 @@ centralize_data{T<:AbstractFloat}(D::Vector{T}, m::T, s::T)                   = 
 
 decentralize_data{T<:AbstractFloat}(D::Matrix{T}, m::Matrix{T}, s::Matrix{T}) = D .*s .+m
 decentralize_data{T<:AbstractFloat}(D::Vector{T}, m::T, s::T)                 = D *s +m
-
-#end
