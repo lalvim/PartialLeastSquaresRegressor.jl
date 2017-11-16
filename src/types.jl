@@ -35,6 +35,22 @@ mutable struct PLS2Model{T<:AbstractFloat} <:PLSModel{T}
     centralize::Bool       # store information of centralization of data. if true, tehn it is passed to transform function
 end
 
+#### KPLS type
+mutable struct KPLSModel{T<:AbstractFloat} <:PLSModel{T}
+    X::Matrix{T}           # Training set
+    K::Matrix{T}           # Kernel matrix
+    B::Matrix{T}           # Regression matrix
+    nfactors::Int          # a scalar value representing the number of latent variables
+    mx::Matrix{T}          # mean stat after for z-scoring input data (X)
+    my::Matrix{T}          # mean stat after for z-scoring target data (Y)
+    sx::Matrix{T}          # standard deviation stat after z-scoring input data (X)
+    sy::Matrix{T}          # standard deviation stat after z-scoring target data (X)
+    nfeatures::Int         # number of input (X) features columns
+    ntargetcols::Int       # number of target (Y) columns
+    centralize::Bool       # store information of centralization of data. if true, tehn it is passed to transform function
+end
+
+
 ## PLS1: constructor
 function Model{T<:AbstractFloat}(X::Matrix{T},
                                  Y::Vector{T},
@@ -75,6 +91,28 @@ function Model{T<:AbstractFloat}(X::Matrix{T},
             m,
             centralize)
 end
+
+## KPLS: constructor
+function Model{T<:AbstractFloat}(X::Matrix{T},
+                                 Y::Matrix{T}, # this is the diference from PLS1 param constructor!
+                                 nfactors::Int,
+                                 centralize::Bool)
+    (nrows,ncols) = size(X)
+    (n,m)         = size(Y)
+    ## Allocation
+    return PLS2Model(zeros(T,nrows,ncols), ## X
+            zeros(T,nrows,nrows),          ## K
+            zeros(T,ncols,m),              ## B
+            nfactors,
+            mean(X,1),
+            mean(Y,1),
+            std(X,1),
+            std(Y,1),
+            ncols,
+            m,
+            centralize)
+end
+
 
 ## Load and Store models (good for production)
 function load(; filename::AbstractString = MODEL_FILENAME, modelname::AbstractString = MODEL_ID)
