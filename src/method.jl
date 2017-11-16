@@ -12,6 +12,8 @@ A Partial Least Squares learning algorithm.
 - `nfactors::Int = 10`: The number of latent variables to explain the data.
 - `copydata::Bool = true`: If you want to use the same input matrix or a copy.
 - `centralize::Bool = true`: If you want to z-score columns. Recommended if not z-scored yet.
+- `kernel::AbstractString = "gaussian"`: If you want to apply a nonlinear PLS with gaussian Kernel.
+- `width::AbstractFloat = 1.0`: Gaussian Kernel width (Only if kernel="gaussian").
 """
 function fit{T<:AbstractFloat}(X::Matrix{T},
                                Y::AbstractArray{T};
