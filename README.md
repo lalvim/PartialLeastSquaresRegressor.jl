@@ -103,13 +103,16 @@ Method Description
 
 References
 =======
-* PLS1 and PLS2 NIPALS Algorithm (this implemented version) http://vision.cse.psu.edu/seminars/talks/PLSpresentation.pdf
-* A Kernel PLS2 (this implemented version) http://www.jmlr.org/papers/volume2/rosipal01a/rosipal01a.pdf
+* PLS1 and PLS2 based on
+   * Bob Collins Slides, LPAC Group. http://vision.cse.psu.edu/seminars/talks/PLSpresentation.pdf
+* A Kernel PLS2 based on
+   * Kernel Partial Least Squares Regression in Reproducing Kernel Hilbert Space" by Roman Rosipal and Leonard J Trejo. Journal of Machine Learning Research 2 (2001) 97-123 http://www.jmlr.org/papers/volume2/rosipal01a/rosipal01a.pdf
 
 * NIPALS: Nonlinear Iterative Partial Least Squares
     * Wold, H. (1966). Estimation of principal components and related models
 by iterative least squares. In P.R. Krishnaiaah (Ed.). Multivariate Analysis.
 (pp.391-420) New York: Academic Press.
+
 * SIMPLS: more efficient, optimal result
     * Supports multivariate Y
     * De Jong, S., 1993. SIMPLS: an alternative approach to partial least squares
