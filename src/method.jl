@@ -30,16 +30,13 @@ function fit{T<:AbstractFloat}(X::Matrix{T},
 
     Xi =  (copydata ? deepcopy(X) : X)
     Yi =  (copydata ? deepcopy(Y) : Y)
-    print("kernel " ,kernel)
     if kernel == "gaussian"
-      print("aqui!")
        model = Model(Xi,Yi,
                  nfactors,
                  centralize,
                  kernel,
                  width)
     else
-       print("Aqui?")
        model = Model(Xi,Yi,
                  nfactors,
                  centralize)

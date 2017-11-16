@@ -30,8 +30,11 @@ function ΦΦ{T<:AbstractFloat}(X::Matrix{T},
     (nx,mx)    = size(X)
     (nz,mz)    = size(Z)
     K          = zeros(T,nz, nx)
+    #meanx      = mean(X,1)
+    #meanx      = reshape(meanx,size(Z[1, :]))
     for i=1:nz
         for j=1:nx
+            #K[i, j] = Φ(Z[i, :] - meanx, X[j, :],r)
             K[i, j] = Φ(Z[i, :], X[j, :],r)
         end
     end
@@ -74,7 +77,6 @@ function trainer{T<:AbstractFloat}(model::KPLSModel{T},
         iteration_count  = 0
         iteration_change = tol * 10.0
         local w,t,q,old_u
-        print("condition = ",iteration_count < max_iterations && iteration_change > tol)
         while iteration_count < max_iterations && iteration_change > tol
 
             w = K * u
@@ -92,6 +94,7 @@ function trainer{T<:AbstractFloat}(model::KPLSModel{T},
         if iteration_count >= max_iterations
             if ignore_failures
                 nfactors = j
+                print("Found with less factors. Overall factors = $(nfactors)")
                 break
             else
                 error("KPLS failed to converge for component: $(components+1)")
@@ -102,11 +105,12 @@ function trainer{T<:AbstractFloat}(model::KPLSModel{T},
         U[:, j] = u
 
         P[:, j]  = (K_j' * w) / (w'w)
-        println("outer: ",t'*t)
+        #println("outer: ",t'*t)
         deflator = eye(n) - t'*t
         K_j      = deflator * K_j * deflator
-        println("outer: ",t * q')
+        #println("outer: ",t * q')
         Y        = Y - t * q'
+        #println("Y = ",Y)
     end
     # If iteration stopped early because of failed convergence, only
     # the actual components will be copied
@@ -121,9 +125,9 @@ function trainer{T<:AbstractFloat}(model::KPLSModel{T},
     model.K        = K # unfortunately it is necessary on the prediction phase
     model.B        = U * inv(Tj' * K * U) * Q'
 
-    println("Saiu!")
-    println("regressor: ",model.B)
-    println("K: ",model.K)
+    #println("Saiu!")
+    #println("regressor: ",model.B)
+    #println("K: ",model.K)
 
     return model
 
@@ -141,9 +145,13 @@ function predictor{T<:AbstractFloat}(model::KPLSModel{T},
     # centralize
     c = (1.0 / nx) * ones(T,nz,nx)
 
-    Kt = (Kt - c * K) * (eye(nx) - (1.0 / nx) * ones(T,nx,nx))
-    #Kt -= Kt.mean(0)
+    Kt = (Kt - c * K) * (eye(T,nx) - (1.0 / nx) * ones(T,nx,nx))
 
-    return Kt * B
+    # pq?
+    #Kt .-= mean(Kt,1)
+
+    Y = Kt * B
+
+    return Y
 
 end

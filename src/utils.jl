@@ -30,8 +30,8 @@ check_constant_cols{T<:AbstractFloat}(X::Matrix{T}) = size(X,1)==1 || (i=find(al
 check_constant_cols{T<:AbstractFloat}(Y::Vector{T}) = length(Y)==1 || length(unique(Y)) != 1 || error("Your target values are constant. All values are equal to $(Y[1])")
 
 ## Preprocessing data using z-score statistics. this is due to the fact that if X and Y are z-scored, than X'Y returns for W vector a pearson correlation for each element! :)
-centralize_data{T<:AbstractFloat}(D::Matrix{T}, m::Matrix{T}, s::Matrix{T})   = (D .-m)./s
+centralize_data{T<:AbstractFloat}(D::AbstractArray{T}, m::AbstractArray{T}, s::AbstractArray{T})   = (D .-m)./s
 centralize_data{T<:AbstractFloat}(D::Vector{T}, m::T, s::T)                   = (D -m)/s
 
-decentralize_data{T<:AbstractFloat}(D::Matrix{T}, m::Matrix{T}, s::Matrix{T}) = D .*s .+m
+decentralize_data{T<:AbstractFloat}(D::AbstractArray{T}, m::AbstractArray{T}, s::AbstractArray{T}) = D .*s .+m
 decentralize_data{T<:AbstractFloat}(D::Vector{T}, m::T, s::T)                 = D *s +m
