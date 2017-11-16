@@ -2,6 +2,21 @@ using PLS
 using Base.Test
 reload("PLS")
 
+@testset "Test KPLS Models" begin
+
+
+
+	Xtr        = [1 -2; 2 -4; 4.0 -6]
+	Ytr        = [-2 -2; -4 -4; -6.0 -6.0]
+	Xt         = [6 -8; 8 -10; 10.0 -12]
+	model    = PLS.fit(Xtr,Ytr,nfactors=2,kernel="gaussian",width=5.0)
+	pred     = PLS.transform(model,Xt)
+    print(pred)
+
+
+end
+
+
 @testset "Test Saving and Loading PLS1 Models" begin
 
 
@@ -66,8 +81,8 @@ end
 
 	@testset "decentralize" begin
 
-		Xo        = reshape([1; 2; 3.0],(3,1))
-		Xn        = reshape([-1,0,1.0],(3,1))
+		Xo        = [1; 2; 3.0][:,:]
+		Xn        = [-1,0,1.0][:,:]
 		Xn        = PLS.decentralize_data(Xn,mean(Xo,1),std(Xo,1))
 		@test all(Xn .== [1; 2; 3.0])
 
@@ -96,7 +111,7 @@ end;
 
 	@testset "Single Column Prediction Test" begin
 
-		X        = reshape([1; 2; 3.0],(3,1))
+		X        = [1; 2; 3.0][:,:]
 		Y        = [1; 2; 3.0]
 		model    = PLS.fit(X,Y,nfactors=1)
 		pred     = PLS.transform(model,X)
@@ -205,7 +220,7 @@ end;
 
 	@testset "Single Column Prediction Test" begin
 
-		X        = reshape([1; 2; 3.0],(3,1))
+		X        = [1; 2; 3.0][:,:]
 		Y        = [1 1; 2 2; 3 3.0]
 		model    = PLS.fit(X,Y,nfactors=1)
 		pred     = PLS.transform(model,X)
