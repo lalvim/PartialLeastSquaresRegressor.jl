@@ -20,9 +20,10 @@ function check_data{T<:AbstractFloat}(X::Matrix{T},nplscols::Int)
         throw(DimensionMismatch("Incompatible number of columns of input data (X) and original training X columns."))
 end
 
-function check_params(nfactors::Int, ncols::Int)
+function check_params(nfactors::Int, ncols::Int, kernel::AbstractString)
     nfactors >= 1 || error("nfactors must be a positive integer.")
     nfactors <= ncols || warn("nfactors greater than ncols of input data (X) must generate numerical problems. However, can improve results if ok.")
+    kernel == "rbf" || kernel == "linear" || error("kernel must be kernel='linear' or 'kernel=rbf'")
 end
 
 ## checks constant columns

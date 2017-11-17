@@ -39,7 +39,7 @@ end
 (xtrn, ytrn, xtst, ytst) = loaddata()
 
 model    = PLS.fit(xtrn, ytrn, nfactors = 3)
-pred     = PLS.transform(model, xtst)
+pred     = PLS.predict(model, xtst)
 
 
 println("[PLS] mae error :", mean(abs.(ytst .- pred)))
