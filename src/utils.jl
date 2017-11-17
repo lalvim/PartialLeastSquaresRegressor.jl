@@ -1,9 +1,7 @@
-#module UTILS
 
-
-#export check_data,check_params,check_constant_cols,centralize_data,decentralize_data
 
 ## Auxiliary functions
+
 
 ## checks PLS input data and params
 function check_data{T<:AbstractFloat}(X::Matrix{T},Y::Union{Vector{T},Matrix{T}})
@@ -24,7 +22,7 @@ end
 
 function check_params(nfactors::Int, ncols::Int)
     nfactors >= 1 || error("nfactors must be a positive integer.")
-    nfactors <= ncols || error("nfactors must be less or equal to the number of columns of input data (X).")
+    nfactors <= ncols || warn("nfactors greater than ncols of input data (X) must generate numerical problems. However, can improve results if ok.")
 end
 
 ## checks constant columns
@@ -32,10 +30,8 @@ check_constant_cols{T<:AbstractFloat}(X::Matrix{T}) = size(X,1)==1 || (i=find(al
 check_constant_cols{T<:AbstractFloat}(Y::Vector{T}) = length(Y)==1 || length(unique(Y)) != 1 || error("Your target values are constant. All values are equal to $(Y[1])")
 
 ## Preprocessing data using z-score statistics. this is due to the fact that if X and Y are z-scored, than X'Y returns for W vector a pearson correlation for each element! :)
-centralize_data{T<:AbstractFloat}(D::Matrix{T}, m::Matrix{T}, s::Matrix{T})   = (D .-m)./s
+centralize_data{T<:AbstractFloat}(D::AbstractArray{T}, m::AbstractArray{T}, s::AbstractArray{T})   = (D .-m)./s
 centralize_data{T<:AbstractFloat}(D::Vector{T}, m::T, s::T)                   = (D -m)/s
 
-decentralize_data{T<:AbstractFloat}(D::Matrix{T}, m::Matrix{T}, s::Matrix{T}) = D .*s .+m
+decentralize_data{T<:AbstractFloat}(D::AbstractArray{T}, m::AbstractArray{T}, s::AbstractArray{T}) = D .*s .+m
 decentralize_data{T<:AbstractFloat}(D::Vector{T}, m::T, s::T)                 = D *s +m
-
-#end
