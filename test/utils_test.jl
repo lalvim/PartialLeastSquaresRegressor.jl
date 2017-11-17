@@ -33,9 +33,11 @@
 
 	@testset "checkdata" begin
 
-         try PLS.check_params(2,1) catch @test true end
-		 try PLS.check_params(-1,2) catch @test true end
-		 @test PLS.check_params(1,2)
+         try PLS.check_params(2,1,"linear") catch @test true end
+		 try PLS.check_params(-1,2,"linear") catch @test true end
+		 try PLS.check_params(1,2,"x") catch @test true end
+
+		 @test PLS.check_params(1,2,"linear")
 
 	end
 

@@ -2,6 +2,7 @@ PLS.jl
 ======
 
 A Partial Least Squares Regressor package. Contains PLS1, PLS2 and Kernel PLS2 NIPALS algorithms.
+Can be used mainly for regression. However, for classification task, binarizing targets and then obtaining multiple targets, you can apply KPLS. 
 
 
 | **PackageEvaluator**            | **Build Status**                          |
@@ -42,7 +43,7 @@ Examples
     X_test         = [6 8; 8 10; 10 12.0]
 
     model          = PLS.fit(X_train,Y_train,nfactors=2)
-    Y_test         = PLS.transform(model,X_test)
+    Y_test         = PLS.predict(model,X_test)
 
     print("[PLS1] mae error : $(mean(abs.(Y_test .- Y_pred)))")
 
@@ -53,13 +54,13 @@ Examples
     X_test         = [6 8; 8 10; 10 12.0]
 
     model          = PLS.fit(X_train,Y_train,nfactors=2)
-    Y_test         = PLS.transform(model,X_test)
+    Y_test         = PLS.predict(model,X_test)
 
     print("[PLS2] mae error : $(mean(abs.(Y_test .- Y_pred)))")
 
     # nonlinear learning with multiple targets
     model          = PLS.fit(X_train,Y_train,nfactors=2,kernel="gaussian",width=0.1)
-    Y_test         = PLS.transform(model,X_test)
+    Y_test         = PLS.predict(model,X_test)
 
     print("[KPLS] mae error : $(mean(abs.(Y_test .- Y_pred)))")
 

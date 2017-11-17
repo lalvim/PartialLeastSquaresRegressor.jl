@@ -6,12 +6,12 @@
 	Ytr        = [-2; -4; -6.0]
 	Xt         = [6 -8; 8 -10; 10.0 -12]
 	model1    = PLS.fit(Xtr,Ytr,nfactors=2)
-	pred1     = PLS.transform(model1,Xt)
+	pred1     = PLS.predict(model1,Xt)
 
 	PLS.save(model1)
 	model2    = PLS.load()
 
-	pred2     = PLS.transform(model2,Xt)
+	pred2     = PLS.predict(model2,Xt)
     rm(PLS.MODEL_FILENAME)
 	@test all(pred1 .== pred2)
 
@@ -26,7 +26,7 @@ end
 		X        = [1; 2; 3.0][:,:]
 		Y        = [1; 2; 3.0]
 		model    = PLS.fit(X,Y,nfactors=1)
-		pred     = PLS.transform(model,X)
+		pred     = PLS.predict(model,X)
 		@test isequal(round.(pred),[1; 2; 3.0])
 
 	end
@@ -46,13 +46,13 @@ end
 		X        = [1 2; 2 4; 4.0 6]
 		Y        = [2; 4; 6.0]
 		model    = PLS.fit(X,Y,nfactors=2)
-		pred     = PLS.transform(model,X)
+		pred     = PLS.predict(model,X)
 		@test isequal(round.(pred),[2; 4; 6.0])
 
 		X           = [1 -2; 2 -4; 4.0 -6]
 		Y           = [-2; -4; -6.0]
 		model       = PLS.fit(X,Y,nfactors=2)
-		pred        = PLS.transform(model,X)
+		pred        = PLS.predict(model,X)
 		@test isequal(round.(pred),[-2; -4; -6.0])
 
 	end
@@ -64,7 +64,7 @@ end
 		Ytr        = [2; 4; 6.0]
 		Xt         = [6 8; 8 10; 10.0 12] # same sample
 		model    = PLS.fit(Xtr,Ytr,nfactors=2)
-		pred     = PLS.transform(model,Xt)
+		pred     = PLS.predict(model,Xt)
 		@test isequal(round.(pred),[8; 10; 12.0])
 
 		Xtr        = [1 2; 2 4.0; 4.0 6; 6 8]
@@ -72,7 +72,7 @@ end
 		Xt         = [1 2; 2 4.0] # a subsample
 
 		model    = PLS.fit(Xtr,Ytr,nfactors=2,centralize=true)
-		pred     = PLS.transform(model,Xt)
+		pred     = PLS.predict(model,Xt)
 		@test isequal(round.(pred),[2; 4])
 
 	end
@@ -90,7 +90,7 @@ end;
 		Ytr        = [2; 4; 6.0]
 		Xt         = [6 8; 8 10; 10.0 12]
 		model    = PLS.fit(Xtr,Ytr,nfactors=2)
-		pred     = PLS.transform(model,Xt)
+		pred     = PLS.predict(model,Xt)
 		@test isequal(round.(pred),[8; 10; 12.0])
 
 
@@ -98,7 +98,7 @@ end;
 		Ytr        = [4; 6; 8.0]
 		Xt         = [6 8; 8 10; 10.0 12]
 		model    = PLS.fit(Xtr,Ytr,nfactors=2)
-		pred     = PLS.transform(model,Xt)
+		pred     = PLS.predict(model,Xt)
 		@test isequal(round.(pred),[10; 12; 14.0])
 
 
@@ -112,7 +112,7 @@ end;
 		Ytr        = [-2; -4; -6.0]
 		Xt         = [6 -8; 8 -10; 10.0 -12]
 		model    = PLS.fit(Xtr,Ytr,nfactors=2)
-		pred     = PLS.transform(model,Xt)
+		pred     = PLS.predict(model,Xt)
 		@test isequal(round.(pred),[-8; -10; -12.0])
 
 
@@ -120,7 +120,7 @@ end;
 		Ytr        = [-4; -6; -8.0]
 		Xt         = [6 -8; 8 -10; 10.0 -12]
 		model    = PLS.fit(Xtr,Ytr,nfactors=2)
-		pred     = PLS.transform(model,Xt)
+		pred     = PLS.predict(model,Xt)
 		@test isequal(round.(pred),[-10; -12; -14.0])
 
 	end

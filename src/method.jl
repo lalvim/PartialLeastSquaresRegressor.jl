@@ -20,19 +20,19 @@ function fit{T<:AbstractFloat}(X::AbstractArray{T},
                                nfactors::Int          = NFACT,
                                copydata::Bool         = true,
                                centralize::Bool       = true,
-                               kernel                 = "",
+                               kernel                 = "linear",
                                width                  = 1.0)
     X = X[:,:]
     check_constant_cols(X)
     check_constant_cols(Y)
 
-    check_params(nfactors, size(X,2))
+    check_params(nfactors, size(X,2),kernel)
 
     check_data(X, Y)
 
     Xi =  (copydata ? deepcopy(X) : X)
     Yi =  (copydata ? deepcopy(Y) : Y)
-    if kernel == "gaussian"
+    if kernel == "rbf"
        model = Model(Xi,Yi,
                  nfactors,
                  centralize,
@@ -64,7 +64,7 @@ A Partial Least Squares predictor.
 # Arguments
 - `copydata::Bool = true`: If you want to use the same input matrix or a copy.
 """
-function transform{T<:AbstractFloat}(model::PLSModel{T},
+function predict{T<:AbstractFloat}(model::PLSModel{T},
                                     X::AbstractArray{T};
                                     copydata::Bool=true)
 

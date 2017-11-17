@@ -13,8 +13,8 @@
         z_noisy  = z_pure + noise
         X        = collect(x_values)
         Y        = z_noisy #z_pure
-        model    = PLS.fit(X,Y,nfactors=1,kernel="gaussian",width=0.01)
-    	Y_pred   = PLS.transform(model,X)
+        model    = PLS.fit(X,Y,nfactors=1,kernel="rbf",width=0.01)
+    	Y_pred   = PLS.predict(model,X)
         @test mean(abs.(Y .- Y_pred)) < 1e-2
 
     end
@@ -24,14 +24,14 @@
 
         X        = [1 2; 2 4; 4.0 6]
         Y        = [-2; -4; -6.0]
-        model    = PLS.fit(X,Y,nfactors=1,kernel="gaussian",width=0.01)
-    	Y_pred     = PLS.transform(model,X)
+        model    = PLS.fit(X,Y,nfactors=1,kernel="rbf",width=0.01)
+    	Y_pred     = PLS.predict(model,X)
         @test mean(abs.(Y .- Y_pred)) < 1e-6
 
         X        = [1 2; 2 4; 4.0 6]
         Y        = [2; 4; 6.0]
-        model    = PLS.fit(X,Y,nfactors=1,kernel="gaussian",width=0.01)
-    	Y_pred     = PLS.transform(model,X)
+        model    = PLS.fit(X,Y,nfactors=1,kernel="rbf",width=0.01)
+    	Y_pred     = PLS.predict(model,X)
         @test mean(abs.(Y .- Y_pred)) < 1e-6
 
     end
@@ -41,14 +41,14 @@
 
         X        = [1; 2; 3.0]
         Y        = [1 1; 2 2; 3 3.0]
-        model    = PLS.fit(X,Y,nfactors=1,kernel="gaussian",width=0.01)
-    	Y_pred     = PLS.transform(model,X)
+        model    = PLS.fit(X,Y,nfactors=1,kernel="rbf",width=0.01)
+    	Y_pred     = PLS.predict(model,X)
         @test mean(abs.(Y .- Y_pred)) < 1e-6
 
         X        = [1; 2; 3.0]
         Y        = [1 -1; 2 -2; 3 -3.0]
-        model    = PLS.fit(X,Y,nfactors=1,kernel="gaussian",width=0.01)
-    	Y_pred     = PLS.transform(model,X)
+        model    = PLS.fit(X,Y,nfactors=1,kernel="rbf",width=0.01)
+    	Y_pred     = PLS.predict(model,X)
         @test mean(abs.(Y .- Y_pred)) < 1e-6
 
         @testset "Linear Prediction Tests " begin
@@ -56,14 +56,14 @@
 
         X        = [1 2; 2 4; 4 6.0]
         Y        = [4 2;6 4;8 6.0]
-        model    = PLS.fit(X,Y,nfactors=1,kernel="gaussian",width=0.01)
-    	Y_pred     = PLS.transform(model,X)
+        model    = PLS.fit(X,Y,nfactors=1,kernel="rbf",width=0.01)
+    	Y_pred     = PLS.predict(model,X)
         @test mean(abs.(Y .- Y_pred)) < 1e-6
 
         X           = [1 -2; 2 -4; 4 -6.0]
         Y           = [-4 -2;-6 -4;-8 -6.0]
-        model    = PLS.fit(X,Y,nfactors=1,kernel="gaussian",width=0.01)
-    	Y_pred     = PLS.transform(model,X)
+        model    = PLS.fit(X,Y,nfactors=1,kernel="rbf",width=0.01)
+    	Y_pred     = PLS.predict(model,X)
         @test mean(abs.(Y .- Y_pred)) < 1e-6
 
 
@@ -82,13 +82,13 @@ end;
 	Xtr        = [1 -2; 2 -4; 4.0 -6]
 	Ytr        = [-2; -4; -6.0]
 	Xt         = [6 -8; 8 -10; 10.0 -12]
-	model1    = PLS.fit(Xtr,Ytr,nfactors=1,kernel="gaussian",width=0.01)
-	pred1     = PLS.transform(model1,Xt)
+	model1    = PLS.fit(Xtr,Ytr,nfactors=1,kernel="rbf",width=0.01)
+	pred1     = PLS.predict(model1,Xt)
 
 	PLS.save(model1)
 	model2    = PLS.load()
 
-	pred2     = PLS.transform(model2,Xt)
+	pred2     = PLS.predict(model2,Xt)
     rm(PLS.MODEL_FILENAME)
 	@test all(pred1 .== pred2)
 
