@@ -1,8 +1,7 @@
 using PLS
 using Base.Test
-reload("PLS")
 
-include("test/pls1_test.jl")
-include("test/pls2_test.jl")
-include("test/utils_test.jl")
-include("test/kpls_test.jl")
+include("./pls1_test.jl")
+include("./pls2_test.jl")
+include("./utils_test.jl")
+include("./kpls_test.jl")

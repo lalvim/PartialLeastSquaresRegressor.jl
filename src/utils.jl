@@ -22,7 +22,7 @@ end
 
 function check_params(nfactors::Int, ncols::Int)
     nfactors >= 1 || error("nfactors must be a positive integer.")
-    nfactors <= ncols || error("nfactors must be less or equal to the number of columns of input data (X).")
+    nfactors <= ncols || warn("nfactors greater than ncols of input data (X) must generate numerical problems. However, can improve results if ok.")
 end
 
 ## checks constant columns

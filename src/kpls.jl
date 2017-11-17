@@ -9,7 +9,7 @@
 end
 
 # A kernel matrix
-function ΦΦ{T<:AbstractFloat}(X::Matrix{T},
+function ΦΦ{T<:AbstractFloat}(X::AbstractArray{T},
                               r::T=1.0)
     n = size(X,1)
     K = zeros(n,n)
@@ -24,17 +24,14 @@ function ΦΦ{T<:AbstractFloat}(X::Matrix{T},
 end
 
 # A kernel matrix for test data
-function ΦΦ{T<:AbstractFloat}(X::Matrix{T},
-                              Z::Matrix{T},
+function ΦΦ{T<:AbstractFloat}(X::AbstractArray{T},
+                              Z::AbstractArray{T},
                               r::T=1.0)
     (nx,mx)    = size(X)
     (nz,mz)    = size(Z)
     K          = zeros(T,nz, nx)
-    #meanx      = mean(X,1)
-    #meanx      = reshape(meanx,size(Z[1, :]))
     for i=1:nz
         for j=1:nx
-            #K[i, j] = Φ(Z[i, :] - meanx, X[j, :],r)
             K[i, j] = Φ(Z[i, :], X[j, :],r)
         end
     end
@@ -43,7 +40,7 @@ end
 
 ## the learning algorithm: KPLS2 - multiple targets
 function trainer{T<:AbstractFloat}(model::KPLSModel{T},
-                                       X::Matrix{T},
+                                       X::AbstractArray{T},
                                        Y::AbstractArray{T};
                                        ignore_failures       = true,
                                        tol                   = 1e-6,
@@ -94,10 +91,10 @@ function trainer{T<:AbstractFloat}(model::KPLSModel{T},
         if iteration_count >= max_iterations
             if ignore_failures
                 nfactors = j
-                print("Found with less factors. Overall factors = $(nfactors)")
+                warn("KPLS: Found with less factors. Overall factors = $(nfactors)")
                 break
             else
-                error("KPLS failed to converge for component: $(components+1)")
+                error("KPLS: failed to converge for component: $(nfactors+1)")
             end
         end
         Tj[:, j] = t
@@ -105,12 +102,10 @@ function trainer{T<:AbstractFloat}(model::KPLSModel{T},
         U[:, j] = u
 
         P[:, j]  = (K_j' * w) / (w'w)
-        #println("outer: ",t'*t)
         deflator = eye(n) - t'*t
         K_j      = deflator * K_j * deflator
-        #println("outer: ",t * q')
         Y        = Y - t * q'
-        #println("Y = ",Y)
+
     end
     # If iteration stopped early because of failed convergence, only
     # the actual components will be copied
@@ -123,32 +118,32 @@ function trainer{T<:AbstractFloat}(model::KPLSModel{T},
     model.nfactors = nfactors
     model.X        = X # unfortunately it is necessary on the prediction phase
     model.K        = K # unfortunately it is necessary on the prediction phase
-    model.B        = U * inv(Tj' * K * U) * Q'
-
-    #println("Saiu!")
-    #println("regressor: ",model.B)
-    #println("K: ",model.K)
+    try
+       model.B        = U * inv(Tj' * K * U) * Q'
+    catch
+       error("KPLS: Not able to compute inverse.
+             Maybe nfactors is greater than ncols of input data (X) or
+             this matrix is not invertible.
+             ")
+    end
 
     return model
 
 end
 
 function predictor{T<:AbstractFloat}(model::KPLSModel{T},
-                                         Z::DenseMatrix{T})
+                                         Z::AbstractArray{T})
 
-    X,K,B      = model.X,model.K,model.B
+    X,K,B,w      = model.X,model.K,model.B,model.width
     (nx,mx)    = size(X)
     (nz,mz)    = size(Z)
 
-    Kt         = ΦΦ(X,Z) # kernel matrix
+    Kt         = ΦΦ(X,Z,w) # kernel matrix
 
     # centralize
     c = (1.0 / nx) * ones(T,nz,nx)
 
     Kt = (Kt - c * K) * (eye(T,nx) - (1.0 / nx) * ones(T,nx,nx))
-
-    # pq?
-    #Kt .-= mean(Kt,1)
 
     Y = Kt * B
 

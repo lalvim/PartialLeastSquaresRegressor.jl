@@ -1,7 +1,7 @@
 PLS.jl
 ======
 
-A Partial Least Squares Regressor package
+A Partial Least Squares Regressor package. Contains PLS1, PLS2 and Kernel PLS2 NIPALS algorithms.
 
 
 | **PackageEvaluator**            | **Build Status**                          |
@@ -58,7 +58,7 @@ Examples
     print("[PLS2] mae error : $(mean(abs.(Y_test .- Y_pred)))")
 
     # nonlinear learning with multiple targets
-    model          = PLS.fit(X_train,Y_train,nfactors=2,kernel="gaussian",width=1.0)
+    model          = PLS.fit(X_train,Y_train,nfactors=2,kernel="gaussian",width=0.1)
     Y_test         = PLS.transform(model,X_test)
 
     print("[KPLS] mae error : $(mean(abs.(Y_test .- Y_pred)))")

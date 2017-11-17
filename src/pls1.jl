@@ -2,7 +2,7 @@
 
 ## the learning algorithm: PLS1 - single target
 function trainer{T<:AbstractFloat}(model::PLS1Model{T},
-                                   X::Matrix{T}, Y::Vector{T})
+                                   X::AbstractArray{T}, Y::Vector{T})
     W,b,P  = model.W,model.b,model.P
     nfactors = model.nfactors
     for i = 1:nfactors
@@ -26,7 +26,7 @@ end
 
 
 function predictor{T<:AbstractFloat}(model::PLS1Model{T},
-                                     X::DenseMatrix{T})
+                                     X::AbstractArray{T})
 
     W,b,P    = model.W,model.b,model.P
     nfactors = model.nfactors

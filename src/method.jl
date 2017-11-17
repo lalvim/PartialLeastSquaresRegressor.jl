@@ -4,7 +4,7 @@ const NFACT          = 10              # default number of factors if it is not 
 
 
 """
-    fit(X::Matrix{:<AbstractFloat},Y::Vector{:<AbstractFloat}; nfactors::Int=10,copydata::Bool=true,centralize::Bool=true)
+    fit(X::Matrix{:<AbstractFloat},Y::Vector{:<AbstractFloat}; nfactors::Int=10,copydata::Bool=true,centralize::Bool=true,kernel="",width=1.0)
 
 A Partial Least Squares learning algorithm.
 
@@ -15,14 +15,14 @@ A Partial Least Squares learning algorithm.
 - `kernel::AbstractString = "gaussian"`: If you want to apply a nonlinear PLS with gaussian Kernel.
 - `width::AbstractFloat = 1.0`: Gaussian Kernel width (Only if kernel="gaussian").
 """
-function fit{T<:AbstractFloat}(X::Matrix{T},
+function fit{T<:AbstractFloat}(X::AbstractArray{T},
                                Y::AbstractArray{T};
                                nfactors::Int          = NFACT,
                                copydata::Bool         = true,
                                centralize::Bool       = true,
                                kernel                 = "",
                                width                  = 1.0)
-
+    X = X[:,:]
     check_constant_cols(X)
     check_constant_cols(Y)
 
@@ -65,8 +65,10 @@ A Partial Least Squares predictor.
 - `copydata::Bool = true`: If you want to use the same input matrix or a copy.
 """
 function transform{T<:AbstractFloat}(model::PLSModel{T},
-                                    X::Matrix{T};
+                                    X::AbstractArray{T};
                                     copydata::Bool=true)
+
+    X = X[:,:]
     check_data(X,model.nfeatures)
 
     Xi =  (copydata ? deepcopy(X) : X)

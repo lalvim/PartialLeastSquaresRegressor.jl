@@ -23,7 +23,7 @@ end
 
 	@testset "Single Column Prediction Test" begin
 
-		X        = [1; 2; 3.0][:,:]
+		X        = [1; 2; 3.0]
 		Y        = [1 1; 2 2; 3 3.0]
 		model    = PLS.fit(X,Y,nfactors=1)
 		pred     = PLS.transform(model,X)
