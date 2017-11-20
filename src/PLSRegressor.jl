@@ -1,5 +1,5 @@
 # Partial Least Squares (PLS1 and PLS2 NIPALS version)
-module PLS
+module PLSRegressor
 
 using JLD
 

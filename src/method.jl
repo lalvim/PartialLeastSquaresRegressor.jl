@@ -57,7 +57,7 @@ end
 
 
 """
-    transform(model::PLS.Model; X::Matrix{:<AbstractFloat}; copydata::Bool=true)
+    transform(model::PLSRegressor.Model; X::Matrix{:<AbstractFloat}; copydata::Bool=true)
 
 A Partial Least Squares predictor.
 
