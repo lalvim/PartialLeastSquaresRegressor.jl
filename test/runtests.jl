@@ -1,4 +1,4 @@
-using PLS
+using PLSRegressor
 using Base.Test
 
 include("./pls1_test.jl")

@@ -6,14 +6,14 @@
 	Xtr        = [1 2;2 4;3 6;6 12;7 14.0]
 	Ytr        = [2 2;4 4;6 6;12 12;14 14.0]
 	Xt         = [4 8;5 10.0]
-	model1    = PLS.fit(Xtr,Ytr,nfactors=2)
-	pred1     = PLS.predict(model1,Xt)
+	model1    = PLSRegressor.fit(Xtr,Ytr,nfactors=2)
+	pred1     = PLSRegressor.predict(model1,Xt)
 
-	PLS.save(model1)
-	model2    = PLS.load()
+	PLSRegressor.save(model1)
+	model2    = PLSRegressor.load()
 
-	pred2     = PLS.predict(model2,Xt)
-    rm(PLS.MODEL_FILENAME)
+	pred2     = PLSRegressor.predict(model2,Xt)
+    rm(PLSRegressor.MODEL_FILENAME)
 	@test all(pred1 .== pred2)
 
 
@@ -25,8 +25,8 @@ end
 
 		X        = [1; 2; 3.0]
 		Y        = [1 1; 2 2; 3 3.0]
-		model    = PLS.fit(X,Y,nfactors=1)
-		pred     = PLS.predict(model,X)
+		model    = PLSRegressor.fit(X,Y,nfactors=1)
+		pred     = PLSRegressor.predict(model,X)
 
 		@test isequal(round.(pred),[1 1; 2 2; 3 3.0])
 
@@ -36,7 +36,7 @@ end
 
 		X        = [1 3;2 1;3 2.0]
 		Y        = [1 1; 1 1; 1 1.0]
-		try PLS.fit(X,Y,nfactors=2) catch @test true end
+		try PLSRegressor.fit(X,Y,nfactors=2) catch @test true end
 
 	end
 
@@ -45,14 +45,14 @@ end
 
 		X        = [1 2; 2 4; 4 6.0]
 		Y        = [4 2;6 4;8 6.0]
-		model    = PLS.fit(X,Y,nfactors=2)
-		pred     = PLS.predict(model,X)
+		model    = PLSRegressor.fit(X,Y,nfactors=2)
+		pred     = PLSRegressor.predict(model,X)
 		@test isequal(round.(pred),[4 2;6 4;8 6.0])
 
 		X           = [1 -2; 2 -4; 4 -6.0]
 		Y           = [-4 -2;-6 -4;-8 -6.0]
-		model       = PLS.fit(X,Y,nfactors=2)
-		pred        = PLS.predict(model,X)
+		model       = PLSRegressor.fit(X,Y,nfactors=2)
+		pred        = PLSRegressor.predict(model,X)
 		@test isequal(round.(pred),[-4 -2;-6 -4;-8 -6.0])
 
 
@@ -70,16 +70,16 @@ end
 		Xtr        = [1 2;2 4;3 6;6 12;7 14.0]
 		Ytr        = [2 2;4 4;6 6;12 12;14 14.0]
 		Xt         = [4 8;5 10.0]
-		model    = PLS.fit(Xtr,Ytr,nfactors=2)
-		pred     = PLS.predict(model,Xt)
+		model    = PLSRegressor.fit(Xtr,Ytr,nfactors=2)
+		pred     = PLSRegressor.predict(model,Xt)
 		@test isequal(round.(pred),[8 8;10 10.0])
 
 
 		Xtr        = [1 2;2 4;3 6;6 12;7 14.0]
 		Ytr        = [2 4;4 6;6 8;12 14;14 16.0]
 		Xt         = [4 8;5 10.0]
-		model    = PLS.fit(Xtr,Ytr,nfactors=2)
-		pred     = PLS.predict(model,Xt)
+		model    = PLSRegressor.fit(Xtr,Ytr,nfactors=2)
+		pred     = PLSRegressor.predict(model,Xt)
 		@test isequal(round.(pred),[8 10;10 12.0])
 
 
@@ -91,16 +91,16 @@ end
 		Xtr        = [1 -2;2 -4;3 -6;6 -12;7 -14.0]
 		Ytr        = [2 -2;4 -4;6 -6;12 -12;14 -14.0]
 		Xt         = [4 -8;5 -10.0]
-		model    = PLS.fit(Xtr,Ytr,nfactors=2)
-		pred     = PLS.predict(model,Xt)
+		model    = PLSRegressor.fit(Xtr,Ytr,nfactors=2)
+		pred     = PLSRegressor.predict(model,Xt)
 		@test isequal(round.(pred),[8 -8;10 -10.0])
 
 
 		Xtr        = [1 -2;2 -4;3 -6;6 -12;7 -14.0]
 		Ytr        = [2 -4;4 -6;6 -8;12 -14;14 -16.0]
 		Xt         = [4 -8;5 -10.0]
-		model    = PLS.fit(Xtr,Ytr,nfactors=2)
-		pred     = PLS.predict(model,Xt)
+		model    = PLSRegressor.fit(Xtr,Ytr,nfactors=2)
+		pred     = PLSRegressor.predict(model,Xt)
 		@test isequal(round.(pred),[8 -10;10 -12.0])
 
 

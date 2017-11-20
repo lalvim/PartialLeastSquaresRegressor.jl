@@ -1,7 +1,7 @@
 using MultivariateStats
-using PLS
+using PLSRegressor
 
-const defdir = PLS.dir("datasets")
+const defdir = PLSRegressor.dir("datasets")
 
 function gethousingdata(dir, filename)
     url = "https://archive.ics.uci.edu/ml/machine-learning-databases/housing/housing.data"
@@ -38,8 +38,8 @@ end
 
 (xtrn, ytrn, xtst, ytst) = loaddata()
 
-model    = PLS.fit(xtrn, ytrn, nfactors = 3)
-pred     = PLS.predict(model, xtst)
+model    = PLSRegressor.fit(xtrn, ytrn, nfactors = 3)
+pred     = PLSRegressor.predict(model, xtst)
 
 
 println("[PLS] mae error :", mean(abs.(ytst .- pred)))
@@ -51,5 +51,5 @@ yp = xtst * a + b
 println("[LLS] mae error :",mean(abs.(ytst .- yp)))
 
 ### if you want to save or load model use this
-#PLS.save(model,filename="/tmp/pls_model.jld",modelname="pls_model")
-#model = PLS.load(filename="/tmp/pls_model.jld",modelname="pls_model")
+#PLSRegressor.save(model,filename="/tmp/pls_model.jld",modelname="pls_model")
+#model = PLSRegressor.load(filename="/tmp/pls_model.jld",modelname="pls_model")

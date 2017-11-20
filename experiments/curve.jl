@@ -4,7 +4,7 @@
 
 ### Example extracted from a python KPLS implementation: https://github.com/jhumphry/regressions/blob/master/examples/kpls_example.py
 
-using PLS
+using PLSRegressor
 using Gadfly
 
 srand(1)
@@ -25,8 +25,8 @@ global best_g = 10
 for g in [1,2],
     w in linspace(0.01,3,10)
     print(".")
-    model      = PLS.fit(X,Y,centralize=true,nfactors=g,kernel="rbf",width=w)
-    Y_pred     = PLS.predict(model,X)
+    model      = PLSRegressor.fit(X,Y,centralize=true,nfactors=g,kernel="rbf",width=w)
+    Y_pred     = PLSRegressor.predict(model,X)
     mae = mean(abs.(Y .- Y_pred))
     if mae < min_mae
        min_mae = mae

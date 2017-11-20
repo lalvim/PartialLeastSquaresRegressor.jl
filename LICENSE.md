@@ -1,4 +1,4 @@
-The PLS.jl package is licensed under the MIT "Expat" License:
+The PLSRegressor.jl package is licensed under the MIT "Expat" License:
 
 > Copyright (c) 2017: Leandro Alvim.
 >
