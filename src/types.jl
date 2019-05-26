@@ -1,3 +1,6 @@
+#### Libs
+using Statistics
+
 #### Constants
 const MODEL_FILENAME = "pls_model.jld" # jld filename for storing the model
 const MODEL_ID       = "pls_model"     # if od the model in the filesystem jld data
@@ -22,19 +25,19 @@ end
 
 
 ## PLS1: constructor
-function Model{T<:AbstractFloat}(X::Matrix{T},
-                                 Y::Vector{T},
-                                 nfactors::Int,
-                                 centralize::Bool)
+function Model(X::Matrix{T},
+               Y::Vector{T},
+               nfactors::Int,
+               centralize::Bool) where T<:AbstractFloat
     (nrows,ncols) = size(X)
     ## Allocation
     return PLS1Model(zeros(T,ncols,nfactors), ## W
             zeros(T,1,nfactors),       ## b
             zeros(T,ncols,nfactors), ## P
             nfactors,
-            mean(X,1),
+            mean(X,dims=1),
             mean(Y),
-            std(X,1),
+            std(X,dims=1),
             std(Y),
             ncols,
             centralize)
@@ -59,10 +62,10 @@ end
 
 
 ## PLS2: constructor
-function Model{T<:AbstractFloat}(X::Matrix{T},
-                                 Y::Matrix{T}, # this is the diference from PLS1 param constructor!
-                                 nfactors::Int,
-                                 centralize::Bool)
+function Model(X::Matrix{T},
+        Y::Matrix{T}, # this is the diference from PLS1 param constructor!
+        nfactors::Int,
+        centralize::Bool) where T<:AbstractFloat
     (nrows,ncols) = size(X)
     (n,m)         = size(Y)
     ## Allocation
@@ -71,10 +74,10 @@ function Model{T<:AbstractFloat}(X::Matrix{T},
             zeros(T,n,nfactors),       ## b
             zeros(T,ncols,nfactors),   ## P
             nfactors,
-            mean(X,1),
-            mean(Y,1),
-            std(X,1),
-            std(Y,1),
+            mean(X,dims=1),
+            mean(Y,dims=1),
+            std(X,dims=1),
+            std(Y,dims=1),
             ncols,
             m,
             centralize)
@@ -100,12 +103,12 @@ end
 
 
 ## KPLS: constructor
-function Model{T<:AbstractFloat}(X::Matrix{T},
-                                 Y::AbstractArray{T}, # this is the diference from PLS1 param constructor!
-                                 nfactors::Int,
-                                 centralize::Bool,
-                                 kernel::String,
-                                 width::Float64)
+function Model(X::Matrix{T},
+            Y::AbstractArray{T}, # this is the diference from PLS1 param constructor!
+            nfactors::Int,
+            centralize::Bool,
+            kernel::String,
+            width::Float64) where T<:AbstractFloat
     (nrows,ncols) = size(X)
     (n,m)         = size(Y[:,:])
     ## Allocation
@@ -113,10 +116,10 @@ function Model{T<:AbstractFloat}(X::Matrix{T},
             zeros(T,nrows,nrows),          ## K
             zeros(T,ncols,m),              ## B
             nfactors,
-            mean(X,1),
-            mean(Y,1),
-            std(X,1),
-            std(Y,1),
+            mean(X,dims=1),
+            mean(Y,dims=1),
+            std(X,dims=1),
+            std(Y,dims=1),
             ncols,
             m,
             centralize,

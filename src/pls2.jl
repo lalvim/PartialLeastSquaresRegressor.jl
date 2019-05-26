@@ -1,8 +1,8 @@
 
 
 ## the learning algorithm: PLS2 - multiple targets
-function trainer{T<:AbstractFloat}(model::PLS2Model{T},
-                                   X::AbstractArray{T}, Y::Matrix{T})
+function trainer(model::PLS2Model{T},
+                X::AbstractArray{T}, Y::Matrix{T}) where T<:AbstractFloat
     W,b,P,Q  = model.W,model.b,model.P,model.Q
     model.ntargetcols = size(Y,2)
     nfactors = model.nfactors
@@ -47,8 +47,8 @@ end
 
 
 
-function predictor{T<:AbstractFloat}(model::PLS2Model{T},
-                                     X::AbstractArray{T})
+function predictor(model::PLS2Model{T},
+                   X::AbstractArray{T}) where T<:AbstractFloat
 
     W,Q,P    = model.W,model.Q,model.P
     nfactors   = model.nfactors

@@ -1,8 +1,8 @@
 
 
 ## the learning algorithm: PLS1 - single target
-function trainer{T<:AbstractFloat}(model::PLS1Model{T},
-                                   X::AbstractArray{T}, Y::Vector{T})
+function trainer(model::PLS1Model{T},
+                 X::AbstractArray{T}, Y::Vector{T}) where T<:AbstractFloat
     W,b,P  = model.W,model.b,model.P
     nfactors = model.nfactors
     for i = 1:nfactors
@@ -25,8 +25,8 @@ function trainer{T<:AbstractFloat}(model::PLS1Model{T},
 end
 
 
-function predictor{T<:AbstractFloat}(model::PLS1Model{T},
-                                     X::AbstractArray{T})
+function predictor(model::PLS1Model{T},
+                   X::AbstractArray{T}) where T<:AbstractFloat
 
     W,b,P    = model.W,model.b,model.P
     nfactors = model.nfactors

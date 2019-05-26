@@ -1,5 +1,5 @@
 using PLSRegressor
-using Base.Test
+using Test
 
 include("./pls1_test.jl")
 include("./pls2_test.jl")
