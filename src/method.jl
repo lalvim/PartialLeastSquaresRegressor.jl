@@ -45,7 +45,6 @@ function fit(X::AbstractArray{T},
                  nfactors,
                  centralize)
     end
-    println("size aqui",size(Yi))
 
     Xi =  (centralize ? centralize_data(Xi,model.mx,model.sx) : Xi)
     Yi =  (centralize ? centralize_data(Yi,model.my,model.sy) : Yi)

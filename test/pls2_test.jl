@@ -36,7 +36,11 @@ end
 
 		X        = [1 3;2 1;3 2.0]
 		Y        = [1 1; 1 1; 1 1.0]
-		try PLSRegressor.fit(X,Y,nfactors=2) catch @test true end
+		try
+			PLSRegressor.fit(X,Y,nfactors=2)
+		catch
+			@test true
+		end
 
 	end
 
