@@ -66,10 +66,11 @@ Examples
 
 
     # if you want to save your model
-    PLSRegressor.save(model,filename="/tmp/pls_model.jld")
+    PLSRegressor.save(model,filename=joinpath(homedir(),"pls_model.jld"))
 
     # if you want to load back your model
-    model = PLSRegressor.load(filename="/tmp/pls_model.jld")
+    model = PLSRegressor.load(filename=joinpath(homedir(),"pls_model.jld"))
+
 
 
 What is Implemented
