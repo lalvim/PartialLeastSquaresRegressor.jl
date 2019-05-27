@@ -1,10 +1,12 @@
-
+using Statistics
+using LinearAlgebra
+using Random
 
 @testset "KPLS Pediction Tests (in sample)" begin
 
     @testset "Test KPLS Single Non Linear Target" begin
 
-        srand(1)
+        seed!(1)
 
         z(x)     = 4.26 * (exp.(-x) - 4 * exp.(-2.0*x) + 3 * exp.(-3.0*x))
         x_values = linspace(0.0,3.5,100)
@@ -22,14 +24,14 @@
     @testset "Test KPLS Single Target (Linear Target)" begin
 
 
-        X        = [1 2; 2 4; 4.0 6]
-        Y        = [-2; -4; -6.0]
+        X        = [1 2; 2 4; 4.0 6][:,:]
+        Y        = [-2; -4; -6.0][:,:]
         model    = PLSRegressor.fit(X,Y,nfactors=1,kernel="rbf",width=0.01)
     	Y_pred     = PLSRegressor.predict(model,X)
         @test mean(abs.(Y .- Y_pred)) < 1e-6
 
-        X        = [1 2; 2 4; 4.0 6]
-        Y        = [2; 4; 6.0]
+        X        = [1 2; 2 4; 4.0 6][:,:]
+        Y        = [2; 4; 6.0][:,:]
         model    = PLSRegressor.fit(X,Y,nfactors=1,kernel="rbf",width=0.01)
     	Y_pred     = PLSRegressor.predict(model,X)
         @test mean(abs.(Y .- Y_pred)) < 1e-6
@@ -39,14 +41,14 @@
     @testset "Test KPLS Multiple Target (Linear Target)" begin
 
 
-        X        = [1; 2; 3.0]
-        Y        = [1 1; 2 2; 3 3.0]
+        X        = [1; 2; 3.0][:,:]
+        Y        = [1 1; 2 2; 3 3.0][:,:]
         model    = PLSRegressor.fit(X,Y,nfactors=1,kernel="rbf",width=0.01)
     	Y_pred     = PLSRegressor.predict(model,X)
         @test mean(abs.(Y .- Y_pred)) < 1e-6
 
-        X        = [1; 2; 3.0]
-        Y        = [1 -1; 2 -2; 3 -3.0]
+        X        = [1; 2; 3.0][:,:]
+        Y        = [1 -1; 2 -2; 3 -3.0][:,:]
         model    = PLSRegressor.fit(X,Y,nfactors=1,kernel="rbf",width=0.01)
     	Y_pred     = PLSRegressor.predict(model,X)
         @test mean(abs.(Y .- Y_pred)) < 1e-6
@@ -54,14 +56,14 @@
         @testset "Linear Prediction Tests " begin
 
 
-        X        = [1 2; 2 4; 4 6.0]
-        Y        = [4 2;6 4;8 6.0]
+        X        = [1 2; 2 4; 4 6.0][:,:]
+        Y        = [4 2;6 4;8 6.0][:,:]
         model    = PLSRegressor.fit(X,Y,nfactors=1,kernel="rbf",width=0.01)
     	Y_pred     = PLSRegressor.predict(model,X)
         @test mean(abs.(Y .- Y_pred)) < 1e-6
 
-        X           = [1 -2; 2 -4; 4 -6.0]
-        Y           = [-4 -2;-6 -4;-8 -6.0]
+        X           = [1 -2; 2 -4; 4 -6.0][:,:]
+        Y           = [-4 -2;-6 -4;-8 -6.0][:,:]
         model    = PLSRegressor.fit(X,Y,nfactors=1,kernel="rbf",width=0.01)
     	Y_pred     = PLSRegressor.predict(model,X)
         @test mean(abs.(Y .- Y_pred)) < 1e-6

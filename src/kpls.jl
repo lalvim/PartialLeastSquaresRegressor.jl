@@ -63,7 +63,7 @@ function trainer(model::KPLSModel{T},
     K = ΦΦ(X,width)
 
     # centralize kernel
-    c = eye(n) -  ones(Float64,n,n)*1.0/n
+    c = Matrix{Float64}(I, n, n) -  ones(Float64,n,n).*1.0/n
     K = c * K * c
 
     K_j = K[:,:]
@@ -103,7 +103,7 @@ function trainer(model::KPLSModel{T},
         U[:, j] = u
 
         P[:, j]  = (K_j' * w) / (w'w)
-        deflator = eye(n) - t'*t
+        deflator = Matrix{Float64}(I, n, n) .- t'*t
         K_j      = deflator * K_j * deflator
         Y        = Y - t * q'
 
@@ -142,9 +142,8 @@ function predictor(model::KPLSModel{T},
     Kt         = ΦΦ(X,Z,w) # kernel matrix
 
     # centralize
-    c = (1.0 / nx) * ones(T,nz,nx)
-
-    Kt = (Kt - c * K) * (eye(T,nx) - (1.0 / nx) * ones(T,nx,nx))
+    c = (1.0 / nx) .* ones(T,nz,nx)
+    Kt = (Kt - c * K) * (Matrix{T}(I, nx, nx) - (1.0 / nx) .* ones(T,nx,nx))
 
     Y = Kt * B
 
