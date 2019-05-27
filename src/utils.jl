@@ -36,4 +36,4 @@ centralize_data(D::Matrix{T}, m::Matrix{T}, s::Matrix{T}) where {T<:AbstractFloa
 centralize_data(D::Vector{T}, m::T, s::T)  where {T<:AbstractFloat} = (D .-m)./s
 
 decentralize_data(D::Matrix{T}, m::Matrix{T}, s::Matrix{T}) where {T<:AbstractFloat} = D .*s .+m
-decentralize_data(D::Vector{T}, m::T, s::T)  where {T<:AbstractFloat}               = D .*s +.m
+decentralize_data(D::Vector{T}, m::T, s::T)  where {T<:AbstractFloat}               = D .*s .+m
