@@ -1,4 +1,4 @@
-
+using Statistics
 
 @testset "Auxiliary Functions Test" begin
 
