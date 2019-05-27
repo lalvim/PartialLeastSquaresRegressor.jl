@@ -1,20 +1,20 @@
 using Statistics
 using LinearAlgebra
-using Random
+import Random
 
 @testset "KPLS Pediction Tests (in sample)" begin
 
     @testset "Test KPLS Single Non Linear Target" begin
 
-        seed!(1)
+        Random.seed!(1)
 
         z(x)     = 4.26 * (exp.(-x) - 4 * exp.(-2.0*x) + 3 * exp.(-3.0*x))
-        x_values = linspace(0.0,3.5,100)
+        x_values = Array(range(0.0,step=3.5,length=100))
         z_pure   = z(x_values)
-        noise    = randn(100)
+        noise    = Random.randn(100)
         z_noisy  = z_pure + noise
-        X        = collect(x_values)
-        Y        = z_noisy #z_pure
+        X        = collect(x_values)[:,:]
+        Y        = z_noisy[:,:] #z_pure
         model    = PLSRegressor.fit(X,Y,nfactors=1,kernel="rbf",width=0.01)
     	Y_pred   = PLSRegressor.predict(model,X)
         @test mean(abs.(Y .- Y_pred)) < 1e-2
@@ -82,7 +82,7 @@ end;
 
 
 	Xtr        = [1 -2; 2 -4; 4.0 -6]
-	Ytr        = [-2; -4; -6.0]
+	Ytr        = [-2; -4; -6.0][:,:]
 	Xt         = [6 -8; 8 -10; 10.0 -12]
 	model1    = PLSRegressor.fit(Xtr,Ytr,nfactors=1,kernel="rbf",width=0.01)
 	pred1     = PLSRegressor.predict(model1,Xt)
