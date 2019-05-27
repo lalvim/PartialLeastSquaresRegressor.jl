@@ -32,6 +32,8 @@ function fit(X::AbstractArray{T},
 
     Xi =  (copydata ? deepcopy(X) : X)
     Yi =  (copydata ? deepcopy(Y) : Y)
+
+
     if kernel == "rbf"
        model = Model(Xi,Yi,
                  nfactors,
@@ -43,6 +45,7 @@ function fit(X::AbstractArray{T},
                  nfactors,
                  centralize)
     end
+    println("size aqui",size(Yi))
 
     Xi =  (centralize ? centralize_data(Xi,model.mx,model.sx) : Xi)
     Yi =  (centralize ? centralize_data(Yi,model.my,model.sy) : Yi)
