@@ -51,7 +51,8 @@
 
          try
 			 PLSRegressor.check_params(2,1,"linear")
-		 catch @test true
+		 catch
+			 @test true
 		 end
 		 try
 			 PLSRegressor.check_params(-1,2,"linear")
