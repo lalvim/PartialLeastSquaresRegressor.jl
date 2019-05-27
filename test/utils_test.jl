@@ -4,10 +4,26 @@
 
     @testset "check constant columns" begin
 
-		try PLSRegressor.check_constant_cols(Matrix([1.0 1;1 2;1 3])) catch @test true end
-		try PLSRegressor.check_constant_cols(Matrix([1.0;1;1])) catch @test true end
-		try PLSRegressor.check_constant_cols(Matrix([1.0 2 3])) catch @test true end
-		try PLSRegressor.check_constant_cols([1.0; 1; 1]) catch @test true end
+		try
+			PLSRegressor.check_constant_cols(Matrix([1.0 1;1 2;1 3]))
+		catch
+			@test true
+		end
+		try
+			PLSRegressor.check_constant_cols(Matrix([1.0;1;1]))
+		catch
+			@test true
+		end
+		try
+			PLSRegressor.check_constant_cols(Matrix([1.0 2 3]))
+		catch
+			@test true
+		end
+		try
+			PLSRegressor.check_constant_cols([1.0; 1; 1])
+		catch
+			@test true
+		end
 
 		@test PLSRegressor.check_constant_cols([1.0 1;2 2;3 3])
 		@test PLSRegressor.check_constant_cols([1.0;2;3])
@@ -33,9 +49,20 @@
 
 	@testset "checkdata" begin
 
-         try PLSRegressor.check_params(2,1,"linear") catch @test true end
-		 try PLSRegressor.check_params(-1,2,"linear") catch @test true end
-		 try PLSRegressor.check_params(1,2,"x") catch @test true end
+         try
+			 PLSRegressor.check_params(2,1,"linear")
+		 catch @test true
+		 end
+		 try
+			 PLSRegressor.check_params(-1,2,"linear")
+		 catch
+			 @test true
+		 end
+		 try
+			 PLSRegressor.check_params(1,2,"x")
+		 catch
+			 @test true
+		 end
 
 		 @test PLSRegressor.check_params(1,2,"linear")
 
@@ -43,8 +70,16 @@
 
 	@testset "checkparams" begin
 
-		 try PLSRegressor.check_data(Matrix{Float64}(0,0), 0) catch @test true end
-		 try PLSRegressor.check_data(Matrix{Float64}(1,1), 10) catch @test true end
+		 try
+			 PLSRegressor.check_data(Matrix{Float64}(0,0), 0)
+		 catch
+			 @test true
+		 end
+		 try
+			 PLSRegressor.check_data(Matrix{Float64}(1,1), 10)
+		 catch
+			 @test true
+		 end
 		 @test PLSRegressor.check_data(Matrix{Float64}(1,1), 1)
 
 	end
