@@ -1,3 +1,4 @@
+using LinearAlgebra
 
 
 ## the learning algorithm: PLS2 - multiple targets
