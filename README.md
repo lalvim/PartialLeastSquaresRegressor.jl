@@ -41,9 +41,10 @@ Examples
     X_train        = [1 2; 2 4; 4 6.0]
     Y_train        = [4; 6; 8.0]
     X_test         = [6 8; 8 10; 10 12.0]
+    Y_test         = [10; 12; 14.0]
 
     model          = PLSRegressor.fit(X_train,Y_train,nfactors=2)
-    Y_test         = PLSRegressor.predict(model,X_test)
+    Y_pred         = PLSRegressor.predict(model,X_test)
 
     print("[PLS1] mae error : $(mean(abs.(Y_test .- Y_pred)))")
 
@@ -52,15 +53,16 @@ Examples
     X_train        = [1 2; 2 4; 4 6.0]
     Y_train        = [2 4;4 6;6 8.0]
     X_test         = [6 8; 8 10; 10 12.0]
+    Y_test         = [8 10; 10 12; 12 14.0]
 
     model          = PLSRegressor.fit(X_train,Y_train,nfactors=2)
-    Y_test         = PLSRegressor.predict(model,X_test)
+    Y_pred         = PLSRegressor.predict(model,X_test)
 
     print("[PLS2] mae error : $(mean(abs.(Y_test .- Y_pred)))")
 
     # nonlinear learning with multiple targets
     model          = PLSRegressor.fit(X_train,Y_train,nfactors=2,kernel="rbf",width=0.1)
-    Y_test         = PLSRegressor.predict(model,X_test)
+    Y_pred         = PLSRegressor.predict(model,X_test)
 
     print("[KPLS] mae error : $(mean(abs.(Y_test .- Y_pred)))")
 
