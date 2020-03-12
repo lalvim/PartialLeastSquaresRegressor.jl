@@ -109,7 +109,7 @@ version = "1.1.0"
 deps = ["JLD", "LinearAlgebra", "Random", "Statistics", "Test"]
 path = "/home/alvim/PLSRegressor.jl"
 uuid = "e010f91f-06b9-52b3-bed3-bb1da186bddc"
-version = "0.0.0"
+version = "1.1.0"
 
 [[Parameters]]
 deps = ["OrderedCollections"]
