@@ -1,3 +1,14 @@
+using .PLSTypes: PLSModel,Model
+using .PLS1Algo: trainer, predictor   
+using .PLS2Algo: trainer, predictor  
+using .KPLSAlgo: trainer, predictor  
+
+
+module PLSMethod
+
+
+export fit,predict
+
 ## constants
 const NFACT          = 10              # default number of factors if it is not informed by the user
 
@@ -80,4 +91,6 @@ function predict(model::PLSModel{T},
     Yi =  decentralize_data(Yi,model.my,model.sy)
 
     return Yi
+end
+
 end

@@ -1,5 +1,11 @@
+using  .PLSTypes: PLS2Model
+
+module PLS2Algo
+
+
 using LinearAlgebra
 
+export trainer,predictor
 
 ## the learning algorithm: PLS2 - multiple targets
 function trainer(model::PLS2Model{T},
@@ -62,4 +68,6 @@ function predictor(model::PLS2Model{T},
     end
 
     return Y
+end
+
 end

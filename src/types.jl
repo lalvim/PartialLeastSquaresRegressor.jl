@@ -1,3 +1,8 @@
+
+
+module PLSTypes
+
+
 #### Libs
 using Statistics
 
@@ -7,6 +12,9 @@ const MODEL_ID       = "pls_model"     # if od the model in the filesystem jld d
 
 #### An abstract pls model
 abstract type PLSModel{T} end
+
+
+export Model,PLS1Model,PLS2Model, KPLSModel
 
 #### PLS1 type
 mutable struct PLS1Model{T<:AbstractFloat} <:PLSModel{T}
@@ -127,6 +135,7 @@ function Model(X::Matrix{T},
             width)
 end
 
+
 ######################################################################################################
 ## Load and Store models (good for production)
 function load(; filename::AbstractString = MODEL_FILENAME, modelname::AbstractString = MODEL_ID)
@@ -142,3 +151,11 @@ function save(M::PLSModel; filename::AbstractString = MODEL_FILENAME, modelname:
         write(file, modelname, M)
     end
 end
+
+
+#dir(path...) = joinpath(dirname(dirname(@__FILE__)),path...)
+
+
+end
+
+

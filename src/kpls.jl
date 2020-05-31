@@ -1,4 +1,10 @@
+using  .PLSTypes: KPLSModel
+
+module KPLSAlgo
+
 using LinearAlgebra
+
+export trainer,predictor
 
 # A gaussian kernel function
 @inline function Φ(x::Vector{T},
@@ -148,5 +154,7 @@ function predictor(model::KPLSModel{T},
     Y = Kt * B
 
     return Y
+
+end
 
 end
