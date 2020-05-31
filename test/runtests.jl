@@ -1,5 +1,6 @@
 using PLSRegressor
 using Test
+using MLJ
 
 include("./pls1_test.jl")
 include("./pls2_test.jl")

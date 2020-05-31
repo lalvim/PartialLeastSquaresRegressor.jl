@@ -1,24 +1,4 @@
 
-@testset "Test Saving and Loading PLS2 Models" begin
-
-
-
-	Xtr        = [1 2;2 4;3 6;6 12;7 14.0]
-	Ytr        = [2 2;4 4;6 6;12 12;14 14.0]
-	Xt         = [4 8;5 10.0]
-	model1    = PLSRegressor.fit(Xtr,Ytr,nfactors=2)
-	pred1     = PLSRegressor.predict(model1,Xt)
-
-	PLSRegressor.save(model1)
-	model2    = PLSRegressor.load()
-
-	pred2     = PLSRegressor.predict(model2,Xt)
-    rm(PLSRegressor.MODEL_FILENAME)
-	@test all(pred1 .== pred2)
-
-
-end
-
 @testset "PLS2 Prediction Tests (in sample)" begin
 
 	@testset "Single Column Prediction Test" begin

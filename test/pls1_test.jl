@@ -1,23 +1,3 @@
-@testset "Test Saving and Loading PLS1 Models" begin
-
-
-
-	Xtr        = [1 -2; 2 -4; 4.0 -6]
-	Ytr        = [-2; -4; -6.0]
-	Xt         = [6 -8; 8 -10; 10.0 -12]
-	model1    = PLSRegressor.fit(Xtr,Ytr,nfactors=2)
-	pred1     = PLSRegressor.predict(model1,Xt)
-
-	PLSRegressor.save(model1)
-	model2    = PLSRegressor.load()
-
-	pred2     = PLSRegressor.predict(model2,Xt)
-    rm(PLSRegressor.MODEL_FILENAME)
-	@test all(pred1 .== pred2)
-
-
-end
-
 
 @testset "PLS1 Pediction Tests (in sample)" begin
 
@@ -25,9 +5,15 @@ end
 
 		X        = [1; 2; 3.0][:,:]
 		Y        = [1; 2; 3.0]
-		model    = PLSRegressor.fit(X,Y,nfactors=1)
-		pred     = PLSRegressor.predict(model,X)
-		@test isequal(round.(pred),[1; 2; 3.0])
+		
+        pls_model      = PLS(n_factors=1,centralize=true,copy_data=true,rng=42)
+        pls_machine    = MLJ.machine(pls_model, X, Y)
+        
+        train = range(1,len(X))
+        MLJ.fit!(pls_machine, rows=train,force=true)
+        yhat = MLJ.predict(pls_machine, rows=train);
+    		
+		@test isequal(round.(yhat),[1; 2; 3.0])
 
 	end
 
@@ -37,7 +23,11 @@ end
 		X        = [1 3;2 1;3 2.0]
 		Y        = [1; 1; 1.0]
 		try
-			PLSRegressor.fit(X,Y,nfactors=2)
+			pls_model      = PLS(n_factors=2,centralize=true,copy_data=true,rng=42)
+			pls_machine    = MLJ.machine(pls_model, X, Y)
+			
+			train = range(1,len(X))
+			MLJ.fit!(pls_machine, rows=train,force=true)
 		catch
 			@test true
 		end
@@ -49,14 +39,26 @@ end
 
 		X        = [1 2; 2 4; 4.0 6]
 		Y        = [2; 4; 6.0]
-		model    = PLSRegressor.fit(X,Y,nfactors=2)
-		pred     = PLSRegressor.predict(model,X)
+
+		pls_model      = PLS(n_factors=2,centralize=true,copy_data=true,rng=42)
+        pls_machine    = MLJ.machine(pls_model, X, Y)
+        
+        train = range(1,len(X))
+        MLJ.fit!(pls_machine, rows=train,force=true)
+        pred = MLJ.predict(pls_machine, rows=train);
+		
 		@test isequal(round.(pred),[2; 4; 6.0])
 
 		X           = [1 -2; 2 -4; 4.0 -6]
 		Y           = [-2; -4; -6.0]
-		model       = PLSRegressor.fit(X,Y,nfactors=2)
-		pred        = PLSRegressor.predict(model,X)
+
+		pls_model      = PLS(n_factors=2,centralize=true,copy_data=true,rng=42)
+        pls_machine    = MLJ.machine(pls_model, X, Y)
+        
+        train = range(1,len(X))
+        MLJ.fit!(pls_machine, rows=train,force=true)
+        pred = MLJ.predict(pls_machine, rows=train);
+
 		@test isequal(round.(pred),[-2; -4; -6.0])
 
 	end
@@ -64,19 +66,32 @@ end
 	@testset "Linear Prediction Tests (Ax + b)" begin
 
 
-		Xtr        = [1 2; 2 4; 4.0 6]
-		Ytr        = [2; 4; 6.0]
-		Xt         = [6 8; 8 10; 10.0 12] # same sample
-		model    = PLSRegressor.fit(Xtr,Ytr,nfactors=2)
-		pred     = PLSRegressor.predict(model,Xt)
+		X = [1 2; 2 4; 4.0 6;6 8; 8 10; 10.0 12]
+		Y = [2; 4; 6.0; 8; 10; 12.0]
+
+		train = range(1,3)
+		test  = range(4,6)
+
+		pls_model      = PLS(n_factors=2,centralize=true,copy_data=true,rng=42)
+        pls_machine    = MLJ.machine(pls_model, X, Y)
+        
+        MLJ.fit!(pls_machine, rows=train,force=true)
+        pred = MLJ.predict(pls_machine, rows=test);
+		
 		@test isequal(round.(pred),[8; 10; 12.0])
 
-		Xtr        = [1 2; 2 4.0; 4.0 6; 6 8]
-		Ytr        = [2; 4; 6.0; 8]
-		Xt         = [1 2; 2 4.0] # a subsample
+		X        = [1 2; 2 4.0; 4.0 6; 6 8; 1 2; 2 4.0]
+		Y        = [2; 4; 6.0; 8; 2; 4.0]
+		
+		train = range(1,4)
+		test  = range(5,6)
 
-		model    = PLSRegressor.fit(Xtr,Ytr,nfactors=2,centralize=true)
-		pred     = PLSRegressor.predict(model,Xt)
+		pls_model      = PLS(n_factors=2,centralize=true,copy_data=true,rng=42)
+        pls_machine    = MLJ.machine(pls_model, X, Y)
+        
+        MLJ.fit!(pls_machine, rows=train,force=true)
+        pred = MLJ.predict(pls_machine, rows=test);
+
 		@test isequal(round.(pred),[2; 4])
 
 	end
@@ -90,19 +105,34 @@ end;
 	@testset "Linear Prediction Tests (Ax + b) | A>0" begin
 
 
-		Xtr        = [1 2; 2 4; 4.0 6]
-		Ytr        = [2; 4; 6.0]
-		Xt         = [6 8; 8 10; 10.0 12]
-		model    = PLSRegressor.fit(Xtr,Ytr,nfactors=2)
-		pred     = PLSRegressor.predict(model,Xt)
+		X        = [1 2; 2 4; 4.0 6;6 8; 8 10; 10.0 12]
+		Y        = [2; 4; 6.0; 8.0; 10; 12]
+		
+		train = range(1,3)
+		test  = range(4,6)
+
+		pls_model      = PLS(n_factors=2,centralize=true,copy_data=true,rng=42)
+        pls_machine    = MLJ.machine(pls_model, X, Y)
+        
+        MLJ.fit!(pls_machine, rows=train,force=true)
+        pred = MLJ.predict(pls_machine, rows=test);
+		
+		
 		@test isequal(round.(pred),[8; 10; 12.0])
 
 
-		Xtr        = [1 2; 2 4; 4.0 6]
-		Ytr        = [4; 6; 8.0]
-		Xt         = [6 8; 8 10; 10.0 12]
-		model    = PLSRegressor.fit(Xtr,Ytr,nfactors=2)
-		pred     = PLSRegressor.predict(model,Xt)
+		Xtr        = [1 2; 2 4; 4.0 6; 6 8; 8 10; 10.0 12]
+		Ytr        = [4; 6; 8.0; 10; 12; 14.0]
+
+		train = range(1,3)
+		test  = range(4,6)
+
+		pls_model      = PLS(n_factors=2,centralize=true,copy_data=true,rng=42)
+        pls_machine    = MLJ.machine(pls_model, X, Y)
+        
+        MLJ.fit!(pls_machine, rows=train,force=true)
+        pred = MLJ.predict(pls_machine, rows=test);
+
 		@test isequal(round.(pred),[10; 12; 14.0])
 
 
@@ -112,19 +142,33 @@ end;
 
 
 
-		Xtr        = [1 -2; 2 -4; 4.0 -6]
-		Ytr        = [-2; -4; -6.0]
-		Xt         = [6 -8; 8 -10; 10.0 -12]
-		model    = PLSRegressor.fit(Xtr,Ytr,nfactors=2)
-		pred     = PLSRegressor.predict(model,Xt)
+		X        = [1 -2; 2 -4; 4.0 -6; 6 -8; 8 -10; 10.0 -12]
+		Y        = [-2; -4; -6.0; -8; -10; -12.0]
+
+		train = range(1,3)
+		test  = range(4,6)
+
+		pls_model      = PLS(n_factors=2,centralize=true,copy_data=true,rng=42)
+        pls_machine    = MLJ.machine(pls_model, X, Y)
+        
+        MLJ.fit!(pls_machine, rows=train,force=true)
+        pred = MLJ.predict(pls_machine, rows=test);
+		
 		@test isequal(round.(pred),[-8; -10; -12.0])
 
 
-		Xtr        = [1 -2; 2 -4; 4.0 -6]
-		Ytr        = [-4; -6; -8.0]
-		Xt         = [6 -8; 8 -10; 10.0 -12]
-		model    = PLSRegressor.fit(Xtr,Ytr,nfactors=2)
-		pred     = PLSRegressor.predict(model,Xt)
+		X        = [1 -2; 2 -4; 4.0 -6; 6 -8; 8 -10; 10.0 -12]
+		Ytr      = [-4; -6; -8.0; -10; -12; -14.0]
+
+		train = range(1,3)
+		test  = range(4,6)
+
+		pls_model      = PLS(n_factors=2,centralize=true,copy_data=true,rng=42)
+        pls_machine    = MLJ.machine(pls_model, X, Y)
+        
+        MLJ.fit!(pls_machine, rows=train,force=true)
+        pred = MLJ.predict(pls_machine, rows=test);
+		
 		@test isequal(round.(pred),[-10; -12; -14.0])
 
 	end
