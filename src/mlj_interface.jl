@@ -9,20 +9,6 @@ import MLJModelInterface: @mlj_model, metadata_pkg, metadata_model,Table, Contin
 
 import MLJ: fit!,predict
 
-#using PLSRegressor
-
-#using Main.PLSTypes: .PLS1Algo, .PLS2Algo, .KPLSAlgo, .PLSMethod
-
-
-
-import .PLSTypes: PLSModel,PLS1Model,PLS2Model,KPLSModel,Model
-import .PLS1Algo: trainer, predictor   
-import .PLS2Algo: trainer, predictor  
-import .KPLSAlgo: trainer, predictor  
-import .PLSMethod: fit, predict
-#using  .PLSMethod 
-
-
 
 
 const MMI = MLJModelInterface
@@ -67,7 +53,7 @@ function MLJModelInterface.clean!(m::PLS)
 end
 
 function KPLS(; n_factors=1,centralize=false,kernel="rbf",width=1.0,copy_data=true,rng=42)
-    model   = KPLS(n_factors=1,centralize=false,kernel="rbf",width=1.0,copy_data=true,rng=42)
+    model   = KPLS(n_factors,centralize,kernel,width,copy_data,rng)
     message = MLJModelInterface.clean!(model)
     isempty(message) || @warn message
     return model
@@ -78,7 +64,7 @@ function MLJModelInterface.clean!(m::KPLS)
         warning *= "Parameter `n_factors` expected to be positive, resetting to 1"
         m.n_factors = 1
     end
-    if m.kernel != :rbf
+    if m.kernel != "rbf"
         warning *= "Parameter `kernel` expected to be rbf, resetting to rbf"
         m.kernel = "rbf"
     end
@@ -88,7 +74,8 @@ end
 
 function MMI.fit(m::PLS, verbosity::Int, X,Y)
     
-    X = MMI.Matrix(X) #X[:,:]
+    X = convert(Array{Float64, 2}, MLJ.matrix(X))
+
     check_constant_cols(X)
     check_constant_cols(Y)
 
@@ -100,7 +87,7 @@ function MMI.fit(m::PLS, verbosity::Int, X,Y)
     Yi =  (m.copy_data ? deepcopy(Y) : Y)
 
 
-    fitresult = PLSTypes.Model(Xi,Yi,m.n_factors, m.centralize)
+    fitresult = PLSModel(Xi,Yi,m.n_factors, m.centralize)
 
     Xi =  (m.centralize ? centralize_data(Xi,fitresult.mx,fitresult.sx) : Xi)
     Yi =  (m.centralize ? centralize_data(Yi,fitresult.my,fitresult.sy) : Yi)
@@ -116,7 +103,8 @@ end
 
 function MMI.fit(m::KPLS, verbosity::Int, X,Y)
     
-    X = MMI.Matrix(X) #X[:,:]
+    X = convert(Array{Float64, 2}, MLJ.matrix(X))
+
     check_constant_cols(X)
     check_constant_cols(Y)
 
@@ -127,7 +115,7 @@ function MMI.fit(m::KPLS, verbosity::Int, X,Y)
     Xi =  (m.copy_data ? deepcopy(X) : X)
     Yi =  (m.copy_data ? deepcopy(Y) : Y)
 
-    fitresult = PLSTypes.Model(Xi,Yi,
+    fitresult = PLSModel(Xi,Yi,
                  m.n_factors,
                  m.centralize,
                  m.kernel,
@@ -147,14 +135,14 @@ end
 
 function MMI.predict(m::Union{PLS,KPLS}, fitresult, X) 
     
-    X = MMI.Matrix(X) 
+    X = convert(Array{Float64, 2}, MLJ.matrix(X))
 
     check_data(X,fitresult.nfeatures)
 
     Xi =  (m.copy_data ? deepcopy(X) : X)
     Xi =  (m.centralize ? centralize_data(Xi,fitresult.mx,fitresult.sx) : Xi)
     Yi =  predictor(fitresult,Xi)
-    Yi =  decentralize_data(Yi,fitresult.my,fitresult.sy)
+    Yi =  (m.centralize ? decentralize_data(Yi,fitresult.my,fitresult.sy) : Yi)
 
     return Yi
 end
@@ -170,15 +158,15 @@ metadata_pkg.(
     is_wrapper = false) # ?
 
 metadata_model(PLS,
-    input   = Table(Continuous, Count),
+    input   = Table(Continuous),
     target  = AbstractVector{<:Continuous},
-    weights = true,
+    weights = false,
     descr   = PLSRegressor_Desc)
 
 metadata_model(KPLS,
-    input   = Table(Continuous, Count),
+    input   = Table(Continuous),
     target  = AbstractVector{<:Continuous},
-    weights = true,
+    weights = false,
     descr   = KPLSRegressor_Desc)
 
 

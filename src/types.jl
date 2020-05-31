@@ -1,8 +1,4 @@
 
-
-module PLSTypes
-
-
 #### Libs
 using Statistics
 
@@ -14,7 +10,7 @@ const MODEL_ID       = "pls_model"     # if od the model in the filesystem jld d
 abstract type PLSModel{T} end
 
 
-export Model,PLS1Model,PLS2Model, KPLSModel
+#export Model,PLS1Model,PLS2Model, KPLSModel
 
 #### PLS1 type
 mutable struct PLS1Model{T<:AbstractFloat} <:PLSModel{T}
@@ -33,7 +29,7 @@ end
 
 
 ## PLS1: constructor
-function Model(X::Matrix{T},
+function PLSModel(X::Matrix{T},
                Y::Vector{T},
                nfactors::Int,
                centralize::Bool) where T<:AbstractFloat
@@ -70,7 +66,7 @@ end
 
 
 ## PLS2: constructor
-function Model(X::Matrix{T},
+function PLSModel(X::Matrix{T},
         Y::Matrix{T}, # this is the diference from PLS1 param constructor!
         nfactors::Int,
         centralize::Bool) where T<:AbstractFloat
@@ -111,7 +107,7 @@ end
 
 
 ## KPLS: constructor
-function Model(X::Matrix{T},
+function PLSModel(X::Matrix{T},
             Y::AbstractArray{T}, # this is the diference from PLS1 param constructor!
             nfactors::Int,
             centralize::Bool,
@@ -153,9 +149,5 @@ function save(M::PLSModel; filename::AbstractString = MODEL_FILENAME, modelname:
 end
 
 
-#dir(path...) = joinpath(dirname(dirname(@__FILE__)),path...)
-
-
-end
 
 

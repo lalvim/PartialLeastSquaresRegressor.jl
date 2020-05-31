@@ -32,7 +32,7 @@ Using
 
     using PLSRegressor
 
-Examples (MLJ)
+Example (MLJ)
 ========
 
     using MLJ
@@ -47,7 +47,7 @@ Examples (MLJ)
     y, X = unpack(data, ==(:GNP), colname -> true);
 
     # algorothm
-    pls_model      = PLS(n_factors=10,centralize=true,copy_data=true,rng=42)
+    pls_model      = PLS(n_factors=3,centralize=true,copy_data=true,rng=42)
 
     # associating algo. and data
     pls_machine    = MLJ.machine(pls_model, X, y)
@@ -65,47 +65,6 @@ Examples (MLJ)
 
     MLJ.mae(yhat, y[test]) |> mean
 
-Examples (No MLJ)
-========
-
-    using PLSRegressor
-
-    # learning a single target
-    X_train        = [1 2; 2 4; 4 6.0]
-    Y_train        = [4; 6; 8.0]
-    X_test         = [6 8; 8 10; 10 12.0]
-    Y_test         = [10; 12; 14.0]
-
-    model          = PLSRegressor.fit(X_train,Y_train,nfactors=2)
-    Y_pred         = PLSRegressor.predict(model,X_test)
-
-    print("[PLS1] mae error : $(mean(abs.(Y_test .- Y_pred)))")
-
-
-    # learning multiple targets
-    X_train        = [1 2; 2 4; 4 6.0]
-    Y_train        = [2 4;4 6;6 8.0]
-    X_test         = [6 8; 8 10; 10 12.0]
-    Y_test         = [8 10; 10 12; 12 14.0]
-
-    model          = PLSRegressor.fit(X_train,Y_train,nfactors=2)
-    Y_pred         = PLSRegressor.predict(model,X_test)
-
-    print("[PLS2] mae error : $(mean(abs.(Y_test .- Y_pred)))")
-
-    # nonlinear learning with multiple targets
-    model          = PLSRegressor.fit(X_train,Y_train,nfactors=2,kernel="rbf",width=0.1)
-    Y_pred         = PLSRegressor.predict(model,X_test)
-
-    print("[KPLS] mae error : $(mean(abs.(Y_test .- Y_pred)))")
-
-
-    # if you want to save your model
-    PLSRegressor.save(model,filename=joinpath(homedir(),"pls_model.jld"))
-
-    # if you want to load back your model
-    model = PLSRegressor.load(filename=joinpath(homedir(),"pls_model.jld"))
-
 
 
 What is Implemented
@@ -115,26 +74,20 @@ What is Implemented
 * A non linear algorithm for multiple targets (Kernel PLS2 - NIPALS)
 
 
-What is Upcoming
-=======
-* Bagging for Kernel PLS
-
-Method Description (No MLJ)
+Method Description 
 =======
 
-* PLSRegressor.fit - learns from input data and its related single target
-    * X::Matrix{:<AbstractFloat} - A matrix that columns are the features and rows are the samples
-    * Y::Vector{:<AbstractFloat} - A vector with float values.
+* PLS - PLS MLJ model (identidies PLS1 or PLS2)
     * nfactors::Int = 10 - The number of latent variables to explain the data.
     * copydata::Bool = true - If you want to use the same input matrix or a copy.
     * centralize::Bool = true - If you want to z-score columns. Recommended if not z-scored yet.
     * kernel::AbstractString = "rbf" - use a non linear kernel.
     * width::AbstractFloat   = 1.0 - If you want to z-score columns. Recommended if not z-scored yet.
 
-* PLSRegressor.transform - predicts using the learnt model extracted from fit.
-    * model::PLSRegressor.Model - A PLS model learnt from fit.
-    * X::Matrix{:<AbstractFloat} - A matrix that columns are the features and rows are the samples.
+* KPLS - Kernel PLS MLJ model
+    * nfactors::Int = 10 - The number of latent variables to explain the data.
     * copydata::Bool = true - If you want to use the same input matrix or a copy.
+    * centralize::Bool = true - If you want to z-score columns. Recommended if not z-scored yet.
 
 
 References

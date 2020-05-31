@@ -1,16 +1,10 @@
 
 
-module PLS1Algo
-
 using LinearAlgebra
-using  ..PLSTypes: PLS1Model
-
-export trainer,predictor
 
 ## the learning algorithm: PLS1 - single target
 function trainer(model::PLS1Model{T},
                  X::AbstractArray{T}, Y::Vector{T}) where T<:AbstractFloat
-#function trainer(model,X, Y)
    
     W,b,P  = model.W,model.b,model.P
     nfactors = model.nfactors
@@ -49,6 +43,4 @@ function predictor(model::PLS1Model{T},
     end
 
     return Y
-end
-
 end

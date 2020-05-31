@@ -1,11 +1,6 @@
 
-module KPLSAlgo
-
-using  ..PLSTypes: KPLSModel
 
 using LinearAlgebra
-
-export trainer,predictor
 
 # A gaussian kernel function
 @inline function Φ(x::Vector{T},
@@ -99,10 +94,10 @@ function trainer(model::KPLSModel{T},
         if iteration_count >= max_iterations
             if ignore_failures
                 nfactors = j
-                warn("KPLS: Found with less factors. Overall factors = $(nfactors)")
+                @warn "KPLS: Found solution with less factors. Overall factors = $(nfactors)"
                 break
             else
-                error("KPLS: failed to converge for component: $(nfactors+1)")
+                @error "KPLS: failed to converge for component: $(nfactors+1)"
             end
         end
         Tj[:, j] = t
@@ -129,10 +124,14 @@ function trainer(model::KPLSModel{T},
     try
        model.B        = U * inv(Tj' * K * U) * Q'
     catch
-       error("KPLS: Not able to compute inverse.
+       try
+         model.B        = U * pinv(Tj' * K * U) * Q'
+        catch  
+             @error "KPLS: Not able to compute inverse.
              Maybe nfactors is greater than ncols of input data (X) or
              this matrix is not invertible.
-             ")
+             "
+         end     
     end
 
     return model
@@ -153,9 +152,10 @@ function predictor(model::KPLSModel{T},
     Kt = (Kt - c * K) * (Matrix{T}(I, nx, nx) - (1.0 / nx) .* ones(T,nx,nx))
 
     Y = Kt * B
-
+    if size(Y,2) ==1
+       return dropdims(Y;dims=2) 
+    end    
     return Y
 
 end
 
-end

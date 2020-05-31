@@ -4,3 +4,4 @@
 *.jld
 deps/deps.jl
 datasets/
+Manifest.toml
