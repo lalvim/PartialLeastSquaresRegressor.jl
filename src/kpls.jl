@@ -1,6 +1,7 @@
-using  .PLSTypes: KPLSModel
 
 module KPLSAlgo
+
+using  ..PLSTypes: KPLSModel
 
 using LinearAlgebra
 

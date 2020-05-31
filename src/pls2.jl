@@ -1,7 +1,7 @@
-using  .PLSTypes: PLS2Model
 
 module PLS2Algo
 
+using  ..PLSTypes: PLS2Model
 
 using LinearAlgebra
 

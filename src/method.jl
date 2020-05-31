@@ -1,10 +1,11 @@
-using .PLSTypes: PLSModel,Model
-using .PLS1Algo: trainer, predictor   
-using .PLS2Algo: trainer, predictor  
-using .KPLSAlgo: trainer, predictor  
 
 
 module PLSMethod
+
+using ..PLSTypes: PLSModel,Model
+using ..PLS1Algo: trainer, predictor   
+using ..PLS2Algo: trainer, predictor  
+using ..KPLSAlgo: trainer, predictor  
 
 
 export fit,predict

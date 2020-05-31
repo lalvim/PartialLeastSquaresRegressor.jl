@@ -9,17 +9,18 @@ import MLJModelInterface: @mlj_model, metadata_pkg, metadata_model,Table, Contin
 
 import MLJ: fit!,predict
 
+#using PLSRegressor
 
 #using Main.PLSTypes: .PLS1Algo, .PLS2Algo, .KPLSAlgo, .PLSMethod
 
 
 
-import Main.PLSTypes: PLSModel,PLS1Model,PLS2Model,KPLSModel,Model
+import .PLSTypes: PLSModel,PLS1Model,PLS2Model,KPLSModel,Model
 import .PLS1Algo: trainer, predictor   
 import .PLS2Algo: trainer, predictor  
 import .KPLSAlgo: trainer, predictor  
-#import Main.PLSMethod: fit, predict
-#using  Main.PLSMethod 
+import .PLSMethod: fit, predict
+#using  .PLSMethod 
 
 
 
@@ -182,13 +183,3 @@ metadata_model(KPLS,
 
 
 
-    data = RDatasets.dataset("datasets", "longley");
-
-    y, X = unpack(data, ==(:GNP), colname -> true);
-
-    pls_model      = PLS(n_factors=1,centralize=true,copy_data=true,rng=42)
-    pls_machine    = machine(pls_model, X, y)
-    
-    # evaluate you regressor
-    evaluate!(pls_machine, resampling=CV(shuffle=true), measure=mae, verbosity=0)
-    
