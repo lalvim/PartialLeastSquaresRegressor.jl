@@ -41,23 +41,41 @@ Example (MLJ)
     import PLSRegressor: PLS
     import RDatasets
 
+    # loading data and selecting some features
+    data = RDatasets.dataset("datasets", "longley")[:,2:5]; 
 
-    data = RDatasets.dataset("datasets", "longley");
-
+    # unpacking the target
     y, X = unpack(data, ==(:GNP), colname -> true);
 
-    # algorothm
-    pls_model      = PLS(n_factors=3,centralize=true,copy_data=true,rng=42)
+    # loading the model
+    pls_model      = KPLS()
 
-    # associating algo. and data
-    pls_machine    = MLJ.machine(pls_model, X, y)
+    # defining hyperparams for tunning
+    r1 = MLJ.range(pls_model, :width, lower=0.001, upper=100.0)#, scale=:log);
+    r2 = MLJ.range(pls_model, :n_factors, lower=1, upper=3);
 
-    # evaluate you regressor using cross validation
-    MLJ.evaluate!(pls_machine, resampling=CV(shuffle=true), measure=[mae], verbosity=0)
+    # attaching tune
+    self_tuning_pls_model = TunedModel(model=pls_model,
+                                resampling = CV(nfolds=10),
+                                tuning = Grid(resolution=100),
+                                range = [r1,r2],
+                                measure = mae);
+
+    # putting into the machine
+    self_tuning_pls = machine(self_tuning_pls_model, X, y);
+
+    # fitting with tunning
+    MLJ.fit!(self_tuning_pls, verbosity=0)
+
+    # getting the reports
+    MLJ.report(self_tuning_pls).best_result
+    MLJ.report(self_tuning_pls).best_model
 
 
-    # you can use hould out
+    # or you can use a simple hould out
     train, test    = MLJ.partition(eachindex(y), 0.7, shuffle=true); 
+
+    pls_machine = machine(pls_model, X, y);
 
     MLJ.fit!(pls_machine, rows=train)
 
@@ -74,19 +92,17 @@ What is Implemented
 * A non linear algorithm for multiple targets (Kernel PLS2 - NIPALS)
 
 
-Method Description 
+Model Description 
 =======
 
 * PLS - PLS MLJ model (identidies PLS1 or PLS2)
     * nfactors::Int = 10 - The number of latent variables to explain the data.
-    * copydata::Bool = true - If you want to use the same input matrix or a copy.
     * centralize::Bool = true - If you want to z-score columns. Recommended if not z-scored yet.
     * kernel::AbstractString = "rbf" - use a non linear kernel.
     * width::AbstractFloat   = 1.0 - If you want to z-score columns. Recommended if not z-scored yet.
 
 * KPLS - Kernel PLS MLJ model
     * nfactors::Int = 10 - The number of latent variables to explain the data.
-    * copydata::Bool = true - If you want to use the same input matrix or a copy.
     * centralize::Bool = true - If you want to z-score columns. Recommended if not z-scored yet.
 
 

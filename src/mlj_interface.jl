@@ -72,8 +72,11 @@ end
 
 function MMI.fit(m::PLS, verbosity::Int, X,Y)
     
-    X = convert(Array{Float64, 2}, MLJ.matrix(X))
-
+    #X = convert(Array{Float64, 2}, MLJ.matrix(X))
+    if typeof(X) != Array{Float64,2}
+        X = MLJ.matrix(X)
+    end
+ 
     check_constant_cols(X)
     check_constant_cols(Y)
 
@@ -101,8 +104,11 @@ end
 
 function MMI.fit(m::KPLS, verbosity::Int, X,Y)
     
-    X = convert(Array{Float64, 2}, MLJ.matrix(X))
-
+    #X = convert(Array{Float64, 2}, MLJ.matrix(X))
+    if typeof(X) != Array{Float64,2}
+        X = MLJ.matrix(X)
+    end
+ 
     check_constant_cols(X)
     check_constant_cols(Y)
 
@@ -133,8 +139,10 @@ end
 
 function MMI.predict(m::Union{PLS,KPLS}, fitresult, X) 
     
-    X = convert(Array{Float64, 2}, MLJ.matrix(X))
-
+    #X = convert(Array{Float64, 2}, MLJ.matrix(X))
+    if typeof(X) != Array{Float64,2}
+       X = MLJ.matrix(X)
+    end
     check_data(X,fitresult.nfeatures)
 
     Xi =  X #(m.copy_data ? deepcopy(X) : X)

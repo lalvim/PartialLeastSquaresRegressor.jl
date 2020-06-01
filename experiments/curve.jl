@@ -17,6 +17,8 @@ Random.seed!(1)
 
 X = MLJ.table(rand(100, 2));
 X = coerce(X,:x1=>Continuous,:x2=>Continuous) 
+#X = MLJ.matrix(X)
+
 y = 2X.x1 + X.x2 - 0.05*rand(100)  
 
 pls_model      = KPLS(n_factors=2,kernel="rbf",width=1.0,centralize=true,rng=42)
