@@ -14,7 +14,7 @@ y, X = unpack(data, ==(:Price), colname -> true);
 
 # algorithm
 #pls_model      = PLS(n_factors=3,centralize=true,copy_data=true,rng=42)
-pls_model      = KPLS(n_factors=1,kernel="rbf",width=0.01,centralize=true,copy_data=true,rng=42)
+pls_model      = KPLS(n_factors=1,kernel="rbf",width=0.01,centralize=true,rng=42)
 
 #@pipeline MyPipe(X -> coerce(X, :Price=>Continuous,:LotSize=>Continuous,:LotSize=>Continuous,:Bathrms=>Continuous,:Stories=>Continuous,:GaragePl=>Continuous),
 #                      hot = OneHotEncoder(),

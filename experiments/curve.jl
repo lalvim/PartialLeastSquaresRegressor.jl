@@ -19,7 +19,7 @@ X = MLJ.table(rand(100, 2));
 X = coerce(X,:x1=>Continuous,:x2=>Continuous) 
 y = 2X.x1 + X.x2 - 0.05*rand(100)  
 
-pls_model      = KPLS(n_factors=2,kernel="rbf",width=1.0,centralize=true,copy_data=false,rng=42)
+pls_model      = KPLS(n_factors=2,kernel="rbf",width=1.0,centralize=true,rng=42)
 
 
 r1 = MLJ.range(pls_model, :width, lower=0.001, upper=10.0, scale=:log);

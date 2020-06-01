@@ -11,7 +11,7 @@ data = RDatasets.dataset("datasets", "longley")[:,2:5];
 y, X = unpack(data, ==(:GNP), colname -> true);
 
 
-pls_model      = KPLS(n_factors=1,kernel="rbf",width=0.01,centralize=true,copy_data=true,rng=42)
+pls_model      = KPLS(n_factors=1,kernel="rbf",width=0.01,centralize=true,rng=42)
 
 
 r1 = MLJ.range(pls_model, :width, lower=0.001, upper=100.0)#, scale=:log);

@@ -23,7 +23,6 @@ const MLJDICT = Dict(:Pls1 => PLS1Model,:Pls2 => PLS2Model,:Kpls => KPLSModel)
 mutable struct PLS <: MMI.Deterministic
     n_factors::Int             
     centralize::Bool           
-    copy_data::Bool            
     rng::Int                   
 end
 
@@ -32,13 +31,12 @@ mutable struct KPLS <: MMI.Deterministic
     centralize::Bool             # = false
     kernel::String               # = :rbf
     width::Real                  # = 1.0
-    copy_data::Bool              # = false
     rng::Union{AbstractRNG, Integer} # = Random.GLOBAL_RNG
 end
 
 
-function PLS(; n_factors=1,centralize=false,copy_data=true,rng=42)
-    model   = PLS(n_factors,centralize,copy_data,rng)
+function PLS(; n_factors=1,centralize=false,rng=42)
+    model   = PLS(n_factors,centralize,rng)
     message = MLJModelInterface.clean!(model)
     isempty(message) || @warn message
     return model
@@ -52,8 +50,8 @@ function MLJModelInterface.clean!(m::PLS)
     return warning
 end
 
-function KPLS(; n_factors=1,centralize=false,kernel="rbf",width=1.0,copy_data=true,rng=42)
-    model   = KPLS(n_factors,centralize,kernel,width,copy_data,rng)
+function KPLS(; n_factors=1,centralize=false,kernel="rbf",width=1.0,rng=42)
+    model   = KPLS(n_factors,centralize,kernel,width,rng)
     message = MLJModelInterface.clean!(model)
     isempty(message) || @warn message
     return model
@@ -83,8 +81,8 @@ function MMI.fit(m::PLS, verbosity::Int, X,Y)
 
     check_data(X, Y)
 
-    Xi =  (m.copy_data ? deepcopy(X) : X)
-    Yi =  (m.copy_data ? deepcopy(Y) : Y)
+    Xi =  X #(m.copy_data ? deepcopy(X) : X)
+    Yi =  Y #(m.copy_data ? deepcopy(Y) : Y)
 
 
     fitresult = PLSModel(Xi,Yi,m.n_factors, m.centralize)
@@ -112,8 +110,8 @@ function MMI.fit(m::KPLS, verbosity::Int, X,Y)
 
     check_data(X, Y)
 
-    Xi =  (m.copy_data ? deepcopy(X) : X)
-    Yi =  (m.copy_data ? deepcopy(Y) : Y)
+    Xi =  X #(m.copy_data ? deepcopy(X) : X)
+    Yi =  Y #(m.copy_data ? deepcopy(Y) : Y)
 
     fitresult = PLSModel(Xi,Yi,
                  m.n_factors,
@@ -139,7 +137,7 @@ function MMI.predict(m::Union{PLS,KPLS}, fitresult, X)
 
     check_data(X,fitresult.nfeatures)
 
-    Xi =  (m.copy_data ? deepcopy(X) : X)
+    Xi =  X #(m.copy_data ? deepcopy(X) : X)
     Xi =  (m.centralize ? centralize_data(Xi,fitresult.mx,fitresult.sx) : Xi)
     Yi =  predictor(fitresult,Xi)
     Yi =  (m.centralize ? decentralize_data(Yi,fitresult.my,fitresult.sy) : Yi)
