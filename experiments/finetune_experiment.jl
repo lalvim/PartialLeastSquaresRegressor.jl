@@ -32,7 +32,7 @@ MLJ.report(self_tuning_pls).best_result
 MLJ.report(self_tuning_pls).best_model
 
 
-using Plots
-plot(self_tuning_pls)
+#using Plots
+#plot(self_tuning_pls)
 
 
