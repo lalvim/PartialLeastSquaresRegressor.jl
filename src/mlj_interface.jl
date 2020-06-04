@@ -1,24 +1,12 @@
 using MLJModelInterface 
-using MLJ
-using MLJBase
-
 using Random
-
-
-import MLJModelInterface: @mlj_model, metadata_pkg, metadata_model,Table, Continuous, Count, Finite
-
-import MLJ: fit!,predict
-
-
 
 const MMI = MLJModelInterface
 
 const PLSRegressor_Desc = "A Partial Least Squares Regressor. Contains PLS1, PLS2 (multi target) algorithms. Can be used mainly for regression."
 const KPLSRegressor_Desc = "A Kernel Partial Least Squares Regressor. A Kernel PLS2 NIPALS algorithms. Can be used mainly for regression."
 
-
 const MLJDICT = Dict(:Pls1 => PLS1Model,:Pls2 => PLS2Model,:Kpls => KPLSModel)
-
 
 mutable struct PLS <: MMI.Deterministic
     n_factors::Int             
@@ -34,14 +22,14 @@ mutable struct KPLS <: MMI.Deterministic
     rng::Union{AbstractRNG, Integer} # = Random.GLOBAL_RNG
 end
 
-
 function PLS(; n_factors=1,centralize=false,rng=42)
     model   = PLS(n_factors,centralize,rng)
     message = MLJModelInterface.clean!(model)
     isempty(message) || @warn message
     return model
 end
-function MLJModelInterface.clean!(m::PLS)
+
+function MMI.clean!(m::PLS)
     warning = ""
     if m.n_factors <= 0
         warning *= "Parameter `n_factors` expected to be positive, resetting to 1"
@@ -56,7 +44,8 @@ function KPLS(; n_factors=1,centralize=false,kernel="rbf",width=1.0,rng=42)
     isempty(message) || @warn message
     return model
 end
-function MLJModelInterface.clean!(m::KPLS)
+
+function MMI.clean!(m::KPLS)
     warning = ""
     if m.n_factors <= 0
         warning *= "Parameter `n_factors` expected to be positive, resetting to 1"
@@ -72,9 +61,9 @@ end
 
 function MMI.fit(m::PLS, verbosity::Int, X,Y)
     
-    #X = convert(Array{Float64, 2}, MLJ.matrix(X))
+    #X = convert(Array{Float64, 2}, MMI.matrix(X))
     if typeof(X) != Array{Float64,2}
-        X = MLJ.matrix(X)
+        X = MMI.matrix(X)
     end
  
     check_constant_cols(X)
@@ -104,9 +93,9 @@ end
 
 function MMI.fit(m::KPLS, verbosity::Int, X,Y)
     
-    #X = convert(Array{Float64, 2}, MLJ.matrix(X))
+    #X = convert(Array{Float64, 2}, MMI.matrix(X))
     if typeof(X) != Array{Float64,2}
-        X = MLJ.matrix(X)
+        X = MMI.matrix(X)
     end
  
     check_constant_cols(X)
@@ -136,12 +125,11 @@ function MMI.fit(m::KPLS, verbosity::Int, X,Y)
     return (fitresult,cache,report)
 end
 
-
 function MMI.predict(m::Union{PLS,KPLS}, fitresult, X) 
     
-    #X = convert(Array{Float64, 2}, MLJ.matrix(X))
+    #X = convert(Array{Float64, 2}, MMI.matrix(X))
     if typeof(X) != Array{Float64,2}
-       X = MLJ.matrix(X)
+       X = MMI.matrix(X)
     end
     check_data(X,fitresult.nfeatures)
 
@@ -153,8 +141,7 @@ function MMI.predict(m::Union{PLS,KPLS}, fitresult, X)
     return Yi
 end
 
-
-metadata_pkg.(
+MMI.metadata_pkg.(
     (PLS, KPLS),
     name       = "Partial Least Squares Regressor",
     uuid       = "e010f91f-06b9-52b3-bed3-bb1da186bddc",
@@ -163,17 +150,14 @@ metadata_pkg.(
     license    = "MIT",
     is_wrapper = false) # ?
 
-metadata_model(PLS,
+MMI.metadata_model(PLS,
     input   = Table(Continuous),
     target  = AbstractVector{<:Continuous},
     weights = false,
     descr   = PLSRegressor_Desc)
 
-metadata_model(KPLS,
+MMI.metadata_model(KPLS,
     input   = Table(Continuous),
     target  = AbstractVector{<:Continuous},
     weights = false,
     descr   = KPLSRegressor_Desc)
-
-
-
