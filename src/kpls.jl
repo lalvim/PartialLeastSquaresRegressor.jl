@@ -1,7 +1,3 @@
-
-
-using LinearAlgebra
-
 # A gaussian kernel function
 @inline function Φ(x::Vector{T},
                    y::Vector{T},

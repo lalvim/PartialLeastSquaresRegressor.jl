@@ -1,8 +1,3 @@
-using MLJ
-using MLJBase
-
-import PLSRegressor: PLS
-
 @testset "PLS1 Pediction Tests (in sample)" begin
 
 	@testset "Single Column Prediction Test" begin

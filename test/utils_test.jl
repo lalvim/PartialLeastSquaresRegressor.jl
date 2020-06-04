@@ -1,5 +1,3 @@
-using Statistics
-
 @testset "Auxiliary Functions Test" begin
 
     @testset "check constant columns" begin

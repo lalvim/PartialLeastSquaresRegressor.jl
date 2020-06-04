@@ -1,8 +1,3 @@
-
-
-## Auxiliary functions
-
-
 ## checks PLS input data and params
 ## checks PLS input data and params
 function check_data(X::Matrix{T},Y::Union{Vector{T},Matrix{T}}) where T<:AbstractFloat

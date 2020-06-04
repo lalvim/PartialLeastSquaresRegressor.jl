@@ -1,9 +1,3 @@
-using Statistics
-using LinearAlgebra
-import Random
-using MLJ
-import PLSRegressor: KPLS
-
 @testset "KPLS Pediction Tests (in sample)" begin
 
     @testset "Test KPLS Single Non Linear Target" begin

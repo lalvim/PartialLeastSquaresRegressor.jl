@@ -1,7 +1,3 @@
-
-#### Libs
-using Statistics
-
 #### Constants
 const MODEL_FILENAME = "pls_model.jld" # jld filename for storing the model
 const MODEL_ID       = "pls_model"     # if od the model in the filesystem jld data

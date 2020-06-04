@@ -1,7 +1,3 @@
-
-
-using LinearAlgebra
-
 ## the learning algorithm: PLS1 - single target
 function trainer(model::PLS1Model{T},
                  X::AbstractArray{T}, Y::Vector{T}) where T<:AbstractFloat

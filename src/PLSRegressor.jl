@@ -1,6 +1,8 @@
 # Partial Least Squares (PLS1 and PLS2 NIPALS version)
 module PLSRegressor
 
+using LinearAlgebra
+using Statistics
 using JLD
 
 include("utils.jl")
