@@ -25,7 +25,7 @@
 	end
 
 	@testset "checkparams" begin
-	     PLSRegressor.check_params(2,1,"linear")
+	     #@test_logs PLSRegressor.check_params(2,1,"linear")
 		 @test_throws Exception PLSRegressor.check_params(-1,2,"linear")
 		 @test_throws Exception PLSRegressor.check_params(1,2,"x")
 
