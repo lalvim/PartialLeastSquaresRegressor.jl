@@ -3,7 +3,6 @@ module PLSRegressor
 
 using LinearAlgebra
 using Statistics
-using JLD
 
 include("utils.jl")
 include("types.jl")
