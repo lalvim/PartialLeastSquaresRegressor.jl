@@ -24,18 +24,17 @@
 		@test all(Xn .== [1; 2; 3.0])
 	end
 
-	@testset "checkdata" begin
-		 @test_throws Exception PLSRegressor.check_params(2,1,"linear")
+	@testset "checkparams" begin
+	     PLSRegressor.check_params(2,1,"linear")
 		 @test_throws Exception PLSRegressor.check_params(-1,2,"linear")
 		 @test_throws Exception PLSRegressor.check_params(1,2,"x")
 
 		 @test PLSRegressor.check_params(1,2,"linear")
 	end
 
-	@testset "checkparams" begin
+	@testset "checkdata" begin
 		 @test_throws Exception PLSRegressor.check_data(zeros(0,0), 0)
 		 @test_throws Exception PLSRegressor.check_data(zeros(1,1), 10)
-
 		 @test PLSRegressor.check_data(zeros(1,1), 1)
 	end
 end
