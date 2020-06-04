@@ -144,12 +144,12 @@ MMI.metadata_pkg.(
 
 MMI.metadata_model(PLS,
     input   = Table(Continuous),
-    target  = AbstractVector{<:Continuous},
+    target  = Union{AbstractVector{<:Continuous},Table(Continuous)},
     weights = false,
     descr   = PLSRegressor_Desc)
 
 MMI.metadata_model(KPLS,
     input   = Table(Continuous),
-    target  = AbstractVector{<:Continuous},
+    target  = Union{AbstractVector{<:Continuous},Table(Continuous)},
     weights = false,
     descr   = KPLSRegressor_Desc)
