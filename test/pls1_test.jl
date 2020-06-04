@@ -68,8 +68,8 @@
 		X = MLJ.table([1 2; 2 4; 4.0 6;6 8; 8 10; 10.0 12])
 		Y = [2; 4; 6.0; 8; 10; 12.0]
 
-		train = range(1,3)
-		test  = range(4,6)
+		train = range(1,stop=3)
+		test  = range(4,stop=6)
 
 		pls_model      = PLSRegressor.PLS(n_factors=2,centralize=true,rng=42)
         pls_machine    = MLJ.machine(pls_model, X, Y)
