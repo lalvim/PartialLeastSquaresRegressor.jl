@@ -72,18 +72,14 @@ function MMI.fit(m::PLS, verbosity::Int, X,Y)
     check_params(m.n_factors, size(X,2),"linear")
 
     check_data(X, Y)
+ 
+    fitresult = PLSModel(X,Y,m.n_factors, m.centralize)
 
-    Xi =  X #(m.copy_data ? deepcopy(X) : X)
-    Yi =  Y #(m.copy_data ? deepcopy(Y) : Y)
-
-
-    fitresult = PLSModel(Xi,Yi,m.n_factors, m.centralize)
-
-    Xi =  (m.centralize ? centralize_data(Xi,fitresult.mx,fitresult.sx) : Xi)
-    Yi =  (m.centralize ? centralize_data(Yi,fitresult.my,fitresult.sy) : Yi)
+    X = (m.centralize ? centralize_data(X,fitresult.mx,fitresult.sx) : X)
+    Y = (m.centralize ? centralize_data(Y,fitresult.my,fitresult.sy) : Y)
     fitresult.centralize  = (m.centralize ? true : false)
 
-    trainer(fitresult,Xi,Yi)
+    trainer(fitresult,X,Y)
 
     report = nothing    
     cache  = nothing
@@ -105,20 +101,17 @@ function MMI.fit(m::KPLS, verbosity::Int, X,Y)
 
     check_data(X, Y)
 
-    Xi =  X #(m.copy_data ? deepcopy(X) : X)
-    Yi =  Y #(m.copy_data ? deepcopy(Y) : Y)
-
-    fitresult = PLSModel(Xi,Yi,
+    fitresult = PLSModel(X,Y,
                  m.n_factors,
                  m.centralize,
                  m.kernel,
                  m.width)
 
-    Xi =  (m.centralize ? centralize_data(Xi,fitresult.mx,fitresult.sx) : Xi)
-    Yi =  (m.centralize ? centralize_data(Yi,fitresult.my,fitresult.sy) : Yi)
+    X =  (m.centralize ? centralize_data(X,fitresult.mx,fitresult.sx) : X)
+    Y =  (m.centralize ? centralize_data(Y,fitresult.my,fitresult.sy) : Y)
     fitresult.centralize  = (m.centralize ? true : false)
 
-    trainer(fitresult,Xi,Yi)
+    trainer(fitresult,X,Y)
     report = nothing    
     cache  = nothing
 
@@ -133,12 +126,11 @@ function MMI.predict(m::Union{PLS,KPLS}, fitresult, X)
     end
     check_data(X,fitresult.nfeatures)
 
-    Xi =  X #(m.copy_data ? deepcopy(X) : X)
-    Xi =  (m.centralize ? centralize_data(Xi,fitresult.mx,fitresult.sx) : Xi)
-    Yi =  predictor(fitresult,Xi)
-    Yi =  (m.centralize ? decentralize_data(Yi,fitresult.my,fitresult.sy) : Yi)
+    X =  (m.centralize ? centralize_data(X,fitresult.mx,fitresult.sx) : X)
+    Y =  predictor(fitresult,X)
+    Y =  (m.centralize ? decentralize_data(Y,fitresult.my,fitresult.sy) : Y)
 
-    return Yi
+    return Y
 end
 
 MMI.metadata_pkg.(
