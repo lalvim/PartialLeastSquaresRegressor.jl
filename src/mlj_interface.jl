@@ -73,16 +73,16 @@ function MMI.fit(m::PLS, verbosity::Int, X,Y)
 
     check_data(X, Y)
  
-    fitresult = PLSModel(X,Y,m.n_factors, m.centralize)
+    model = PLSModel(X,Y,m.n_factors, m.centralize)
 
-    X = (m.centralize ? centralize_data(X,fitresult.mx,fitresult.sx) : X)
-    Y = (m.centralize ? centralize_data(Y,fitresult.my,fitresult.sy) : Y)
-    fitresult.centralize  = (m.centralize ? true : false)
+    X = (m.centralize ? centralize_data(X,model.mx,model.sx) : X)
+    Y = (m.centralize ? centralize_data(Y,model.my,model.sy) : Y)
+    model.centralize  = (m.centralize ? true : false)
 
-    trainer(fitresult,X,Y)
-
-    report = nothing    
-    cache  = nothing
+    fitresult = trainer(model,X,Y)
+    report    = nothing    
+    cache     = nothing
+    
     return (fitresult,cache,report)
 
 end
@@ -101,19 +101,19 @@ function MMI.fit(m::KPLS, verbosity::Int, X,Y)
 
     check_data(X, Y)
 
-    fitresult = PLSModel(X,Y,
+    model = PLSModel(X,Y,
                  m.n_factors,
                  m.centralize,
                  m.kernel,
                  m.width)
 
-    X =  (m.centralize ? centralize_data(X,fitresult.mx,fitresult.sx) : X)
-    Y =  (m.centralize ? centralize_data(Y,fitresult.my,fitresult.sy) : Y)
-    fitresult.centralize  = (m.centralize ? true : false)
+    X =  (m.centralize ? centralize_data(X,model.mx,model.sx) : X)
+    Y =  (m.centralize ? centralize_data(Y,model.my,model.sy) : Y)
+    model.centralize  = (m.centralize ? true : false)
 
-    trainer(fitresult,X,Y)
-    report = nothing    
-    cache  = nothing
+    fitresult = trainer(model,X,Y)
+    report    = nothing    
+    cache     = nothing
 
     return (fitresult,cache,report)
 end
