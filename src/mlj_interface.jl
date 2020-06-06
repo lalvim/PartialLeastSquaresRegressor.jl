@@ -11,19 +11,17 @@ const MLJDICT = Dict(:Pls1 => PLS1Model,:Pls2 => PLS2Model,:Kpls => KPLSModel)
 mutable struct PLS <: MMI.Deterministic
     n_factors::Int
     centralize::Bool
-    rng::Int
 end
 
 mutable struct KPLS <: MMI.Deterministic
-    n_factors::Integer           # = 10
-    centralize::Bool             # = false
-    kernel::String               # = :rbf
-    width::Real                  # = 1.0
-    rng::Union{AbstractRNG, Integer} # = Random.GLOBAL_RNG
+    n_factors::Integer
+    centralize::Bool
+    kernel::String
+    width::Real
 end
 
-function PLS(; n_factors=1,centralize=false,rng=42)
-    model   = PLS(n_factors,centralize,rng)
+function PLS(; n_factors=1,centralize=false)
+    model   = PLS(n_factors,centralize)
     message = MLJModelInterface.clean!(model)
     isempty(message) || @warn message
     return model
@@ -38,8 +36,8 @@ function MMI.clean!(m::PLS)
     return warning
 end
 
-function KPLS(; n_factors=1,centralize=false,kernel="rbf",width=1.0,rng=42)
-    model   = KPLS(n_factors,centralize,kernel,width,rng)
+function KPLS(; n_factors=1,centralize=false,kernel="rbf",width=1.0)
+    model   = KPLS(n_factors,centralize,kernel,width)
     message = MLJModelInterface.clean!(model)
     isempty(message) || @warn message
     return model
