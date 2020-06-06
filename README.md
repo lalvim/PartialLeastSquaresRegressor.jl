@@ -32,17 +32,16 @@ Using
 
     using PLSRegressor
 
-Example (MLJ)
+Example
 ========
 
     using MLJ
-    using MLJBase
+    @load PLS pkg=PLSRegressor
 
-    import PLSRegressor: PLS
     import RDatasets
 
     # loading data and selecting some features
-    data = RDatasets.dataset("datasets", "longley")[:,2:5]; 
+    data = RDatasets.dataset("datasets", "longley")[:,2:5];
 
     # unpacking the target
     y, X = unpack(data, ==(:GNP), colname -> true);
@@ -73,7 +72,7 @@ Example (MLJ)
 
 
     # or you can use a simple hould out
-    train, test    = MLJ.partition(eachindex(y), 0.7, shuffle=true); 
+    train, test    = MLJ.partition(eachindex(y), 0.7, shuffle=true);
 
     pls_machine = machine(pls_model, X, y);
 
@@ -92,7 +91,7 @@ What is Implemented
 * A non linear algorithm for multiple targets (Kernel PLS2 - NIPALS)
 
 
-Model Description 
+Model Description
 =======
 
 * PLS - PLS MLJ model (identidies PLS1 or PLS2)
