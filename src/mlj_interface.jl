@@ -60,9 +60,7 @@ end
 function MMI.fit(m::PLS, verbosity::Int, X,Y)
 
     #X = convert(Array{Float64, 2}, MMI.matrix(X))
-    if typeof(X) != Array{Float64,2}
-        X = MMI.matrix(X)
-    end
+    X = MMI.matrix(X)
 
     check_constant_cols(X)
     check_constant_cols(Y)
@@ -81,9 +79,7 @@ end
 function MMI.fit(m::KPLS, verbosity::Int, X,Y)
 
     #X = convert(Array{Float64, 2}, MMI.matrix(X))
-    if typeof(X) != Array{Float64,2}
-        X = MMI.matrix(X)
-    end
+    X = MMI.matrix(X)
 
     check_constant_cols(X)
     check_constant_cols(Y)
@@ -105,9 +101,7 @@ end
 function MMI.predict(m::Union{PLS,KPLS}, fitresult, X)
 
     #X = convert(Array{Float64, 2}, MMI.matrix(X))
-    if typeof(X) != Array{Float64,2}
-       X = MMI.matrix(X)
-    end
+    X = MMI.matrix(X)
     check_data(X,fitresult.nfeatures)
 
     Y =  predict(fitresult,X)
