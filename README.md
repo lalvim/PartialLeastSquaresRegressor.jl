@@ -35,7 +35,7 @@ Using
 Example 1
 ========
 
-    using MLJ
+    import MLJ
     @load PLS pkg=PLSRegressor
 
     import RDatasets
@@ -73,39 +73,34 @@ Example 1
 Example 2
 ========
 
-    using MLJ
+    using MLJBase, RDatasets
     @load PLS pkg=PLSRegressor
 
-    import RDatasets
-
     # loading data and selecting some features
-    data = RDatasets.dataset("datasets", "longley")[:,2:5];
+    data = dataset("datasets", "longley")[:,2:5]
 
     # unpacking the target
-    y, X = unpack(data, ==(:GNP), colname -> true);
+    y, X = unpack(data, ==(:GNP), colname -> true)
 
     # loading the model
-    pls_model      = PLS(n_factors=2,standardize=true)
+    pls_model = PLS(n_factors=2, standardize=true)
 
     # or you can use a simple hould out
-    train, test    = MLJ.partition(eachindex(y), 0.7, shuffle=true);
+    train, test = partition(eachindex(y), 0.7, shuffle=true)
 
-    pls_machine = machine(pls_model, X, y);
+    pls_machine = machine(pls_model, X, y)
 
-    MLJ.fit!(pls_machine, rows=train)
+    fit!(pls_machine, rows=train)
 
-    yhat = MLJ.predict(pls_machine, rows=test);
+    yhat = predict(pls_machine, rows=test)
 
-    MLJ.mae(yhat, y[test]) |> mean
-
-
+    mae(yhat, y[test]) |> mean
 
 What is Implemented
 ======
 * A fast linear algorithm for single targets (PLS1 - NIPALS)
 * A linear algorithm for multiple targets (PLS2 - NIPALS)
 * A non linear algorithm for multiple targets (Kernel PLS2 - NIPALS)
-
 
 Model Description
 =======
@@ -119,7 +114,6 @@ Model Description
     * standardize::Bool = true - If you want to z-score columns. Recommended if not z-scored yet.
     * kernel::AbstractString = "rbf" - use a non linear kernel.
     * width::AbstractFloat   = 1.0 - If you want to z-score columns. Recommended if not z-scored yet.
-
 
 References
 =======
