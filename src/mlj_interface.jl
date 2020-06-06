@@ -1,4 +1,4 @@
-using MLJModelInterface 
+using MLJModelInterface
 using Random
 
 const MMI = MLJModelInterface
@@ -9,9 +9,9 @@ const KPLSRegressor_Desc = "A Kernel Partial Least Squares Regressor. A Kernel P
 const MLJDICT = Dict(:Pls1 => PLS1Model,:Pls2 => PLS2Model,:Kpls => KPLSModel)
 
 mutable struct PLS <: MMI.Deterministic
-    n_factors::Int             
-    centralize::Bool           
-    rng::Int                   
+    n_factors::Int
+    centralize::Bool
+    rng::Int
 end
 
 mutable struct KPLS <: MMI.Deterministic
@@ -60,45 +60,36 @@ function MMI.clean!(m::KPLS)
 end
 
 function MMI.fit(m::PLS, verbosity::Int, X,Y)
-    
+
     #X = convert(Array{Float64, 2}, MMI.matrix(X))
     if typeof(X) != Array{Float64,2}
         X = MMI.matrix(X)
     end
- 
+
     check_constant_cols(X)
     check_constant_cols(Y)
-
     check_params(m.n_factors, size(X,2),"linear")
-
     check_data(X, Y)
- 
-    model = PLSModel(X,Y,m.n_factors, m.centralize)
 
-    X = (m.centralize ? centralize_data(X,model.mx,model.sx) : X)
-    Y = (m.centralize ? centralize_data(Y,model.my,model.sy) : Y)
-    model.centralize  = (m.centralize ? true : false)
+    model                    = PLSModel(X,Y,m.n_factors, m.centralize)
+    model.centralize         = (m.centralize ? true : false)
 
-    fitresult = trainer(model,X,Y)
-    report    = nothing    
-    cache     = nothing
-    
+    (fitresult,cache,report) = fit(model,X,Y)
+
     return (fitresult,cache,report)
 
 end
 
 function MMI.fit(m::KPLS, verbosity::Int, X,Y)
-    
+
     #X = convert(Array{Float64, 2}, MMI.matrix(X))
     if typeof(X) != Array{Float64,2}
         X = MMI.matrix(X)
     end
- 
+
     check_constant_cols(X)
     check_constant_cols(Y)
-
     check_params(m.n_factors, size(X,2),m.kernel)
-
     check_data(X, Y)
 
     model = PLSModel(X,Y,
@@ -107,28 +98,21 @@ function MMI.fit(m::KPLS, verbosity::Int, X,Y)
                  m.kernel,
                  m.width)
 
-    X =  (m.centralize ? centralize_data(X,model.mx,model.sx) : X)
-    Y =  (m.centralize ? centralize_data(Y,model.my,model.sy) : Y)
-    model.centralize  = (m.centralize ? true : false)
-
-    fitresult = trainer(model,X,Y)
-    report    = nothing    
-    cache     = nothing
+    model.centralize         = (m.centralize ? true : false)
+    (fitresult,cache,report) = fit(model,X,Y)
 
     return (fitresult,cache,report)
 end
 
-function MMI.predict(m::Union{PLS,KPLS}, fitresult, X) 
-    
+function MMI.predict(m::Union{PLS,KPLS}, fitresult, X)
+
     #X = convert(Array{Float64, 2}, MMI.matrix(X))
     if typeof(X) != Array{Float64,2}
        X = MMI.matrix(X)
     end
     check_data(X,fitresult.nfeatures)
 
-    X =  (m.centralize ? centralize_data(X,fitresult.mx,fitresult.sx) : X)
-    Y =  predictor(fitresult,X)
-    Y =  (m.centralize ? decentralize_data(Y,fitresult.my,fitresult.sy) : Y)
+    Y =  predict(fitresult,X)
 
     return Y
 end
