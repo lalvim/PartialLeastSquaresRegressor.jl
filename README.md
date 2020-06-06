@@ -110,7 +110,7 @@ What is Implemented
 Model Description
 =======
 
-* PLS - PLS MLJ model (identidies PLS1 or PLS2)
+* PLS - PLS MLJ model (PLS1 or PLS2)
     * n_factors::Int = 10 - The number of latent variables to explain the data.
     * centralize::Bool = true - If you want to z-score columns. Recommended if not z-scored yet.
 
