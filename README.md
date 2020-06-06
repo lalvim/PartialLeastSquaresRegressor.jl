@@ -35,7 +35,7 @@ Using
 Example 1
 ========
 
-    using MLJBase, RDatasets
+    using MLJBase, RDatasets, MLJTuning
     @load KPLS pkg=PLSRegressor
 
     # loading data and selecting some features
