@@ -70,7 +70,7 @@ function MMI.fit(m::PLS, verbosity::Int, X,Y)
     check_data(X, Y)
 
     model                    = PLSModel(X,Y,m.n_factors, m.centralize)
-    model.centralize         = (m.centralize ? true : false)
+    model.centralize         = m.centralize
 
     (fitresult,cache,report) = fit(model,X,Y)
 
@@ -96,7 +96,7 @@ function MMI.fit(m::KPLS, verbosity::Int, X,Y)
                  m.kernel,
                  m.width)
 
-    model.centralize         = (m.centralize ? true : false)
+    model.centralize         = m.centralize
     (fitresult,cache,report) = fit(model,X,Y)
 
     return (fitresult,cache,report)
