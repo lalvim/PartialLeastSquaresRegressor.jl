@@ -48,7 +48,7 @@ Example 1
     pls_model = KPLS()
 
     # defining hyperparams for tunning
-    r1 = range(pls_model, :width, lower=0.001, upper=100.0)#, scale=:log)
+    r1 = range(pls_model, :width, lower=0.001, upper=100.0, scale=:log)
     r2 = range(pls_model, :n_factors, lower=1, upper=3)
 
     # attaching tune
