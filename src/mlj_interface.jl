@@ -10,18 +10,18 @@ const MLJDICT = Dict(:Pls1 => PLS1Model,:Pls2 => PLS2Model,:Kpls => KPLSModel)
 
 mutable struct PLS <: MMI.Deterministic
     n_factors::Int
-    centralize::Bool
+    standardize::Bool
 end
 
 mutable struct KPLS <: MMI.Deterministic
     n_factors::Integer
-    centralize::Bool
+    standardize::Bool
     kernel::String
     width::Real
 end
 
-function PLS(; n_factors=1,centralize=false)
-    model   = PLS(n_factors,centralize)
+function PLS(; n_factors=1,standardize=false)
+    model   = PLS(n_factors,standardize)
     message = MLJModelInterface.clean!(model)
     isempty(message) || @warn message
     return model
@@ -36,8 +36,8 @@ function MMI.clean!(m::PLS)
     return warning
 end
 
-function KPLS(; n_factors=1,centralize=false,kernel="rbf",width=1.0)
-    model   = KPLS(n_factors,centralize,kernel,width)
+function KPLS(; n_factors=1,standardize=false,kernel="rbf",width=1.0)
+    model   = KPLS(n_factors,standardize,kernel,width)
     message = MLJModelInterface.clean!(model)
     isempty(message) || @warn message
     return model
@@ -67,8 +67,8 @@ function MMI.fit(m::PLS, verbosity::Int, X,Y)
     check_params(m.n_factors, size(X,2),"linear")
     check_data(X, Y)
 
-    model                    = PLSModel(X,Y,m.n_factors, m.centralize)
-    model.centralize         = m.centralize
+    model                    = PLSModel(X,Y,m.n_factors, m.standardize)
+    model.standardize         = m.standardize
 
     (fitresult,cache,report) = fit(model,X,Y)
 
@@ -88,11 +88,11 @@ function MMI.fit(m::KPLS, verbosity::Int, X,Y)
 
     model = PLSModel(X,Y,
                  m.n_factors,
-                 m.centralize,
+                 m.standardize,
                  m.kernel,
                  m.width)
 
-    model.centralize         = m.centralize
+    model.standardize         = m.standardize
     (fitresult,cache,report) = fit(model,X,Y)
 
     return (fitresult,cache,report)

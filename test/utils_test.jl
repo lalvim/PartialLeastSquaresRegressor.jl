@@ -9,17 +9,17 @@
 		@test PLSRegressor.check_constant_cols([1.0;2;3][:,:])
 	end
 
-	@testset "centralize" begin
+	@testset "standardize" begin
 		X        = [1; 2; 3.0][:,:]
-		X        = PLSRegressor.centralize_data(X,mean(X,dims=1),std(X,dims=1))
+		X        = PLSRegressor.standardize_data(X,mean(X,dims=1),std(X,dims=1))
 
 		@test all(X .== [-1;0;1.0])
 	end
 
-	@testset "decentralize" begin
+	@testset "destandardize" begin
 		Xo        = [1; 2; 3.0][:,:]
 		Xn        = [-1;0;1.0][:,:]
-		Xn        = PLSRegressor.decentralize_data(Xn,mean(Xo,dims=1),std(Xo,dims=1))
+		Xn        = PLSRegressor.destandardize_data(Xn,mean(Xo,dims=1),std(Xo,dims=1))
 
 		@test all(Xn .== [1; 2; 3.0])
 	end

@@ -5,7 +5,7 @@
 		X        = MLJ.table([1; 2; 3.0][:,:])
 		Y        = [1; 2; 3.0]
 
-        pls_model      = PLSRegressor.PLS(n_factors=1,centralize=true)
+        pls_model      = PLSRegressor.PLS(n_factors=1,standardize=true)
         pls_machine    = MLJ.machine(pls_model, X, Y)
 
         train = range(1,stop=length(X))
@@ -22,7 +22,7 @@
 		X        = MLJ.table([1 3;2 1;3 2.0])
 		Y        = [1; 1; 1.0]
 		try
-			pls_model      = PLSRegressor.PLS(n_factors=2,centralize=true)
+			pls_model      = PLSRegressor.PLS(n_factors=2,standardize=true)
 			pls_machine    = MLJ.machine(pls_model, X, Y)
 
 			train = range(1,stop=length(X))
@@ -39,7 +39,7 @@
 		X        = MLJ.table([1 2; 2 4; 4.0 6])
 		Y        = [2; 4; 6.0]
 
-		pls_model      = PLSRegressor.PLS(n_factors=2,centralize=true)
+		pls_model      = PLSRegressor.PLS(n_factors=2,standardize=true)
         pls_machine    = MLJ.machine(pls_model, X, Y)
 
         train = range(1,stop=length(X))
@@ -51,7 +51,7 @@
 		X           = MLJ.table([1 -2; 2 -4; 4.0 -6])
 		Y           = [-2; -4; -6.0]
 
-		pls_model      = PLSRegressor.PLS(n_factors=2,centralize=true)
+		pls_model      = PLSRegressor.PLS(n_factors=2,standardize=true)
         pls_machine    = MLJ.machine(pls_model, X, Y)
 
         train = range(1,stop=length(X))
@@ -71,7 +71,7 @@
 		train = range(1,stop=3)
 		test  = range(4,stop=6)
 
-		pls_model      = PLSRegressor.PLS(n_factors=2,centralize=true)
+		pls_model      = PLSRegressor.PLS(n_factors=2,standardize=true)
         pls_machine    = MLJ.machine(pls_model, X, Y)
 
         MLJ.fit!(pls_machine, rows=train,force=true)
@@ -85,7 +85,7 @@
 		train = range(1,stop=4)
 		test  = range(5,stop=6)
 
-		pls_model      = PLSRegressor.PLS(n_factors=2,centralize=true)
+		pls_model      = PLSRegressor.PLS(n_factors=2,standardize=true)
         pls_machine    = MLJ.machine(pls_model, X, Y)
 
         MLJ.fit!(pls_machine, rows=train,force=true)
@@ -110,7 +110,7 @@ end;
 		train = range(1,stop=3)
 		test  = range(4,stop=6)
 
-		pls_model      = PLSRegressor.PLS(n_factors=2,centralize=true)
+		pls_model      = PLSRegressor.PLS(n_factors=2,standardize=true)
         pls_machine    = MLJ.machine(pls_model, X, Y)
 
         MLJ.fit!(pls_machine, rows=train,force=true)
@@ -126,7 +126,7 @@ end;
 		train = range(1,stop=3)
 		test  = range(4,stop=6)
 
-		pls_model      = PLSRegressor.PLS(n_factors=2,centralize=true)
+		pls_model      = PLSRegressor.PLS(n_factors=2,standardize=true)
         pls_machine    = MLJ.machine(pls_model, X, Y)
 
         MLJ.fit!(pls_machine, rows=train,force=true)
@@ -147,7 +147,7 @@ end;
 		train = range(1,stop=3)
 		test  = range(4,stop=6)
 
-		pls_model      = PLSRegressor.PLS(n_factors=2,centralize=true)
+		pls_model      = PLSRegressor.PLS(n_factors=2,standardize=true)
         pls_machine    = MLJ.machine(pls_model, X, Y)
 
         MLJ.fit!(pls_machine, rows=train,force=true)
@@ -162,7 +162,7 @@ end;
 		train = range(1,stop=3)
 		test  = range(4,stop=6)
 
-		pls_model      = PLSRegressor.PLS(n_factors=2,centralize=true)
+		pls_model      = PLSRegressor.PLS(n_factors=2,standardize=true)
         pls_machine    = MLJ.machine(pls_model, X, Y)
 
         MLJ.fit!(pls_machine, rows=train,force=true)

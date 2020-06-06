@@ -19,7 +19,7 @@ mutable struct PLS1Model{T<:AbstractFloat} <:PLSModel{T}
     sx::Matrix{T}          # standard deviation stat after z-scoring input data (X)
     sy::T                  # standard deviation stat after z-scoring target data (X)
     nfeatures::Int         # number of input (X) features columns
-    centralize::Bool       # store information of centralization of data. if true, tehn it is passed to transform function
+    standardize::Bool       # store information of centralization of data. if true, tehn it is passed to transform function
 end
 
 
@@ -28,7 +28,7 @@ end
 function PLSModel(X::Matrix{T},
                Y::Vector{T},
                nfactors::Int,
-               centralize::Bool) where T<:AbstractFloat
+               standardize::Bool) where T<:AbstractFloat
     (nrows,ncols) = size(X)
     ## Allocation
     return PLS1Model(zeros(T,ncols,nfactors), ## W
@@ -40,7 +40,7 @@ function PLSModel(X::Matrix{T},
             std(X,dims=1),
             std(Y),
             ncols,
-            centralize)
+            standardize)
 end
 
 ########################################################################################
@@ -57,7 +57,7 @@ mutable struct PLS2Model{T<:AbstractFloat} <:PLSModel{T}
     sy::Matrix{T}          # standard deviation stat after z-scoring target data (X)
     nfeatures::Int         # number of input (X) features columns
     ntargetcols::Int       # number of target (Y) columns
-    centralize::Bool       # store information of centralization of data. if true, tehn it is passed to transform function
+    standardize::Bool       # store information of centralization of data. if true, tehn it is passed to transform function
 end
 
 
@@ -65,7 +65,7 @@ end
 function PLSModel(X::Matrix{T},
         Y::Matrix{T}, # this is the diference from PLS1 param constructor!
         nfactors::Int,
-        centralize::Bool) where T<:AbstractFloat
+        standardize::Bool) where T<:AbstractFloat
     (nrows,ncols) = size(X)
     (n,m)         = size(Y)
     ## Allocation
@@ -80,7 +80,7 @@ function PLSModel(X::Matrix{T},
             std(Y,dims=1),
             ncols,
             m,
-            centralize)
+            standardize)
 end
 
 ################################################################################
@@ -96,7 +96,7 @@ mutable struct KPLSModel{T<:AbstractFloat} <:PLSModel{T}
     sy::AbstractArray{T}   # standard deviation stat after z-scoring target data (X)
     nfeatures::Int         # number of input (X) features columns
     ntargetcols::Int       # number of target (Y) columns
-    centralize::Bool       # store information of centralization of data. if true, tehn it is passed to transform function
+    standardize::Bool       # store information of centralization of data. if true, tehn it is passed to transform function
     kernel::AbstractString
     width::Float64
 end
@@ -106,7 +106,7 @@ end
 function PLSModel(X::Matrix{T},
             Y::AbstractArray{T}, # this is the diference from PLS1 param constructor!
             nfactors::Int,
-            centralize::Bool,
+            standardize::Bool,
             kernel::String,
             width::Float64) where T<:AbstractFloat
     (nrows,ncols) = size(X)
@@ -122,7 +122,7 @@ function PLSModel(X::Matrix{T},
             std(Y,dims=1),
             ncols,
             m,
-            centralize,
+            standardize,
             kernel,
             width)
 end
@@ -143,7 +143,3 @@ function save(M::PLSModel; filename::AbstractString = MODEL_FILENAME, modelname:
         write(file, modelname, M)
     end
 end
-
-
-
-

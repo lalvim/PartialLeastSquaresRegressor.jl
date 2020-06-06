@@ -6,8 +6,8 @@ function fit(model,
              X::AbstractArray{T},
              Y::AbstractArray{T}) where T<:AbstractFloat
 
-    X = (model.centralize ? centralize_data(X,model.mx,model.sx) : X)
-    Y = (model.centralize ? centralize_data(Y,model.my,model.sy) : Y)
+    X = (model.standardize ? standardize_data(X,model.mx,model.sx) : X)
+    Y = (model.standardize ? standardize_data(Y,model.my,model.sy) : Y)
 
     fitresult = trainer(model,X,Y)
     report    = nothing
@@ -22,9 +22,9 @@ A Partial Least Squares predictor.
 """
 function predict(model,X::AbstractArray{T}) where T<:AbstractFloat
 
-   X =  (model.centralize ? centralize_data(X,model.mx,model.sx) : X)
+   X =  (model.standardize ? standardize_data(X,model.mx,model.sx) : X)
    Y =  predictor(model,X)
-   Y =  (model.centralize ? decentralize_data(Y,model.my,model.sy) : Y)
+   Y =  (model.standardize ? destandardize_data(Y,model.my,model.sy) : Y)
 
    return Y
 end

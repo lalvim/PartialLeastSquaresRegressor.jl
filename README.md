@@ -85,7 +85,7 @@ Example 2
     y, X = unpack(data, ==(:GNP), colname -> true);
 
     # loading the model
-    pls_model      = PLS(n_factors=2,centralize=true)
+    pls_model      = PLS(n_factors=2,standardize=true)
 
     # or you can use a simple hould out
     train, test    = MLJ.partition(eachindex(y), 0.7, shuffle=true);
@@ -112,11 +112,11 @@ Model Description
 
 * PLS - PLS MLJ model (PLS1 or PLS2)
     * n_factors::Int = 10 - The number of latent variables to explain the data.
-    * centralize::Bool = true - If you want to z-score columns. Recommended if not z-scored yet.
+    * standardize::Bool = true - If you want to z-score columns. Recommended if not z-scored yet.
 
 * KPLS - Kernel PLS MLJ model
     * nfactors::Int = 10 - The number of latent variables to explain the data.
-    * centralize::Bool = true - If you want to z-score columns. Recommended if not z-scored yet.
+    * standardize::Bool = true - If you want to z-score columns. Recommended if not z-scored yet.
     * kernel::AbstractString = "rbf" - use a non linear kernel.
     * width::AbstractFloat   = 1.0 - If you want to z-score columns. Recommended if not z-scored yet.
 

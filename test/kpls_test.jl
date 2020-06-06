@@ -12,7 +12,7 @@
         X        = MLJ.table(collect(x_values)[:,:])
         Y        = z_noisy #[:,:] #z_pure
 
-        pls_model      = PLSRegressor.KPLS(n_factors=1,kernel="rbf",width=0.01,centralize=true)
+        pls_model      = PLSRegressor.KPLS(n_factors=1,kernel="rbf",width=0.01,standardize=true)
         pls_machine    = MLJ.machine(pls_model, X, Y)
 
         train = range(1,stop=length(X))
@@ -29,7 +29,7 @@
         X        = MLJ.table([1 2; 2 4; 4.0 6])
         Y        = [-2; -4; -6.0] #[:,:]
 
-        pls_model      = PLSRegressor.KPLS(n_factors=1,kernel="rbf",width=0.01,centralize=true)
+        pls_model      = PLSRegressor.KPLS(n_factors=1,kernel="rbf",width=0.01,standardize=true)
         pls_machine    = MLJ.machine(pls_model, X, Y)
 
         train = range(1,stop=length(X))
@@ -40,7 +40,7 @@
         X        = MLJ.table([1 2; 2 4; 4.0 6])
         Y        = [2; 4; 6.0]#[:,:]
 
-        pls_model      = PLSRegressor.KPLS(n_factors=1,kernel="rbf",width=0.01,centralize=true)
+        pls_model      = PLSRegressor.KPLS(n_factors=1,kernel="rbf",width=0.01,standardize=true)
         pls_machine    = MLJ.machine(pls_model, X, Y)
 
         train = range(1,stop=length(X))
@@ -55,7 +55,7 @@
 
         X        = MLJ.table([1; 2; 3.0][:,:])
         Y        = [1 1; 2 2; 3 3.0] #[:,:]
-        pls_model      = PLSRegressor.KPLS(n_factors=1,kernel="rbf",width=0.01,centralize=true)
+        pls_model      = PLSRegressor.KPLS(n_factors=1,kernel="rbf",width=0.01,standardize=true)
         pls_machine    = MLJ.machine(pls_model, X, Y)
 
         train = range(1,stop=length(X))
@@ -65,7 +65,7 @@
 
         X        = MLJ.table([1; 2; 3.0][:,:])
         Y        = [1 -1; 2 -2; 3 -3.0]#[:,:]
-        pls_model      = PLSRegressor.KPLS(n_factors=1,kernel="rbf",width=0.01,centralize=true)
+        pls_model      = PLSRegressor.KPLS(n_factors=1,kernel="rbf",width=0.01,standardize=true)
         pls_machine    = MLJ.machine(pls_model, X, Y)
 
         train = range(1,stop=length(X))
@@ -78,7 +78,7 @@
 
         X        = MLJ.table([1 2; 2 4; 4 6.0])
         Y        = [4 2;6 4;8 6.0]#[:,:]
-        pls_model      = PLSRegressor.KPLS(n_factors=1,kernel="rbf",width=0.01,centralize=true)
+        pls_model      = PLSRegressor.KPLS(n_factors=1,kernel="rbf",width=0.01,standardize=true)
         pls_machine    = MLJ.machine(pls_model, X, Y)
 
         train = range(1,stop=length(X))
@@ -88,7 +88,7 @@
 
         X           = MLJ.table([1 -2; 2 -4; 4 -6.0])
         Y           = [-4 -2;-6 -4;-8 -6.0]#[:,:]
-        pls_model      = PLSRegressor.KPLS(n_factors=1,kernel="rbf",width=0.01,centralize=true)
+        pls_model      = PLSRegressor.KPLS(n_factors=1,kernel="rbf",width=0.01,standardize=true)
         pls_machine    = MLJ.machine(pls_model, X, Y)
 
         train = range(1,stop=length(X))
