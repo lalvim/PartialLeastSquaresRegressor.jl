@@ -9,9 +9,9 @@ include("types.jl")
 include("pls1.jl")
 include("pls2.jl")
 include("kpls.jl")
+include("method.jl")
 include("mlj_interface.jl")
 
 dir(path...) = joinpath(dirname(dirname(@__FILE__)),path...)
 
 end
-
