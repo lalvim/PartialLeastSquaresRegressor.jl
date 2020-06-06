@@ -32,7 +32,7 @@ Using
 
     using PLSRegressor
 
-Example
+Example 1
 ========
 
     using MLJ
@@ -70,6 +70,22 @@ Example
     MLJ.report(self_tuning_pls).best_result
     MLJ.report(self_tuning_pls).best_model
 
+Example 2
+========
+
+    using MLJ
+    @load PLS pkg=PLSRegressor
+
+    import RDatasets
+
+    # loading data and selecting some features
+    data = RDatasets.dataset("datasets", "longley")[:,2:5];
+
+    # unpacking the target
+    y, X = unpack(data, ==(:GNP), colname -> true);
+
+    # loading the model
+    pls_model      = PLS(n_factors=2,centralize=true)
 
     # or you can use a simple hould out
     train, test    = MLJ.partition(eachindex(y), 0.7, shuffle=true);
@@ -95,14 +111,14 @@ Model Description
 =======
 
 * PLS - PLS MLJ model (identidies PLS1 or PLS2)
-    * nfactors::Int = 10 - The number of latent variables to explain the data.
+    * n_factors::Int = 10 - The number of latent variables to explain the data.
     * centralize::Bool = true - If you want to z-score columns. Recommended if not z-scored yet.
-    * kernel::AbstractString = "rbf" - use a non linear kernel.
-    * width::AbstractFloat   = 1.0 - If you want to z-score columns. Recommended if not z-scored yet.
 
 * KPLS - Kernel PLS MLJ model
     * nfactors::Int = 10 - The number of latent variables to explain the data.
     * centralize::Bool = true - If you want to z-score columns. Recommended if not z-scored yet.
+    * kernel::AbstractString = "rbf" - use a non linear kernel.
+    * width::AbstractFloat   = 1.0 - If you want to z-score columns. Recommended if not z-scored yet.
 
 
 References
