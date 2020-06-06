@@ -35,40 +35,38 @@ Using
 Example 1
 ========
 
-    import MLJ
-    @load PLS pkg=PLSRegressor
-
-    import RDatasets
+    using MLJBase, RDatasets
+    @load KPLS pkg=PLSRegressor
 
     # loading data and selecting some features
-    data = RDatasets.dataset("datasets", "longley")[:,2:5];
+    data = dataset("datasets", "longley")[:, 2:5]
 
     # unpacking the target
-    y, X = unpack(data, ==(:GNP), colname -> true);
+    y, X = unpack(data, ==(:GNP), colname -> true)
 
     # loading the model
-    pls_model      = KPLS()
+    pls_model = KPLS()
 
     # defining hyperparams for tunning
-    r1 = MLJ.range(pls_model, :width, lower=0.001, upper=100.0)#, scale=:log);
-    r2 = MLJ.range(pls_model, :n_factors, lower=1, upper=3);
+    r1 = range(pls_model, :width, lower=0.001, upper=100.0)#, scale=:log)
+    r2 = range(pls_model, :n_factors, lower=1, upper=3)
 
     # attaching tune
-    self_tuning_pls_model = TunedModel(model=pls_model,
-                                resampling = CV(nfolds=10),
-                                tuning = Grid(resolution=100),
-                                range = [r1,r2],
-                                measure = mae);
+    self_tuning_pls_model = TunedModel(model = pls_model,
+                                resampling = CV(nfolds = 10),
+                                tuning = Grid(resolution = 100),
+                                range = [r1, r2],
+                                measure = mae)
 
     # putting into the machine
-    self_tuning_pls = machine(self_tuning_pls_model, X, y);
+    self_tuning_pls = machine(self_tuning_pls_model, X, y)
 
     # fitting with tunning
-    MLJ.fit!(self_tuning_pls, verbosity=0)
+    fit!(self_tuning_pls, verbosity=0)
 
     # getting the reports
-    MLJ.report(self_tuning_pls).best_result
-    MLJ.report(self_tuning_pls).best_model
+    report(self_tuning_pls).best_result
+    report(self_tuning_pls).best_model
 
 Example 2
 ========
@@ -77,7 +75,7 @@ Example 2
     @load PLS pkg=PLSRegressor
 
     # loading data and selecting some features
-    data = dataset("datasets", "longley")[:,2:5]
+    data = dataset("datasets", "longley")[:, 2:5]
 
     # unpacking the target
     y, X = unpack(data, ==(:GNP), colname -> true)
