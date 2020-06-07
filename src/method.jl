@@ -2,7 +2,7 @@
 fit(model, X::AbstractArray{T},Y::AbstractArray{T})
 A Partial Least Squares learning algorithm.
 """
-function fit(model,
+function fitting(model,
              X::AbstractArray{T},
              Y::AbstractArray{T}) where T<:AbstractFloat
 
@@ -20,7 +20,7 @@ end
 transform(model, X::AbstractArray{T})
 A Partial Least Squares predictor.
 """
-function predict(model,X::AbstractArray{T}) where T<:AbstractFloat
+function predicting(model,X::AbstractArray{T}) where T<:AbstractFloat
 
    X =  (model.standardize ? standardize_data(X,model.mx,model.sx) : X)
    Y =  predictor(model,X)
