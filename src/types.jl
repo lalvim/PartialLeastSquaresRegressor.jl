@@ -57,7 +57,7 @@ mutable struct PLS2Model{T<:AbstractFloat} <:PLSModel{T}
     sy::Matrix{T}          # standard deviation stat after z-scoring target data (X)
     nfeatures::Int         # number of input (X) features columns
     ntargetcols::Int       # number of target (Y) columns
-    standardize::Bool       # store information of centralization of data. if true, tehn it is passed to transform function
+    standardize::Bool       # store information of centralization of data. if true, then it is passed to transform function
 end
 
 
