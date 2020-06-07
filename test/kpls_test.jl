@@ -54,47 +54,47 @@
 
 
         X        = MLJ.table([1; 2; 3.0][:,:])
-        Y        = [1 1; 2 2; 3 3.0] #[:,:]
+        Y        = MLJ.table([1 1; 2 2; 3 3.0]) #[:,:]
         pls_model      = PLSRegressor.KPLS(n_factors=1,kernel="rbf",width=0.01,standardize=true)
         pls_machine    = MLJ.machine(pls_model, X, Y)
 
         train = range(1,stop=length(X))
         MLJ.fit!(pls_machine, rows=train,force=true)
         yhat = MLJ.predict(pls_machine, rows=train);
-        @test abs.(yhat .- Y[train,:]) |> mean < 1e-6
+        @test abs.(yhat .- MLJ.matrix(Y)[train,:]) |> mean < 1e-6
 
         X        = MLJ.table([1; 2; 3.0][:,:])
-        Y        = [1 -1; 2 -2; 3 -3.0]#[:,:]
+        Y        = MLJ.table([1 -1; 2 -2; 3 -3.0])#[:,:]
         pls_model      = PLSRegressor.KPLS(n_factors=1,kernel="rbf",width=0.01,standardize=true)
         pls_machine    = MLJ.machine(pls_model, X, Y)
 
         train = range(1,stop=length(X))
         MLJ.fit!(pls_machine, rows=train,force=true)
         yhat = MLJ.predict(pls_machine, rows=train);
-        @test abs.(yhat .- Y[train,:]) |> mean < 1e-6
+        @test abs.(yhat .- MLJ.matrix(Y)[train,:]) |> mean < 1e-6
 
         @testset "Linear Prediction Tests " begin
 
 
         X        = MLJ.table([1 2; 2 4; 4 6.0])
-        Y        = [4 2;6 4;8 6.0]#[:,:]
+        Y        = MLJ.table([4 2;6 4;8 6.0])#[:,:]
         pls_model      = PLSRegressor.KPLS(n_factors=1,kernel="rbf",width=0.01,standardize=true)
         pls_machine    = MLJ.machine(pls_model, X, Y)
 
         train = range(1,stop=length(X))
         MLJ.fit!(pls_machine, rows=train,force=true)
         yhat = MLJ.predict(pls_machine, rows=train);
-        @test abs.(yhat .- Y[train,:]) |> mean < 1e-6
+        @test abs.(yhat .- MLJ.matrix(Y)[train,:]) |> mean < 1e-6
 
         X           = MLJ.table([1 -2; 2 -4; 4 -6.0])
-        Y           = [-4 -2;-6 -4;-8 -6.0]#[:,:]
+        Y           = MLJ.table([-4 -2;-6 -4;-8 -6.0])#[:,:]
         pls_model      = PLSRegressor.KPLS(n_factors=1,kernel="rbf",width=0.01,standardize=true)
         pls_machine    = MLJ.machine(pls_model, X, Y)
 
         train = range(1,stop=length(X))
         MLJ.fit!(pls_machine, rows=train,force=true)
         yhat = MLJ.predict(pls_machine, rows=train);
-        @test abs.(yhat .- Y[train,:]) |> mean < 1e-6
+        @test abs.(yhat .- MLJ.matrix(Y)[train,:]) |> mean < 1e-6
 
 
         end
