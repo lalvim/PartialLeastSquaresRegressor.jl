@@ -59,8 +59,8 @@ end
 
 function MMI.fit(m::PLS, verbosity::Int, X,Y)
 
-    #X = convert(Array{Float64, 2}, MMI.matrix(X))
     X = MMI.matrix(X)
+    Y = (MMI.scitype(Y) == Table{AbstractArray{Continuous,1}} ? MMI.matrix(Y) : Y) #convert.(Float64, MMI.matrix(Y))
 
     check_constant_cols(X)
     check_constant_cols(Y)
@@ -68,18 +68,19 @@ function MMI.fit(m::PLS, verbosity::Int, X,Y)
     check_data(X, Y)
 
     model                    = PLSModel(X,Y,m.n_factors, m.standardize)
-    model.standardize         = m.standardize
+    model.standardize        = m.standardize
 
-    (fitresult,cache,report) = fit(model,X,Y)
+    (fitresult,cache,report) = fitting(model,X,Y)
 
     return (fitresult,cache,report)
 
 end
 
+
 function MMI.fit(m::KPLS, verbosity::Int, X,Y)
 
-    #X = convert(Array{Float64, 2}, MMI.matrix(X))
     X = MMI.matrix(X)
+    Y = (MMI.scitype(Y) == Table{AbstractArray{Continuous,1}} ? MMI.matrix(Y) : Y) #convert.(Float64, MMI.matrix(Y))
 
     check_constant_cols(X)
     check_constant_cols(Y)
@@ -93,7 +94,7 @@ function MMI.fit(m::KPLS, verbosity::Int, X,Y)
                  m.width)
 
     model.standardize         = m.standardize
-    (fitresult,cache,report) = fit(model,X,Y)
+    (fitresult,cache,report) = fitting(model,X,Y)
 
     return (fitresult,cache,report)
 end
@@ -104,7 +105,7 @@ function MMI.predict(m::Union{PLS,KPLS}, fitresult, X)
     X = MMI.matrix(X)
     check_data(X,fitresult.nfeatures)
 
-    Y =  predict(fitresult,X)
+    Y =  predicting(fitresult,X)
 
     return Y
 end
