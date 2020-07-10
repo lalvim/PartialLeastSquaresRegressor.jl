@@ -92,10 +92,10 @@ function trainer(model::KPLSModel{T},
         if iteration_count >= max_iterations
             if ignore_failures
                 nfactors = j
-                warn("KPLS: Found with less factors. Overall factors = $(nfactors)")
+                @warn("KPLS: Found with less factors. Overall factors = $(nfactors)")
                 break
             else
-                error("KPLS: failed to converge for component: $(nfactors+1)")
+                @error("KPLS: failed to converge for component: $(nfactors+1)")
             end
         end
         Tj[:, j] = t
@@ -122,7 +122,7 @@ function trainer(model::KPLSModel{T},
     try
        model.B        = U * inv(Tj' * K * U) * Q'
     catch
-       error("KPLS: Not able to compute inverse.
+       @error("KPLS: Not able to compute inverse.
              Maybe nfactors is greater than ncols of input data (X) or
              this matrix is not invertible.
              ")
