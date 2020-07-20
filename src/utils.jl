@@ -22,14 +22,14 @@ function check_data(X::Matrix{T},nfeatures::Int) where T<:AbstractFloat
 end
 
 function check_params(nfactors::Int, ncols::Int, kernel::AbstractString)
-    nfactors >= 1 || error("nfactors must be a positive integer.")
-    nfactors <= ncols || warn("nfactors greater than ncols of input data (X) must generate numerical problems. However, can improve results if ok.")
-    kernel == "rbf" || kernel == "linear" || error("kernel must be kernel='linear' or 'kernel=rbf'")
+    nfactors >= 1 || @error("nfactors must be a positive integer.")
+    nfactors <= ncols || @warn("nfactors greater than ncols of input data (X) must generate numerical problems. However, can improve results if ok.")
+    kernel == "rbf" || kernel == "linear" || @error("kernel must be kernel='linear' or 'kernel=rbf'")
 end
 
 ## checks constant columns
-check_constant_cols(X::Matrix{T}) where {T<:AbstractFloat} = size(X,1)>1 && !any(all(X .== X[1,:]',dims=1)) || error("You must remove constant columns of input data (X) before train")
-check_constant_cols(Y::Vector{T}) where {T<:AbstractFloat} = length(Y)>1 && length(unique(Y)) > 1 || error("Your target values are constant. All values are equal to $(Y[1])")
+check_constant_cols(X::Matrix{T}) where {T<:AbstractFloat} = size(X,1)>1 && !any(all(X .== X[1,:]',dims=1)) || @error("You must remove constant columns of input data (X) before train")
+check_constant_cols(Y::Vector{T}) where {T<:AbstractFloat} = length(Y)>1 && length(unique(Y)) > 1 || @error("Your target values are constant. All values are equal to $(Y[1])")
 
 ## Preprocessing data using z-score statistics. this is due to the fact that if X and Y are z-scored, than X'Y returns for W vector a pearson correlation for each element! :)
 centralize_data(D::Matrix{T}, m::Matrix{T}, s::Matrix{T}) where {T<:AbstractFloat}  = (D .-m)./s
