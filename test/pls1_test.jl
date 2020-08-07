@@ -5,14 +5,16 @@
 		X        = MLJ.table([1; 2; 3.0][:,:])
 		Y        = [1; 2; 3.0]
 
-        pls_model      = PLSRegressor.PLS(n_factors=1,standardize=true)
-        pls_machine    = MLJ.machine(pls_model, X, Y)
+		pls_pipe       = MLJ.@pipeline MyPipe1(std = MLJ.Standardizer(),
+								            regressor = PLSRegressor.PLS(n_factors=1,standardize=false),
+		                                    target    = MLJ.UnivariateStandardizer())
+		pls_machine    = MLJ.machine(pls_pipe, X, Y)
 
         train = range(1,stop=length(X))
         MLJ.fit!(pls_machine, rows=train,force=true)
-        yhat = MLJ.predict(pls_machine, rows=train);
+        ŷ     = MLJ.predict(pls_machine, rows=train);
 
-		@test isequal(round.(yhat),[1; 2; 3.0])
+		@test isequal(round.(ŷ),[1; 2; 3.0])
 
 	end
 
@@ -22,8 +24,12 @@
 		X        = MLJ.table([1 3;2 1;3 2.0])
 		Y        = [1; 1; 1.0]
 		try
-			pls_model      = PLSRegressor.PLS(n_factors=2,standardize=true)
-			pls_machine    = MLJ.machine(pls_model, X, Y)
+
+			pls_pipe       = MLJ.@pipeline MyPipe(std = MLJ.Standardizer(),
+									            regressor = PLSRegressor.PLS(n_factors=2,standardize=false),
+			                                    target    = MLJ.UnivariateStandardizer())
+			pls_machine    = MLJ.machine(pls_pipe, X, Y)
+
 
 			train = range(1,stop=length(X))
 			MLJ.fit!(pls_machine, rows=train,force=true)
@@ -39,26 +45,30 @@
 		X        = MLJ.table([1 2; 2 4; 4.0 6])
 		Y        = [2; 4; 6.0]
 
-		pls_model      = PLSRegressor.PLS(n_factors=2,standardize=true)
-        pls_machine    = MLJ.machine(pls_model, X, Y)
+		pls_pipe       = MLJ.@pipeline MyPipe(std = MLJ.Standardizer(),
+								            regressor = PLSRegressor.PLS(n_factors=1,standardize=false),
+		                                    target    = MLJ.UnivariateStandardizer())
+		pls_machine    = MLJ.machine(pls_pipe, X, Y)
 
         train = range(1,stop=length(X))
         MLJ.fit!(pls_machine, rows=train,force=true)
-        pred = MLJ.predict(pls_machine, rows=train);
+        ŷ = MLJ.predict(pls_machine, rows=train);
 
-		@test isequal(round.(pred),[2; 4; 6.0])
+		@test isequal(round.(ŷ),[2; 4; 6.0])
 
 		X           = MLJ.table([1 -2; 2 -4; 4.0 -6])
 		Y           = [-2; -4; -6.0]
 
-		pls_model      = PLSRegressor.PLS(n_factors=2,standardize=true)
-        pls_machine    = MLJ.machine(pls_model, X, Y)
+		pls_pipe       = MLJ.@pipeline MyPipe(std = MLJ.Standardizer(),
+								            regressor = PLSRegressor.PLS(n_factors=1,standardize=false),
+		                                    target    = MLJ.UnivariateStandardizer())
+		pls_machine    = MLJ.machine(pls_pipe, X, Y)
 
         train = range(1,stop=length(X))
         MLJ.fit!(pls_machine, rows=train,force=true)
-        pred = MLJ.predict(pls_machine, rows=train);
+        ŷ = MLJ.predict(pls_machine, rows=train);
 
-		@test isequal(round.(pred),[-2; -4; -6.0])
+		@test isequal(round.(ŷ),[-2; -4; -6.0])
 
 	end
 
@@ -71,8 +81,11 @@
 		train = range(1,stop=3)
 		test  = range(4,stop=6)
 
-		pls_model      = PLSRegressor.PLS(n_factors=2,standardize=true)
-        pls_machine    = MLJ.machine(pls_model, X, Y)
+		pls_pipe       = MLJ.@pipeline MyPipe(std = MLJ.Standardizer(),
+								            regressor = PLSRegressor.PLS(n_factors=2,standardize=false),
+		                                    target    = MLJ.UnivariateStandardizer())
+		pls_machine    = MLJ.machine(pls_pipe, X, Y)
+
 
         MLJ.fit!(pls_machine, rows=train,force=true)
         pred = MLJ.predict(pls_machine, rows=test);
@@ -85,8 +98,10 @@
 		train = range(1,stop=4)
 		test  = range(5,stop=6)
 
-		pls_model      = PLSRegressor.PLS(n_factors=2,standardize=true)
-        pls_machine    = MLJ.machine(pls_model, X, Y)
+		pls_pipe       = MLJ.@pipeline MyPipe(std = MLJ.Standardizer(),
+								            regressor = PLSRegressor.PLS(n_factors=2,standardize=false),
+		                                    target    = MLJ.UnivariateStandardizer())
+		pls_machine    = MLJ.machine(pls_pipe, X, Y)
 
         MLJ.fit!(pls_machine, rows=train,force=true)
         pred = MLJ.predict(pls_machine, rows=test);
@@ -110,8 +125,10 @@ end;
 		train = range(1,stop=3)
 		test  = range(4,stop=6)
 
-		pls_model      = PLSRegressor.PLS(n_factors=2,standardize=true)
-        pls_machine    = MLJ.machine(pls_model, X, Y)
+		pls_pipe       = MLJ.@pipeline MyPipe(std = MLJ.Standardizer(),
+								            regressor = PLSRegressor.PLS(n_factors=2,standardize=false),
+		                                    target    = MLJ.UnivariateStandardizer())
+		pls_machine    = MLJ.machine(pls_pipe, X, Y)
 
         MLJ.fit!(pls_machine, rows=train,force=true)
         pred = MLJ.predict(pls_machine, rows=test);
@@ -126,8 +143,11 @@ end;
 		train = range(1,stop=3)
 		test  = range(4,stop=6)
 
-		pls_model      = PLSRegressor.PLS(n_factors=2,standardize=true)
-        pls_machine    = MLJ.machine(pls_model, X, Y)
+
+		pls_pipe       = MLJ.@pipeline MyPipe(std = MLJ.Standardizer(),
+								            regressor = PLSRegressor.PLS(n_factors=2,standardize=false),
+		                                    target    = MLJ.UnivariateStandardizer())
+		pls_machine    = MLJ.machine(pls_pipe, X, Y)
 
         MLJ.fit!(pls_machine, rows=train,force=true)
         pred = MLJ.predict(pls_machine, rows=test);
@@ -147,8 +167,10 @@ end;
 		train = range(1,stop=3)
 		test  = range(4,stop=6)
 
-		pls_model      = PLSRegressor.PLS(n_factors=2,standardize=true)
-        pls_machine    = MLJ.machine(pls_model, X, Y)
+		pls_pipe       = MLJ.@pipeline MyPipe(std = MLJ.Standardizer(),
+								            regressor = PLSRegressor.PLS(n_factors=2,standardize=false),
+		                                    target    = MLJ.UnivariateStandardizer())
+		pls_machine    = MLJ.machine(pls_pipe, X, Y)
 
         MLJ.fit!(pls_machine, rows=train,force=true)
         pred = MLJ.predict(pls_machine, rows=test);
@@ -162,8 +184,10 @@ end;
 		train = range(1,stop=3)
 		test  = range(4,stop=6)
 
-		pls_model      = PLSRegressor.PLS(n_factors=2,standardize=true)
-        pls_machine    = MLJ.machine(pls_model, X, Y)
+		pls_pipe       = MLJ.@pipeline MyPipe(std = MLJ.Standardizer(),
+								            regressor = PLSRegressor.PLS(n_factors=2,standardize=false),
+		                                    target    = MLJ.UnivariateStandardizer())
+		pls_machine    = MLJ.machine(pls_pipe, X, Y)
 
         MLJ.fit!(pls_machine, rows=train,force=true)
         pred = MLJ.predict(pls_machine, rows=test);
