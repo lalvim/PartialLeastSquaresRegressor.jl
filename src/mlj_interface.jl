@@ -59,8 +59,9 @@ end
 
 function MMI.fit(m::PLS, verbosity::Int, X,Y)
 
-    X = MMI.matrix(X)
+    X =  MMI.matrix(X)
     Y = (MMI.scitype(Y) == Table{AbstractArray{Continuous,1}} ? MMI.matrix(Y) : Y) #convert.(Float64, MMI.matrix(Y))
+    Y = (MMI.scitype(Y) == Table{AbstractArray{Continuous,2}} ? MMI.matrix(Y) : Y) #convert.(Float64, MMI.matrix(Y))
 
     check_constant_cols(X)
     check_constant_cols(Y)
@@ -81,6 +82,7 @@ function MMI.fit(m::KPLS, verbosity::Int, X,Y)
 
     X = MMI.matrix(X)
     Y = (MMI.scitype(Y) == Table{AbstractArray{Continuous,1}} ? MMI.matrix(Y) : Y) #convert.(Float64, MMI.matrix(Y))
+    Y = (MMI.scitype(Y) == Table{AbstractArray{Continuous,2}} ? MMI.matrix(Y) : Y) #convert.(Float64, MMI.matrix(Y))
 
     check_constant_cols(X)
     check_constant_cols(Y)
@@ -101,11 +103,11 @@ end
 
 function MMI.predict(m::Union{PLS,KPLS}, fitresult, X)
 
-    #X = convert(Array{Float64, 2}, MMI.matrix(X))
     X = MMI.matrix(X)
     check_data(X,fitresult.nfeatures)
 
     Y =  predicting(fitresult,X)
+    Y = (length(size(Y)) > 1 ? MMI.table(Y) : Y)
 
     return Y
 end
@@ -117,7 +119,7 @@ MMI.metadata_pkg.(
     url        = "https://github.com/lalvim/PLSRegressor.jl",
     julia      = true,
     license    = "MIT",
-    is_wrapper = false) # ?
+    is_wrapper = false)
 
 MMI.metadata_model(PLS,
     input   = Table(Continuous),
