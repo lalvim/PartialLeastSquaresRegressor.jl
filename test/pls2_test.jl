@@ -5,9 +5,9 @@
 		X        = MLJ.table([1; 2; 3.0][:,:])
 		Y        = MLJ.table([1 1; 2 2; 3.0 3.0])
 
-		pls_pipe       = MLJ.@pipeline MyPipe(std = MLJ.Standardizer(),
-								              regressor = PLSRegressor.PLS(n_factors=1,standardize=false),
-		                                      target    = MLJ.Standardizer())
+        pls_pipe       = MLJ.@pipeline prediction_type=:deterministic MLJ.Standardizer() PLSRegressor.PLS(n_factors=1,standardize=false)  target = MLJ.Standardizer()
+
+
 		pls_machine    = MLJ.machine(pls_pipe, X, Y)
 
 		train = range(1,stop=length(X))
@@ -25,9 +25,8 @@
 		X        = MLJ.table([1 2; 2 4; 4 6.0])
 		Y        = MLJ.table([4 2;6 4;8 6.0])
 
-		pls_pipe       = MLJ.@pipeline MyPipe(std = MLJ.Standardizer(),
-								              regressor = PLSRegressor.PLS(n_factors=2,standardize=false),
-		                                      target    = MLJ.Standardizer())
+        pls_pipe       = MLJ.@pipeline prediction_type=:deterministic MLJ.Standardizer() PLSRegressor.PLS(n_factors=2,standardize=false)  target = MLJ.Standardizer()
+
 		pls_machine    = MLJ.machine(pls_pipe, X, Y)
 
         train = range(1,stop=length(X))
@@ -40,9 +39,8 @@
 		X           = MLJ.table([1 -2; 2 -4; 4 -6.0])
 		Y           = MLJ.table([-4 -2;-6 -4;-8 -6.0])
 
-		pls_pipe       = MLJ.@pipeline MyPipe(std = MLJ.Standardizer(),
-								              regressor = PLSRegressor.PLS(n_factors=2,standardize=false),
-		                                      target    = MLJ.Standardizer())
+        pls_pipe       = MLJ.@pipeline prediction_type=:deterministic MLJ.Standardizer() PLSRegressor.PLS(n_factors=2,standardize=false)  target = MLJ.Standardizer()
+
 		pls_machine    = MLJ.machine(pls_pipe, X, Y)
 
         train = range(1,stop=length(X))
@@ -67,9 +65,8 @@ end
 		X        = MLJ.table([1 2;2 4;3 6;6 12;7 14.0;4 8;5 10.0])
 		Y        = MLJ.table([2 2;4 4;6 6;12 12;14 14.0;8 8;10 10.0])
 
-		pls_pipe       = MLJ.@pipeline MyPipe(std = MLJ.Standardizer(),
-								              regressor = PLSRegressor.PLS(n_factors=2,standardize=false),
-		                                      target    = MLJ.Standardizer())
+        pls_pipe       = MLJ.@pipeline prediction_type=:deterministic MLJ.Standardizer() PLSRegressor.PLS(n_factors=2,standardize=false)  target = MLJ.Standardizer()
+
 		pls_machine    = MLJ.machine(pls_pipe, X, Y)
 
 		train = range(1,stop=5)
@@ -86,9 +83,9 @@ end
 		X        = MLJ.table([1 2;2 4;3 6;6 12;7 14.0; 4 8;5 10.0])
 		Y        = MLJ.table([2 4;4 6;6 8;12 14;14 16.0; 8 10;10 12.0])
 
-		pls_pipe       = MLJ.@pipeline MyPipe(std = MLJ.Standardizer(),
-								              regressor = PLSRegressor.PLS(n_factors=2,standardize=false),
-		                                      target    = MLJ.Standardizer())
+
+    	pls_pipe       = MLJ.@pipeline prediction_type=:deterministic MLJ.Standardizer() PLSRegressor.PLS(n_factors=2,standardize=false)  target = MLJ.Standardizer()
+
 		pls_machine    = MLJ.machine(pls_pipe, X, Y)
 
 		train = range(1,stop=5)
@@ -109,9 +106,8 @@ end
 		X        = MLJ.table([1 -2;2 -4;3 -6;6 -12;7 -14.0; 4 -8;5 -10.0])
 		Y        = MLJ.table([2 -2;4 -4;6 -6;12 -12;14 -14.0; 8 -8;10 -10.0])
 
-		pls_pipe       = MLJ.@pipeline MyPipe(std = MLJ.Standardizer(),
-								              regressor = PLSRegressor.PLS(n_factors=2,standardize=false),
-		                                      target    = MLJ.Standardizer())
+        pls_pipe       = MLJ.@pipeline prediction_type=:deterministic MLJ.Standardizer() PLSRegressor.PLS(n_factors=2,standardize=false)  target = MLJ.Standardizer()
+
 		pls_machine    = MLJ.machine(pls_pipe, X, Y)
 
 		train = range(1,stop=5)
@@ -127,9 +123,8 @@ end
 		X        = MLJ.table([1 -2;2 -4;3 -6;6 -12;7 -14.0; 4 -8;5 -10.0])
 		Y        = MLJ.table([2 -4;4 -6;6 -8;12 -14;14 -16.0; 8 -10;10 -12.0])
 
-		pls_pipe       = MLJ.@pipeline MyPipe(std = MLJ.Standardizer(),
-								              regressor = PLSRegressor.PLS(n_factors=2,standardize=false),
-		                                      target    = MLJ.Standardizer())
+        pls_pipe       = MLJ.@pipeline prediction_type=:deterministic MLJ.Standardizer() PLSRegressor.PLS(n_factors=2,standardize=false)  target = MLJ.Standardizer()
+
 		pls_machine    = MLJ.machine(pls_pipe, X, Y)
 
 		train = range(1,stop=5)
