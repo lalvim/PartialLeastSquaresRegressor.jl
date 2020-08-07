@@ -3,25 +3,23 @@ using Random
 
 const MMI = MLJModelInterface
 
-const PLSRegressor_Desc = "A Partial Least Squares Regressor. Contains PLS1, PLS2 (multi target) algorithms. Can be used mainly for regression."
+const PLSRegressor_Desc  = "A Partial Least Squares Regressor. Contains PLS1, PLS2 (multi target) algorithms. Can be used mainly for regression."
 const KPLSRegressor_Desc = "A Kernel Partial Least Squares Regressor. A Kernel PLS2 NIPALS algorithms. Can be used mainly for regression."
 
 const MLJDICT = Dict(:Pls1 => PLS1Model,:Pls2 => PLS2Model,:Kpls => KPLSModel)
 
 mutable struct PLS <: MMI.Deterministic
     n_factors::Int
-    standardize::Bool
 end
 
 mutable struct KPLS <: MMI.Deterministic
     n_factors::Integer
-    standardize::Bool
     kernel::String
     width::Real
 end
 
-function PLS(; n_factors=1,standardize=false)
-    model   = PLS(n_factors,standardize)
+function PLS(; n_factors=1)
+    model   = PLS(n_factors)
     message = MLJModelInterface.clean!(model)
     isempty(message) || @warn message
     return model
@@ -36,8 +34,8 @@ function MMI.clean!(m::PLS)
     return warning
 end
 
-function KPLS(; n_factors=1,standardize=false,kernel="rbf",width=1.0)
-    model   = KPLS(n_factors,standardize,kernel,width)
+function KPLS(; n_factors=1,kernel="rbf",width=1.0)
+    model   = KPLS(n_factors,kernel,width)
     message = MLJModelInterface.clean!(model)
     isempty(message) || @warn message
     return model
@@ -60,16 +58,15 @@ end
 function MMI.fit(m::PLS, verbosity::Int, X,Y)
 
     X =  MMI.matrix(X)
-    Y = (MMI.scitype(Y) == Table{AbstractArray{Continuous,1}} ? MMI.matrix(Y) : Y) #convert.(Float64, MMI.matrix(Y))
-    Y = (MMI.scitype(Y) == Table{AbstractArray{Continuous,2}} ? MMI.matrix(Y) : Y) #convert.(Float64, MMI.matrix(Y))
+    Y = (MMI.scitype(Y) == Table{AbstractArray{Continuous,1}} ? MMI.matrix(Y) : Y)
+    Y = (MMI.scitype(Y) == Table{AbstractArray{Continuous,2}} ? MMI.matrix(Y) : Y)
 
     check_constant_cols(X)
     check_constant_cols(Y)
     check_params(m.n_factors, size(X,2),"linear")
     check_data(X, Y)
 
-    model                    = PLSModel(X,Y,m.n_factors, m.standardize)
-    model.standardize        = m.standardize
+    model                    = PLSModel(X,Y,m.n_factors)
 
     (fitresult,cache,report) = fitting(model,X,Y)
 
@@ -81,8 +78,8 @@ end
 function MMI.fit(m::KPLS, verbosity::Int, X,Y)
 
     X = MMI.matrix(X)
-    Y = (MMI.scitype(Y) == Table{AbstractArray{Continuous,1}} ? MMI.matrix(Y) : Y) #convert.(Float64, MMI.matrix(Y))
-    Y = (MMI.scitype(Y) == Table{AbstractArray{Continuous,2}} ? MMI.matrix(Y) : Y) #convert.(Float64, MMI.matrix(Y))
+    Y = (MMI.scitype(Y) == Table{AbstractArray{Continuous,1}} ? MMI.matrix(Y) : Y)
+    Y = (MMI.scitype(Y) == Table{AbstractArray{Continuous,2}} ? MMI.matrix(Y) : Y)
 
     check_constant_cols(X)
     check_constant_cols(Y)
@@ -91,11 +88,9 @@ function MMI.fit(m::KPLS, verbosity::Int, X,Y)
 
     model = PLSModel(X,Y,
                  m.n_factors,
-                 m.standardize,
                  m.kernel,
                  m.width)
 
-    model.standardize         = m.standardize
     (fitresult,cache,report) = fitting(model,X,Y)
 
     return (fitresult,cache,report)

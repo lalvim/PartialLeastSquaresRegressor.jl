@@ -25,10 +25,3 @@ end
 ## checks constant columns
 check_constant_cols(X::Matrix{T}) where {T<:AbstractFloat} = size(X,1)>1 && !any(all(X .== X[1,:]',dims=1)) || throw(ErrorException("You must remove constant columns of input data (X) before train"))
 check_constant_cols(Y::Vector{T}) where {T<:AbstractFloat} = length(Y)>1 && length(unique(Y)) > 1 || throw(ErrorException("Your target values are constant. All values are equal to $(Y[1])"))
-
-## Preprocessing data using z-score statistics. this is due to the fact that if X and Y are z-scored, than X'Y returns for W vector a pearson correlation for each element! :)
-standardize_data(D::Array{T}, m::Array{T}, s::Array{T}) where {T<:AbstractFloat}  = (D .-m)./s
-standardize_data(D::Vector{T}, m::T, s::T)  where {T<:AbstractFloat} = (D .-m)./s
-
-destandardize_data(D::Array{T}, m::Array{T}, s::Array{T}) where {T<:AbstractFloat} = D .*s .+m
-destandardize_data(D::Vector{T}, m::T, s::T)  where {T<:AbstractFloat}               = D .*s .+m

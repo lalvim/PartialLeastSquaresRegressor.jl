@@ -9,21 +9,6 @@
 		@test PLSRegressor.check_constant_cols([1.0;2;3][:,:])
 	end
 
-	@testset "standardize" begin
-		X        = [1; 2; 3.0][:,:]
-		X        = PLSRegressor.standardize_data(X,mean(X,dims=1),std(X,dims=1))
-
-		@test all(X .== [-1;0;1.0])
-	end
-
-	@testset "destandardize" begin
-		Xo        = [1; 2; 3.0][:,:]
-		Xn        = [-1;0;1.0][:,:]
-		Xn        = PLSRegressor.destandardize_data(Xn,mean(Xo,dims=1),std(Xo,dims=1))
-
-		@test all(Xn .== [1; 2; 3.0])
-	end
-
 	@testset "checkparams" begin
 	     #@test_logs PLSRegressor.check_params(2,1,"linear")
 		 @test_throws Exception PLSRegressor.check_params(-1,2,"linear")
