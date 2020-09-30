@@ -30,10 +30,3 @@ end
 ## checks constant columns
 check_constant_cols(X::Matrix{T}) where {T<:AbstractFloat} = size(X,1)>1 && !any(all(X .== X[1,:]',dims=1)) || error("You must remove constant columns of input data (X) before train")
 check_constant_cols(Y::Vector{T}) where {T<:AbstractFloat} = length(Y)>1 && length(unique(Y)) > 1 || error("Your target values are constant. All values are equal to $(Y[1])")
-
-## Preprocessing data using z-score statistics. this is due to the fact that if X and Y are z-scored, than X'Y returns for W vector a pearson correlation for each element! :)
-centralize_data(D::Matrix{T}, m::Matrix{T}, s::Matrix{T}) where {T<:AbstractFloat}  = (D .-m)./s
-centralize_data(D::Vector{T}, m::T, s::T)  where {T<:AbstractFloat} = (D .-m)./s
-
-decentralize_data(D::Matrix{T}, m::Matrix{T}, s::Matrix{T}) where {T<:AbstractFloat} = D .*s .+m
-decentralize_data(D::Vector{T}, m::T, s::T)  where {T<:AbstractFloat}               = D .*s .+m
