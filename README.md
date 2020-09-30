@@ -1,110 +1,106 @@
-PLSRegressor.jl
-======
+# PLSRegressor.jl
+[![][travis-img]][travis-url] [![][codecov-img]][codecov-url] [![][coverage-img]][coverage-url]
 
-A Partial Least Squares Regressor package. Contains PLS1, PLS2 and Kernel PLS2 NIPALS algorithms.
+The PLSRegressor.jl package is a package with Partial Least Squares Regressor methods. Contains PLS1, PLS2 and Kernel PLS2 NIPALS algorithms.
 Can be used mainly for regression. However, for classification task, binarizing targets and then obtaining multiple targets, you can apply KPLS.
 
+## Install
 
-| **PackageEvaluator**            | **Build Status**                          |
-|:-------------------------------:|:-----------------------------------------:|
-| [![][pkg-0.6-img]][pkg-0.6-url] | [![][travis-img]][travis-url] [![][codecov-img]][codecov-url] |
+The package can be installed with the Julia package manager.
+From the Julia REPL, type `]` to enter the Pkg REPL mode and run:
 
-[travis-img]: https://travis-ci.org/lalvim/PLSRegressor.jl.svg?branch=master
-[travis-url]: https://travis-ci.org/lalvim/PLSRegressor.jl
+```
+pkg> add PLSRegressor
+```
 
-[codecov-img]: http://codecov.io/github/lalvim/PLSRegressor.jl/coverage.svg?branch=master
-[codecov-url]: http://codecov.io/github/lalvim/PLSRegressor.jl?branch=master
+Or, equivalently, via the `Pkg` API:
 
-[issues-url]: https://github.com/lalvim/PLSRegressor.jl/issues
+```julia
+julia> import Pkg; Pkg.add("PLSRegressor")
+```
 
-[pkg-0.6-img]: http://pkg.julialang.org/badges/PLSRegressor_0.6.svg
-[pkg-0.6-url]: http://pkg.julialang.org/?pkg=PLSRegressor&ver=0.6
-[pkg-0.7-img]: http://pkg.julialang.org/badges/PLSRegressor_0.7.svg
-[pkg-0.7-url]: http://pkg.julialang.org/?pkg=PLSRegressor&ver=0.7
+## Using
 
-Install
-=======
+```julia
+julia> using PLSRegressor
+```
 
-    Pkg.add("PLSRegressor") # or ] add PLSRegressor
+## Examples 1
 
-Using
-=====
+### Example 1
 
-    using PLSRegressor
+```julia
+using MLJBase, RDatasets, MLJTuning
+@load KPLS pkg=PLSRegressor
 
-Example 1
-========
+# loading data and selecting some features
+data = dataset("datasets", "longley")[:, 2:5]
 
-    using MLJBase, RDatasets, MLJTuning
-    @load KPLS pkg=PLSRegressor
+# unpacking the target
+y, X = unpack(data, ==(:GNP), colname -> true)
 
-    # loading data and selecting some features
-    data = dataset("datasets", "longley")[:, 2:5]
+# loading the model
+pls_model = KPLS()
 
-    # unpacking the target
-    y, X = unpack(data, ==(:GNP), colname -> true)
+# defining hyperparams for tunning
+r1 = range(pls_model, :width, lower=0.001, upper=100.0, scale=:log)
+r2 = range(pls_model, :n_factors, lower=1, upper=3)
 
-    # loading the model
-    pls_model = KPLS()
+# attaching tune
+self_tuning_pls_model = TunedModel(model = pls_model,
+                                   resampling = CV(nfolds = 10),
+                                   tuning = Grid(resolution = 100),
+                                   range = [r1, r2],
+                                   measure = mae)
 
-    # defining hyperparams for tunning
-    r1 = range(pls_model, :width, lower=0.001, upper=100.0, scale=:log)
-    r2 = range(pls_model, :n_factors, lower=1, upper=3)
+# putting into the machine
+self_tuning_pls = machine(self_tuning_pls_model, X, y)
 
-    # attaching tune
-    self_tuning_pls_model = TunedModel(model = pls_model,
-                                resampling = CV(nfolds = 10),
-                                tuning = Grid(resolution = 100),
-                                range = [r1, r2],
-                                measure = mae)
+# fitting with tunning
+fit!(self_tuning_pls, verbosity=0)
 
-    # putting into the machine
-    self_tuning_pls = machine(self_tuning_pls_model, X, y)
+# getting the reports
+report(self_tuning_pls).best_result
+report(self_tuning_pls).best_model
+```
 
-    # fitting with tunning
-    fit!(self_tuning_pls, verbosity=0)
+### Example 2
 
-    # getting the reports
-    report(self_tuning_pls).best_result
-    report(self_tuning_pls).best_model
+```julia
+using MLJBase, RDatasets
+@load PLS pkg=PLSRegressor
 
-Example 2
-========
+# loading data and selecting some features
+data = dataset("datasets", "longley")[:, 2:5]
 
-    using MLJBase, RDatasets
-    @load PLS pkg=PLSRegressor
+# unpacking the target
+y, X = unpack(data, ==(:GNP), colname -> true)
 
-    # loading data and selecting some features
-    data = dataset("datasets", "longley")[:, 2:5]
+# loading the model
+regressor = PLS(n_factors=2)
 
-    # unpacking the target
-    y, X = unpack(data, ==(:GNP), colname -> true)
+# building a pipeline with scaling on data
+pls_model = @pipeline Standardizer regressor target=Standardizer
 
-    # loading the model
-    regressor = PLS(n_factors=2)
-    
-    # building a pipeline with scaling on data
-    pls_model = @pipeline Standardizer regressor target=Standardizer
+# a simple hould out
+train, test = partition(eachindex(y), 0.7, shuffle=true)
 
-    # a simple hould out
-    train, test = partition(eachindex(y), 0.7, shuffle=true)
+pls_machine = machine(pls_model, X, y)
 
-    pls_machine = machine(pls_model, X, y)
+fit!(pls_machine, rows=train)
 
-    fit!(pls_machine, rows=train)
+yhat = predict(pls_machine, rows=test)
 
-    yhat = predict(pls_machine, rows=test)
+mae(yhat, y[test]) |> mean
+```
 
-    mae(yhat, y[test]) |> mean
+## What is Implemented
 
-What is Implemented
-======
 * A fast linear algorithm for single targets (PLS1 - NIPALS)
 * A linear algorithm for multiple targets (PLS2 - NIPALS)
 * A non linear algorithm for multiple targets (Kernel PLS2 - NIPALS)
 
-Model Description
-=======
+## Model Description
 
 * PLS - PLS MLJ model (PLS1 or PLS2)
     * n_factors::Int = 10 - The number of latent variables to explain the data.
@@ -114,8 +110,8 @@ Model Description
     * kernel::AbstractString = "rbf" - use a non linear kernel.
     * width::AbstractFloat   = 1.0 - If you want to z-score columns. Recommended if not z-scored yet.
 
-References
-=======
+## References
+
 * PLS1 and PLS2 based on
    * Bob Collins Slides, LPAC Group. http://vision.cse.psu.edu/seminars/talks/PLSpresentation.pdf
 * A Kernel PLS2 based on
@@ -132,8 +128,16 @@ by iterative least squares. In P.R. Krishnaiaah (Ed.). Multivariate Analysis.
 regression. Chemometrics and Intelligent Laboratory Systems, 18: 251–
 263
 
-License
-=======
+## License
 
 The PLSRegressor.jl is free software: you can redistribute it and/or modify it under the terms of the MIT "Expat"
-License. A copy of this license is provided in ``LICENSE.md``
+License. A copy of this license is provided in ``LICENSE``
+
+[travis-img]: https://travis-ci.com/lalvim/PLSRegressor.jl.svg?branch=master
+[travis-url]: https://travis-ci.com/lalvim/PLSRegressor.jl
+
+[codecov-img]: https://codecov.io/gh/lalvim/PLSRegressor.jl/branch/master/graph/badge.svg?token=13TrPsgakO
+[codecov-url]: https://codecov.io/gh/lalvim/PLSRegressor.jl
+
+[coverage-img]: https://coveralls.io/repos/github/lalvim/PLSRegressor.jl/badge.svg?branch=master
+[coverage-url]: https://coveralls.io/github/lalvim/PLSRegressor.jl?branch=master
