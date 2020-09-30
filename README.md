@@ -25,7 +25,7 @@ julia> import Pkg; Pkg.add("PLSRegressor")
 julia> using PLSRegressor
 ```
 
-## Examples 1
+Here are a few examples to show the Package functionalities:
 
 ### Example 1
 
