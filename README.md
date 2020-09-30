@@ -81,9 +81,12 @@ Example 2
     y, X = unpack(data, ==(:GNP), colname -> true)
 
     # loading the model
-    pls_model = PLS(n_factors=2, standardize=true)
+    regressor = PLS(n_factors=2)
+    
+    # building a pipeline with scaling on data
+    pls_model = @pipeline Standardizer regressor target=Standardizer
 
-    # or you can use a simple hould out
+    # a simple hould out
     train, test = partition(eachindex(y), 0.7, shuffle=true)
 
     pls_machine = machine(pls_model, X, y)
