@@ -1,6 +1,3 @@
-using LinearAlgebra
-
-
 ## the learning algorithm: PLS2 - multiple targets
 function trainer(model::PLS2Model{T},
                 X::AbstractArray{T}, Y::Matrix{T}) where T<:AbstractFloat
@@ -63,3 +60,4 @@ function predictor(model::PLS2Model{T},
 
     return Y
 end
+
