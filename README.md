@@ -108,11 +108,9 @@ Model Description
 
 * PLS - PLS MLJ model (PLS1 or PLS2)
     * n_factors::Int = 10 - The number of latent variables to explain the data.
-    * standardize::Bool = true - If you want to z-score columns. Recommended if not z-scored yet.
 
 * KPLS - Kernel PLS MLJ model
     * nfactors::Int = 10 - The number of latent variables to explain the data.
-    * standardize::Bool = true - If you want to z-score columns. Recommended if not z-scored yet.
     * kernel::AbstractString = "rbf" - use a non linear kernel.
     * width::AbstractFloat   = 1.0 - If you want to z-score columns. Recommended if not z-scored yet.
 
