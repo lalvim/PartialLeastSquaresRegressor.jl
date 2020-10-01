@@ -1,5 +1,3 @@
-using LinearAlgebra
-
 # A gaussian kernel function
 @inline function Φ(x::Vector{T},
                    y::Vector{T},
@@ -92,10 +90,10 @@ function trainer(model::KPLSModel{T},
         if iteration_count >= max_iterations
             if ignore_failures
                 nfactors = j
-                warn("KPLS: Found with less factors. Overall factors = $(nfactors)")
+                @warn("KPLS: Found with less factors. Overall factors = $(nfactors)")
                 break
             else
-                error("KPLS: failed to converge for component: $(nfactors+1)")
+                @error("KPLS: failed to converge for component: $(nfactors+1)")
             end
         end
         Tj[:, j] = t
@@ -114,7 +112,6 @@ function trainer(model::KPLSModel{T},
     Tj = Tj[:, 1:nfactors]
     Q = Q[:, 1:nfactors]
     U = U[:, 1:nfactors]
-    #P = P[:, 1:nfactors]
 
     model.nfactors = nfactors
     model.X        = X # unfortunately it is necessary on the prediction phase
@@ -146,7 +143,9 @@ function predictor(model::KPLSModel{T},
     Kt = (Kt - c * K) * (Matrix{T}(I, nx, nx) - (1.0 / nx) .* ones(T,nx,nx))
 
     Y = Kt * B
-
+    if size(Y,2) ==1
+       return dropdims(Y;dims=2)
+    end
     return Y
 
 end

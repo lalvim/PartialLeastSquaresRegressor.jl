@@ -4,3 +4,6 @@
 *.jld
 deps/deps.jl
 datasets/
+Manifest.toml
+juliadev
+.vscode

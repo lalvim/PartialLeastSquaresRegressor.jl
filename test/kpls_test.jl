@@ -1,7 +1,3 @@
-using Statistics
-using LinearAlgebra
-import Random
-
 @testset "KPLS Pediction Tests (in sample)" begin
 
     @testset "Test KPLS Single Non Linear Target" begin
@@ -13,86 +9,117 @@ import Random
         z_pure   = z(x_values)
         noise    = Random.randn(100)
         z_noisy  = z_pure + noise
-        X        = collect(x_values)[:,:]
-        Y        = z_noisy[:,:] #z_pure
-        model    = PLSRegressor.fit(X,Y,nfactors=1,kernel="rbf",width=0.01)
-    	Y_pred   = PLSRegressor.predict(model,X)
-        @test mean(abs.(Y .- Y_pred)) < 1e-2
+        X        = MLJ.table(collect(x_values)[:,:])
+        Y        = z_noisy #[:,:] #z_pure
+
+
+        pls_pipe       = MLJ.@pipeline prediction_type=:deterministic MLJ.Standardizer() PLSRegressor.KPLS(n_factors=1,kernel="rbf",width=0.01)  target = MLJ.Standardizer()
+
+
+		pls_machine    = MLJ.machine(pls_pipe, X, Y)
+
+        train = range(1,stop=length(X))
+        MLJ.fit!(pls_machine, rows=train,force=true)
+        yhat = MLJ.predict(pls_machine, rows=train);
+        @test MLJ.mae(yhat, Y[train]) |> mean < 1e-2
+
 
     end
 
     @testset "Test KPLS Single Target (Linear Target)" begin
 
 
-        X        = [1 2; 2 4; 4.0 6][:,:]
-        Y        = [-2; -4; -6.0][:,:]
-        model    = PLSRegressor.fit(X,Y,nfactors=1,kernel="rbf",width=0.01)
-    	Y_pred     = PLSRegressor.predict(model,X)
-        @test mean(abs.(Y .- Y_pred)) < 1e-6
+        X        = MLJ.table([1 2; 2 4; 4.0 6])
+        Y        = [-2; -4; -6.0] #[:,:]
 
-        X        = [1 2; 2 4; 4.0 6][:,:]
-        Y        = [2; 4; 6.0][:,:]
-        model    = PLSRegressor.fit(X,Y,nfactors=1,kernel="rbf",width=0.01)
-    	Y_pred     = PLSRegressor.predict(model,X)
-        @test mean(abs.(Y .- Y_pred)) < 1e-6
+
+        pls_pipe       = MLJ.@pipeline prediction_type=:deterministic MLJ.Standardizer() PLSRegressor.KPLS(n_factors=1,kernel="rbf",width=0.01)  target = MLJ.Standardizer()
+
+		pls_machine    = MLJ.machine(pls_pipe, X, Y)
+
+
+        train = range(1,stop=length(X))
+        MLJ.fit!(pls_machine, rows=train,force=true)
+        yhat = MLJ.predict(pls_machine, rows=train);
+        @test MLJ.mae(yhat, Y[train]) |> mean < 1e-2
+
+        X        = MLJ.table([1 2; 2 4; 4.0 6])
+        Y        = [2; 4; 6.0]#[:,:]
+
+
+        pls_pipe       = MLJ.@pipeline prediction_type=:deterministic MLJ.Standardizer() PLSRegressor.KPLS(n_factors=1,kernel="rbf",width=0.01)  target = MLJ.Standardizer()
+
+		pls_machine    = MLJ.machine(pls_pipe, X, Y)
+
+        train = range(1,stop=length(X))
+        MLJ.fit!(pls_machine, rows=train,force=true)
+        yhat = MLJ.predict(pls_machine, rows=train);
+        @test MLJ.mae(yhat, Y[train]) |> mean < 1e-2
 
     end
 
     @testset "Test KPLS Multiple Target (Linear Target)" begin
 
 
-        X        = [1; 2; 3.0][:,:]
-        Y        = [1 1; 2 2; 3 3.0][:,:]
-        model    = PLSRegressor.fit(X,Y,nfactors=1,kernel="rbf",width=0.01)
-    	Y_pred     = PLSRegressor.predict(model,X)
-        @test mean(abs.(Y .- Y_pred)) < 1e-6
+        X        = MLJ.table([1; 2; 3.0][:,:])
+        Y        = MLJ.table([1 1; 2 2; 3 3.0]) #[:,:]
 
-        X        = [1; 2; 3.0][:,:]
-        Y        = [1 -1; 2 -2; 3 -3.0][:,:]
-        model    = PLSRegressor.fit(X,Y,nfactors=1,kernel="rbf",width=0.01)
-    	Y_pred     = PLSRegressor.predict(model,X)
-        @test mean(abs.(Y .- Y_pred)) < 1e-6
+
+        pls_pipe       = MLJ.@pipeline prediction_type=:deterministic MLJ.Standardizer() PLSRegressor.KPLS(n_factors=1,kernel="rbf",width=0.01)  target = MLJ.Standardizer()
+
+		pls_machine    = MLJ.machine(pls_pipe, X, Y)
+
+        train = range(1,stop=length(X))
+        MLJ.fit!(pls_machine, rows=train,force=true)
+        yhat = MLJ.predict(pls_machine, rows=train);
+        @test abs.(MLJ.matrix(yhat) .- MLJ.matrix(Y)[train,:]) |> mean < 1e-6
+
+        X        = MLJ.table([1; 2; 3.0][:,:])
+        Y        = MLJ.table([1 -1; 2 -2; 3 -3.0])#[:,:]
+
+
+        pls_pipe       = MLJ.@pipeline prediction_type=:deterministic MLJ.Standardizer() PLSRegressor.KPLS(n_factors=1,kernel="rbf",width=0.01)  target = MLJ.Standardizer()
+
+
+		pls_machine    = MLJ.machine(pls_pipe, X, Y)
+
+        train = range(1,stop=length(X))
+        MLJ.fit!(pls_machine, rows=train,force=true)
+        yhat = MLJ.predict(pls_machine, rows=train);
+        @test abs.( MLJ.matrix(yhat) .- MLJ.matrix(Y)[train,:]) |> mean < 1e-6
 
         @testset "Linear Prediction Tests " begin
 
 
-        X        = [1 2; 2 4; 4 6.0][:,:]
-        Y        = [4 2;6 4;8 6.0][:,:]
-        model    = PLSRegressor.fit(X,Y,nfactors=1,kernel="rbf",width=0.01)
-    	Y_pred     = PLSRegressor.predict(model,X)
-        @test mean(abs.(Y .- Y_pred)) < 1e-6
+        X        = MLJ.table([1 2; 2 4; 4 6.0])
+        Y        = MLJ.table([4 2;6 4;8 6.0])#[:,:]
 
-        X           = [1 -2; 2 -4; 4 -6.0][:,:]
-        Y           = [-4 -2;-6 -4;-8 -6.0][:,:]
-        model    = PLSRegressor.fit(X,Y,nfactors=1,kernel="rbf",width=0.01)
-    	Y_pred     = PLSRegressor.predict(model,X)
-        @test mean(abs.(Y .- Y_pred)) < 1e-6
+        pls_pipe       = MLJ.@pipeline prediction_type=:deterministic MLJ.Standardizer() PLSRegressor.KPLS(n_factors=1,kernel="rbf",width=0.01)  target = MLJ.Standardizer()
+
+		pls_machine    = MLJ.machine(pls_pipe, X, Y)
+
+        train = range(1,stop=length(X))
+        MLJ.fit!(pls_machine, rows=train,force=true)
+        yhat = MLJ.predict(pls_machine, rows=train);
+        @test abs.( MLJ.matrix(yhat) .- MLJ.matrix(Y)[train,:]) |> mean < 1e-6
+
+        X           = MLJ.table([1 -2; 2 -4; 4 -6.0])
+        Y           = MLJ.table([-4 -2;-6 -4;-8 -6.0])#[:,:]
+
+        pls_pipe       = MLJ.@pipeline prediction_type=:deterministic MLJ.Standardizer() PLSRegressor.KPLS(n_factors=1,kernel="rbf",width=0.01)  target = MLJ.Standardizer()
+
+
+		pls_machine    = MLJ.machine(pls_pipe, X, Y)
+
+        train = range(1,stop=length(X))
+        MLJ.fit!(pls_machine, rows=train,force=true)
+        yhat = MLJ.predict(pls_machine, rows=train);
+        @test abs.(MLJ.matrix(yhat) .- MLJ.matrix(Y)[train,:]) |> mean < 1e-6
 
 
         end
 
 
     end
-
-end;
-
-### not saving yeat.
-
-@testset "Test Saving and Loading KPLS Models" begin
-
-
-	Xtr        = [1 -2; 2 -4; 4.0 -6]
-	Ytr        = [-2; -4; -6.0][:,:]
-	Xt         = [6 -8; 8 -10; 10.0 -12]
-	model1    = PLSRegressor.fit(Xtr,Ytr,nfactors=1,kernel="rbf",width=0.01)
-	pred1     = PLSRegressor.predict(model1,Xt)
-
-	PLSRegressor.save(model1)
-	model2    = PLSRegressor.load()
-
-	pred2     = PLSRegressor.predict(model2,Xt)
-    rm(PLSRegressor.MODEL_FILENAME)
-	@test all(pred1 .== pred2)
-
 
 end;

@@ -1,8 +1,7 @@
-using LinearAlgebra
-
 ## the learning algorithm: PLS1 - single target
 function trainer(model::PLS1Model{T},
                  X::AbstractArray{T}, Y::Vector{T}) where T<:AbstractFloat
+   
     W,b,P  = model.W,model.b,model.P
     nfactors = model.nfactors
     for i = 1:nfactors
