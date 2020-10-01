@@ -20,7 +20,7 @@
 
 	@testset "Constant Values Prediction Tests (Ax + b) | A=0, b=1 " begin
 
-		X        = MLJ.table([1 3;2 1;3 2.0])
+		X        = MLJ.table([1 3;2 1;3.0 2.0])
 		Y        = [1; 1; 1.0]
 		try
 
@@ -41,7 +41,7 @@
 	@testset "Linear Prediction Tests " begin
 
 
-		X        = MLJ.table([1 2; 2 4; 4.0 6])
+		X        = MLJ.table([1 2; 2 4; 4.0 6.0])
 		Y        = [2; 4; 6.0]
 
 
@@ -75,7 +75,7 @@
 	@testset "Linear Prediction Tests (Ax + b)" begin
 
 
-		X = MLJ.table([1 2; 2 4; 4.0 6;6 8; 8 10; 10.0 12])
+		X = MLJ.table([1 2; 2 4; 4.0 6;6 8; 8 10; 10.0 12.0])
 		Y = [2; 4; 6.0; 8; 10; 12.0]
 
 		train = range(1,stop=3)
@@ -92,7 +92,7 @@
 
 		@test isequal(round.(pred),[8; 10; 12.0])
 
-		X        = MLJ.table([1 2; 2 4.0; 4.0 6; 6 8; 1 2; 2 4.0])
+		X        = MLJ.table([1 2; 2 4.0; 4.0 6; 6 8; 1 2; 2.0 4.0])
 		Y        = [2; 4; 6.0; 8; 2; 4.0]
 
 		train = range(1,stop=4)
@@ -119,7 +119,7 @@ end;
 	@testset "Linear Prediction Tests (Ax + b) | A>0" begin
 
 
-		X        = MLJ.table([1 2; 2 4; 4.0 6;6 8; 8 10; 10.0 12])
+		X        = MLJ.table([1 2; 2 4; 4.0 6;6 8; 8 10; 10.0 12.0])
 		Y        = [2; 4; 6.0; 8.0; 10; 12]
 
 		train = range(1,stop=3)
@@ -138,7 +138,7 @@ end;
 		@test isequal(round.(pred),[8; 10; 12.0])
 
 
-		X        = MLJ.table([1 2; 2 4; 4.0 6; 6 8; 8 10; 10.0 12])
+		X        = MLJ.table([1 2; 2 4; 4.0 6; 6 8; 8 10; 10.0 12.0])
 		Y        = [4; 6; 8.0; 10; 12; 14.0]
 
 		train = range(1,stop=3)
@@ -178,7 +178,7 @@ end;
 		@test isequal(round.(pred),[-8; -10; -12.0])
 
 
-		X        = MLJ.table([1 -2; 2 -4; 4.0 -6; 6 -8; 8 -10; 10.0 -12])
+		X        = MLJ.table([1 -2; 2 -4; 4.0 -6; 6 -8; 8 -10; 10.0 -12.0])
 		Y        = [-4; -6; -8.0; -10; -12; -14.0]
 
 		train = range(1,stop=3)
