@@ -10,13 +10,13 @@ The package can be installed with the Julia package manager.
 From the Julia REPL, type `]` to enter the Pkg REPL mode and run:
 
 ```
-pkg> add PLSRegressor
+pkg> add PartialLeastSquaresRegressor
 ```
 
 Or, equivalently, via the `Pkg` API:
 
 ```julia
-julia> import Pkg; Pkg.add("PLSRegressor")
+julia> import Pkg; Pkg.add("PartialLeastSquaresRegressor")
 ```
 
 ## Using
@@ -27,7 +27,7 @@ PLSRegressor is compatible with [MLJ](https://github.com/alan-turing-institute/M
 
 ```julia
 using MLJBase, RDatasets, MLJTuning
-@load KPLS pkg=PLSRegressor
+@load KPLSRegressor pkg=PartialLeastSquaresRegressor
 
 # loading data and selecting some features
 data = dataset("datasets", "longley")[:, 2:5]
@@ -36,7 +36,7 @@ data = dataset("datasets", "longley")[:, 2:5]
 y, X = unpack(data, ==(:GNP), colname -> true)
 
 # loading the model
-pls_model = KPLS()
+pls_model = KPLSRegressor()
 
 # defining hyperparams for tunning
 r1 = range(pls_model, :width, lower=0.001, upper=100.0, scale=:log)
@@ -64,7 +64,7 @@ report(self_tuning_pls).best_model
 
 ```julia
 using MLJBase, RDatasets
-@load PLS pkg=PLSRegressor
+@load PLSRegressor pkg=PartialLeastSquaresRegressor
 
 # loading data and selecting some features
 data = dataset("datasets", "longley")[:, 2:5]
@@ -73,7 +73,7 @@ data = dataset("datasets", "longley")[:, 2:5]
 y, X = unpack(data, ==(:GNP), colname -> true)
 
 # loading the model
-regressor = PLS(n_factors=2)
+regressor = PLSRegressor(n_factors=2)
 
 # building a pipeline with scaling on data
 pls_model = @pipeline Standardizer regressor target=Standardizer
