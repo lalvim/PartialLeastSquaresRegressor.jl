@@ -126,14 +126,14 @@ regression. Chemometrics and Intelligent Laboratory Systems, 18: 251–
 
 ## License
 
-The PLSRegressor.jl is free software: you can redistribute it and/or modify it under the terms of the MIT "Expat"
+The PartialLeastSquaresRegressor.jl is free software: you can redistribute it and/or modify it under the terms of the MIT "Expat"
 License. A copy of this license is provided in ``LICENSE``
 
-[travis-img]: https://travis-ci.com/lalvim/PLSRegressor.jl.svg?branch=master
-[travis-url]: https://travis-ci.com/lalvim/PLSRegressor.jl
+[travis-img]: https://travis-ci.com/lalvim/PartialLeastSquaresRegressor.jl.svg?branch=master
+[travis-url]: https://travis-ci.com/lalvim/PartialLeastSquaresRegressor.jl
 
-[codecov-img]: https://codecov.io/gh/lalvim/PLSRegressor.jl/branch/master/graph/badge.svg?token=13TrPsgakO
-[codecov-url]: https://codecov.io/gh/lalvim/PLSRegressor.jl
+[codecov-img]: https://codecov.io/gh/lalvim/PartialLeastSquaresRegressor.jl/branch/master/graph/badge.svg?token=13TrPsgakO
+[codecov-url]: https://codecov.io/gh/lalvim/PartialLeastSquaresRegressor.jl
 
-[coverage-img]: https://coveralls.io/repos/github/lalvim/PLSRegressor.jl/badge.svg?branch=master
-[coverage-url]: https://coveralls.io/github/lalvim/PLSRegressor.jl?branch=master
+[coverage-img]: https://coveralls.io/repos/github/lalvim/PartialLeastSquaresRegressor.jl/badge.svg?branch=master
+[coverage-url]: https://coveralls.io/github/lalvim/PartialLeastSquaresRegressor.jl?branch=master
