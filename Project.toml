@@ -1,5 +1,5 @@
-name = "PLSRegressor"
-uuid = "e010f91f-06b9-52b3-bed3-bb1da186bddc"
+name = "PartialLeastSquaresRegressor"
+uuid = "f4b1acfe-f311-436c-bb79-8483f53c17d5"
 keywords = ["Partial Least Squares", "machine learning", "artificial intelligence", "Regression", "Multivariate Statistics", "Statistics"]
 license = "MIT"
 desc = "A Partial Least Squares Regressor package. Contains PLS1, PLS2 and Kernel PLS2 NIPALS algorithms. Can be used mainly for regression."
