@@ -1,4 +1,4 @@
-using PLSRegressor
+using PartialLeastSquaresRegressor
 using Test
 using MLJBase
 using MLJ

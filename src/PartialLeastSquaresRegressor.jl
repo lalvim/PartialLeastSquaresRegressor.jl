@@ -1,5 +1,5 @@
 # Partial Least Squares (PLS1 and PLS2 NIPALS version)
-module PLSRegressor
+module PartialLeastSquaresRegressor
 
 using LinearAlgebra
 using Statistics

@@ -8,24 +8,24 @@ const KPLSRegressor_Desc = "A Kernel Partial Least Squares Regressor. A Kernel P
 
 const MLJDICT = Dict(:Pls1 => PLS1Model,:Pls2 => PLS2Model,:Kpls => KPLSModel)
 
-mutable struct PLS <: MMI.Deterministic
+mutable struct PLSRegressor <: MMI.Deterministic
     n_factors::Int
 end
 
-mutable struct KPLS <: MMI.Deterministic
+mutable struct KPLSRegressor <: MMI.Deterministic
     n_factors::Integer
     kernel::String
     width::Real
 end
 
-function PLS(; n_factors=1)
-    model   = PLS(n_factors)
+function PLSRegressor(; n_factors=1)
+    model   = PLSRegressor(n_factors)
     message = MLJModelInterface.clean!(model)
     isempty(message) || @warn message
     return model
 end
 
-function MMI.clean!(m::PLS)
+function MMI.clean!(m::PLSRegressor)
     warning = ""
     if m.n_factors <= 0
         warning *= "Parameter `n_factors` expected to be positive, resetting to 1"
@@ -34,14 +34,14 @@ function MMI.clean!(m::PLS)
     return warning
 end
 
-function KPLS(; n_factors=1,kernel="rbf",width=1.0)
-    model   = KPLS(n_factors,kernel,width)
+function KPLSRegressor(; n_factors=1,kernel="rbf",width=1.0)
+    model   = KPLSRegressor(n_factors,kernel,width)
     message = MLJModelInterface.clean!(model)
     isempty(message) || @warn message
     return model
 end
 
-function MMI.clean!(m::KPLS)
+function MMI.clean!(m::KPLSRegressor)
     warning = ""
     if m.n_factors <= 0
         warning *= "Parameter `n_factors` expected to be positive, resetting to 1"
@@ -55,7 +55,7 @@ function MMI.clean!(m::KPLS)
     return warning
 end
 
-function MMI.fit(m::PLS, verbosity::Int, X,Y)
+function MMI.fit(m::PLSRegressor, verbosity::Int, X,Y)
 
     X =  MMI.matrix(X)
     Y = (MMI.scitype(Y) == Table{AbstractArray{Continuous,1}} ? MMI.matrix(Y) : Y)
@@ -75,7 +75,7 @@ function MMI.fit(m::PLS, verbosity::Int, X,Y)
 end
 
 
-function MMI.fit(m::KPLS, verbosity::Int, X,Y)
+function MMI.fit(m::KPLSRegressor, verbosity::Int, X,Y)
 
     X = MMI.matrix(X)
     Y = (MMI.scitype(Y) == Table{AbstractArray{Continuous,1}} ? MMI.matrix(Y) : Y)
@@ -96,7 +96,7 @@ function MMI.fit(m::KPLS, verbosity::Int, X,Y)
     return (fitresult,cache,report)
 end
 
-function MMI.predict(m::Union{PLS,KPLS}, fitresult, X)
+function MMI.predict(m::Union{PLSRegressor,KPLSRegressor}, fitresult, X)
 
     X = MMI.matrix(X)
     check_data(X,fitresult.nfeatures)
@@ -108,21 +108,21 @@ function MMI.predict(m::Union{PLS,KPLS}, fitresult, X)
 end
 
 MMI.metadata_pkg.(
-    (PLS, KPLS),
+    (PLSRegressor, KPLSRegressor),
     name       = "Partial Least Squares Regressor",
-    uuid       = "e010f91f-06b9-52b3-bed3-bb1da186bddc",
-    url        = "https://github.com/lalvim/PLSRegressor.jl",
+    uuid       = "f4b1acfe-f311-436c-bb79-8483f53c17d5",
+    url        = "https://github.com/lalvim/PartialLeastSquaresRegressor.jl",
     julia      = true,
     license    = "MIT",
     is_wrapper = false)
 
-MMI.metadata_model(PLS,
+MMI.metadata_model(PLSRegressor,
     input   = Table(Continuous),
     target  = Union{AbstractVector{<:Continuous},Table(Continuous)},
     weights = false,
     descr   = PLSRegressor_Desc)
 
-MMI.metadata_model(KPLS,
+MMI.metadata_model(KPLSRegressor,
     input   = Table(Continuous),
     target  = Union{AbstractVector{<:Continuous},Table(Continuous)},
     weights = false,
