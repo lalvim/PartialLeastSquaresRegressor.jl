@@ -1,7 +1,7 @@
-# PLSRegressor.jl
+# PartialLeastSquaresRegressor.jl
 [![][travis-img]][travis-url] [![][codecov-img]][codecov-url] [![][coverage-img]][coverage-url]
 
-The PLSRegressor.jl package is a package with Partial Least Squares Regressor methods. Contains PLS1, PLS2 and Kernel PLS2 NIPALS algorithms.
+The PartialLeastSquaresRegressor.jl package is a package with Partial Least Squares Regressor methods. Contains PLS1, PLS2 and Kernel PLS2 NIPALS algorithms.
 Can be used mainly for regression. However, for classification task, binarizing targets and then obtaining multiple targets, you can apply KPLS.
 
 ## Install
@@ -21,7 +21,7 @@ julia> import Pkg; Pkg.add("PartialLeastSquaresRegressor")
 
 ## Using
 
-PLSRegressor is compatible with [MLJ](https://github.com/alan-turing-institute/MLJ.jl) machine learning framework. Here are a few examples to show the Package functionalities:
+PartialLeastSquaresRegressor is compatible with [MLJ](https://github.com/alan-turing-institute/MLJ.jl) machine learning framework. Here are a few examples to show the Package functionalities:
 
 ### Example 1
 
