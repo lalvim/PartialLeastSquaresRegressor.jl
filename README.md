@@ -21,7 +21,7 @@ julia> import Pkg; Pkg.add("PartialLeastSquaresRegressor")
 
 ## Using
 
-PartialLeastSquaresRegressor is compatible with [MLJ](https://github.com/alan-turing-institute/MLJ.jl) machine learning framework. Here are a few examples to show the Package functionalities:
+PartialLeastSquaresRegressor is used with [MLJ](https://github.com/alan-turing-institute/MLJ.jl) machine learning framework. Here are a few examples to show the Package functionalities:
 
 ### Example 1
 
