@@ -40,13 +40,12 @@ pls_model = KPLSRegressor()
 
 # defining hyperparams for tunning
 r1 = range(pls_model, :width, lower=0.001, upper=100.0, scale=:log)
-r2 = range(pls_model, :n_factors, lower=1, upper=3)
 
 # attaching tune
 self_tuning_pls_model = TunedModel(model = pls_model,
                                    resampling = CV(nfolds = 10),
                                    tuning = Grid(resolution = 100),
-                                   range = [r1, r2],
+                                   range = [r1],
                                    measure = mae)
 
 # putting into the machine
@@ -55,9 +54,8 @@ self_tuning_pls = machine(self_tuning_pls_model, X, y)
 # fitting with tunning
 fit!(self_tuning_pls, verbosity=0)
 
-# getting the reports
-report(self_tuning_pls).best_result
-report(self_tuning_pls).best_model
+# getting the report
+report(self_tuning_pls)
 ```
 
 ### Example 2
