@@ -116,14 +116,7 @@ function trainer(model::KPLSModel{T},
     model.nfactors = nfactors
     model.X        = X # unfortunately it is necessary on the prediction phase
     model.K        = K # unfortunately it is necessary on the prediction phase
-    try
-       model.B        = U * inv(Tj' * K * U) * Q'
-    catch
-       error("KPLS: Not able to compute inverse.
-             Maybe nfactors is greater than ncols of input data (X) or
-             this matrix is not invertible.
-             ")
-    end
+    model.B        = U * inv(Tj' * K * U) * Q'
 
     return model
 
