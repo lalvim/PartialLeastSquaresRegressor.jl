@@ -63,7 +63,7 @@ report(self_tuning_pls).best_model
 ### Example 2
 
 ```julia
-using MLJBase, RDatasets
+using MLJBase, RDatasets, MLJModels
 @load PLSRegressor pkg=PartialLeastSquaresRegressor
 
 # loading data and selecting some features
