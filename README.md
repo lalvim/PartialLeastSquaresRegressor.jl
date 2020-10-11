@@ -26,6 +26,36 @@ PartialLeastSquaresRegressor is used with [MLJ](https://github.com/alan-turing-i
 ### Example 1
 
 ```julia
+using MLJBase, RDatasets, MLJModels
+@load PLSRegressor pkg=PartialLeastSquaresRegressor
+
+# loading data and selecting some features
+data = dataset("datasets", "longley")[:, 2:5]
+
+# unpacking the target
+y, X = unpack(data, ==(:GNP), colname -> true)
+
+# loading the model
+regressor = PLSRegressor(n_factors=2)
+
+# building a pipeline with scaling on data
+pls_model = @pipeline Standardizer regressor target=Standardizer
+
+# a simple hould out
+train, test = partition(eachindex(y), 0.7, shuffle=true)
+
+pls_machine = machine(pls_model, X, y)
+
+fit!(pls_machine, rows=train)
+
+yhat = predict(pls_machine, rows=test)
+
+mae(yhat, y[test]) |> mean
+```
+
+### Example 2
+
+```julia
 using MLJBase, RDatasets, MLJTuning
 @load KPLSRegressor pkg=PartialLeastSquaresRegressor
 
@@ -56,36 +86,6 @@ fit!(self_tuning_pls, verbosity=0)
 
 # getting the report
 report(self_tuning_pls)
-```
-
-### Example 2
-
-```julia
-using MLJBase, RDatasets, MLJModels
-@load PLSRegressor pkg=PartialLeastSquaresRegressor
-
-# loading data and selecting some features
-data = dataset("datasets", "longley")[:, 2:5]
-
-# unpacking the target
-y, X = unpack(data, ==(:GNP), colname -> true)
-
-# loading the model
-regressor = PLSRegressor(n_factors=2)
-
-# building a pipeline with scaling on data
-pls_model = @pipeline Standardizer regressor target=Standardizer
-
-# a simple hould out
-train, test = partition(eachindex(y), 0.7, shuffle=true)
-
-pls_machine = machine(pls_model, X, y)
-
-fit!(pls_machine, rows=train)
-
-yhat = predict(pls_machine, rows=test)
-
-mae(yhat, y[test]) |> mean
 ```
 
 ## What is Implemented
