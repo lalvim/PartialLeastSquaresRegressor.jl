@@ -93,20 +93,3 @@ function PLSModel(X::Matrix{T},
             kernel,
             width)
 end
-
-
-######################################################################################################
-## Load and Store models (good for production)
-function load(; filename::AbstractString = MODEL_FILENAME, modelname::AbstractString = MODEL_ID)
-    local M
-    jldopen(filename, "r") do file
-        M = read(file, modelname)
-    end
-    M
-end
-
-function save(M::PLSModel; filename::AbstractString = MODEL_FILENAME, modelname::AbstractString = MODEL_ID)
-    jldopen(filename, "w") do file
-        write(file, modelname, M)
-    end
-end
