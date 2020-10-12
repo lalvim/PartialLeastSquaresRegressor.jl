@@ -56,7 +56,7 @@ mae(yhat, y[test]) |> mean
 ### Example 2
 
 ```julia
-using MLJBase, RDatasets, MLJTuning
+using MLJBase, RDatasets, MLJTuning, MLJModels
 @load KPLSRegressor pkg=PartialLeastSquaresRegressor
 
 # loading data and selecting some features
@@ -66,16 +66,18 @@ data = dataset("datasets", "longley")[:, 2:5]
 y, X = unpack(data, ==(:GNP), colname -> true)
 
 # loading the model
-pls_model = KPLSRegressor()
+#regressor = KPLSRegressor()
+pls_model = KPLSRegressor()#@pipeline Standardizer regressor target=Standardizer
 
 # defining hyperparams for tunning
 r1 = range(pls_model, :width, lower=0.001, upper=100.0, scale=:log)
+r2 = range(pls_model, :n_factors, lower=1, upper=2)
 
 # attaching tune
-self_tuning_pls_model = TunedModel(model = pls_model,
+self_tuning_pls_model = TunedModel(model =          pls_model,
                                    resampling = CV(nfolds = 10),
                                    tuning = Grid(resolution = 100),
-                                   range = [r1],
+                                   range = [r1,r2],
                                    measure = mae)
 
 # putting into the machine
