@@ -116,7 +116,7 @@ function trainer(model::KPLSModel{T},
     model.nfactors = nfactors
     model.X        = X # unfortunately it is necessary on the prediction phase
     model.K        = K # unfortunately it is necessary on the prediction phase
-    model.B        = U * inv(Tj' * K * U) * Q'
+    model.B        = U * pinv(Tj' * K * U) * Q'
 
     return model
 
