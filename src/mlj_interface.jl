@@ -109,7 +109,7 @@ end
 
 MMI.metadata_pkg.(
     (PLSRegressor, KPLSRegressor),
-    name       = "Partial Least Squares Regressor",
+    name       = "PartialLeastSquaresRegressor",
     uuid       = "f4b1acfe-f311-436c-bb79-8483f53c17d5",
     url        = "https://github.com/lalvim/PartialLeastSquaresRegressor.jl",
     julia      = true,
@@ -117,12 +117,14 @@ MMI.metadata_pkg.(
     is_wrapper = false)
 
 MMI.metadata_model(PLSRegressor,
+    path = "PartialLeastSquaresRegressor.PLSRegressor",
     input   = Table(Continuous),
     target  = Union{AbstractVector{<:Continuous},Table(Continuous)},
     weights = false,
     descr   = PLSRegressor_Desc)
 
 MMI.metadata_model(KPLSRegressor,
+    path = "PartialLeastSquaresRegressor.KPLSRegressor",
     input   = Table(Continuous),
     target  = Union{AbstractVector{<:Continuous},Table(Continuous)},
     weights = false,
