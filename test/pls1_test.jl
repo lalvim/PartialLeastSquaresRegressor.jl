@@ -48,7 +48,7 @@
                 Y        = [2; 4; 6.0]
 
 
-        pls_pipe       = MLJBase.@pipeline prediction_type=:deterministic Stand.Standardizer() PartialLeastSquaresRegressor.PLSRegressor(n_factors=1)  target = Stand.Standardizer()
+                pls_pipe       = MLJBase.@pipeline prediction_type=:deterministic Stand.Standardizer() PartialLeastSquaresRegressor.PLSRegressor(n_factors=1)  target = Stand.Standardizer()
 
 
                 pls_machine    = MLJBase.machine(pls_pipe, X, Y)
