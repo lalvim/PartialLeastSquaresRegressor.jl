@@ -6,7 +6,7 @@ function fitting(model::OPLS1Model,
     w=X'*Y         # calculate weight vector
     w=w/norm(w)    # normalization
 
-    for i in 1:model.n_components
+    for i in 1:model.n_ortho_components
         t=X*w                     # calculate scores vector  nrows
         p=X'*t/(t'*t)             # calculate loadings of X  ncols
         wosc=p-(w'*p)/(w'*w)*w    # orthogonal weight        ncols
@@ -31,17 +31,17 @@ function filter!(model::OPLS1Model,
     X::AbstractArray{T}) where T<:AbstractFloat
     nrow = size(X,1)
     # ortogonal weights
-    ortho = zeros(T, nrow, model.n_components)
+    ortho = zeros(T, nrow, model.n_ortho_components)
 
-    for i in 1:model.n_components
+    for i in 1:model.n_ortho_components
         R = X * model.W_ortho[:,i]
-        Xt = X - R * model.P_ortho[:,i]'
+        X = X - R * model.P_ortho[:,i]'
         ortho[:,i] = R
     end
 
-    return Xt, ortho
+    return X, ortho
 end
 
 function component(model::OPLS1Model{T},i) where T<:AbstractFloat
-    return model_pls.W[:,i]
+    return model.W_ortho[:,i]
 end

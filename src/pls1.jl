@@ -49,14 +49,14 @@ function filter!(model::PLS1Model{T},
     Y_pred = zeros(size(X,1))
 
     for i = 1:model.nfactors
-        X_proj[:,i] = X*model_pls.W[:,i]
-        X           = X - X_proj[:,i]*model_pls.P[:,i]'
-        Y_pred      = Y_pred + X_proj[:,i]*model_pls.b[i] # building prediction
+        X_proj[:,i] = X*model.W[:,i]
+        X           = X - X_proj[:,i]*model.P[:,i]'
+        Y_pred      = Y_pred + X_proj[:,i]*model.b[i] # building prediction
     end
 
     return X, X_proj, Y_pred
 end
 
 function component(model::PLS1Model{T},i) where T<:AbstractFloat
-    return model_pls.W[:,i]
+    return model.W[:,i]
 end
