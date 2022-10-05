@@ -6,7 +6,8 @@ using MLJModelInterface
 using ..MLJBase.Tables
 const MMI = MLJModelInterface
 using Statistics
-import ..MLJBase.MLJScientificTypes.coerce
+#import ..MLJBase.MLJScientificTypes.coerce
+import ScientificTypes.coerce
 
 const UNIVARIATE_STD_DESCR = "Standardize (whiten) univariate data."
 const STANDARDIZER_DESCR = "Standardize (whiten) features (columns) "*
