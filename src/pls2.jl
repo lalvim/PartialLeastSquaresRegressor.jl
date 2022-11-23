@@ -61,3 +61,27 @@ function predictor(model::PLS2Model{T},
     return Y
 end
 
+function filter!(model::PLS2Model{T},
+    X::AbstractArray{T}) where T<:AbstractFloat
+
+    nrows  = size(X,1)
+    X_proj = zeros(T, nrows, model.nfactors)
+
+    W,Q,P      = model.W,model.Q,model.P
+    nfactors   = model.nfactors
+    Y          = zeros(T,size(X,1),model.ntargetcols)
+    #println("nfactors: ",nfactors)
+    for i = 1:nfactors
+        #R      = X*W[:,i]
+        X_proj[:,i] = X*model.W[:,i]
+        X      = X - X_proj[:,i] * P[:,i]'
+        Y      = Y + X_proj[:,i] * Q[:,i]'
+    end
+
+    return X,X_proj,Y
+end
+
+
+function component(model::PLS2Model{T},i) where T<:AbstractFloat
+    return model.W[:,i]
+end
