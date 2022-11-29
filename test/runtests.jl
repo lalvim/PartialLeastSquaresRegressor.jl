@@ -4,6 +4,7 @@ using MLJBase
 using MLJModels
 using Statistics
 using Random
+using MLJTestInterface
 
 # helper to wrap a partial least square regressor in standardization of inputs and target
 function pipe(n_factors; kernel=false)
@@ -25,3 +26,4 @@ include("./utils_test.jl")
 include("./pls1_test.jl")
 include("./pls2_test.jl")
 include("./kpls_test.jl")
+include("./mlj_interface_test.jl")

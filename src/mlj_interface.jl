@@ -55,11 +55,17 @@ function MMI.clean!(m::KPLSRegressor)
     return warning
 end
 
-function MMI.fit(m::PLSRegressor, verbosity::Int, X,Y)
+# Because PLSModel type and it's relatives cannot accept subarrays (views) in their
+# constructors, we need to modify `MMI.matrix`:
+_concretify(X::Array) = X
+_concretify(X::AbstractArray) = convert(Array, X)
+_matrix(X::AbstractArray) = _concretify(X)
+_matrix(table) = _concretify(MMI.matrix(table))
 
-    X =  MMI.matrix(X)
-    Y = (MMI.scitype(Y) == Table{AbstractArray{Continuous,1}} ? MMI.matrix(Y) : Y)
-    Y = (MMI.scitype(Y) == Table{AbstractArray{Continuous,2}} ? MMI.matrix(Y) : Y)
+function MMI.fit(m::PLSRegressor, verbosity, _X, _Y)
+
+    X =  _matrix(_X)
+    Y = _matrix(_Y)
 
     check_constant_cols(X)
     check_constant_cols(Y)
@@ -75,11 +81,10 @@ function MMI.fit(m::PLSRegressor, verbosity::Int, X,Y)
 end
 
 
-function MMI.fit(m::KPLSRegressor, verbosity::Int, X,Y)
+function MMI.fit(m::KPLSRegressor, verbosity, _X, _Y)
 
-    X = MMI.matrix(X)
-    Y = (MMI.scitype(Y) == Table{AbstractArray{Continuous,1}} ? MMI.matrix(Y) : Y)
-    Y = (MMI.scitype(Y) == Table{AbstractArray{Continuous,2}} ? MMI.matrix(Y) : Y)
+    X = _matrix(_X)
+    Y = _matrix(_Y)
 
     check_constant_cols(X)
     check_constant_cols(Y)
@@ -96,9 +101,9 @@ function MMI.fit(m::KPLSRegressor, verbosity::Int, X,Y)
     return (fitresult,cache,report)
 end
 
-function MMI.predict(m::Union{PLSRegressor,KPLSRegressor}, fitresult, X)
+function MMI.predict(m::Union{PLSRegressor,KPLSRegressor}, fitresult, _X)
 
-    X = MMI.matrix(X)
+    X = _matrix(_X)
     check_data(X,fitresult.nfeatures)
 
     Y =  predicting(fitresult,X)

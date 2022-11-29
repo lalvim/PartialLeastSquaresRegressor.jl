@@ -18,7 +18,7 @@
 		pls_machine    = MLJBase.machine(pls_pipe, X, Y)
 
         train = range(1,stop=nrows(X))
-        MLJBase.fit!(pls_machine, rows=train,force=true)
+        MLJBase.fit!(pls_machine, rows=train,verbosity=0)
         yhat = MLJBase.predict(pls_machine, rows=train);
         @test MLJBase.mae(yhat, Y[train]) |> mean < 1e-2
 
@@ -38,7 +38,7 @@
 
 
         train = range(1,stop=nrows(X))
-        MLJBase.fit!(pls_machine, rows=train,force=true)
+        MLJBase.fit!(pls_machine, rows=train,verbosity=0)
         yhat = MLJBase.predict(pls_machine, rows=train);
         @test MLJBase.mae(yhat, Y[train]) |> mean < 1e-2
 
@@ -51,7 +51,7 @@
 		pls_machine    = MLJBase.machine(pls_pipe, X, Y)
 
         train = range(1,stop=nrows(X))
-        MLJBase.fit!(pls_machine, rows=train,force=true)
+        MLJBase.fit!(pls_machine, rows=train,verbosity=0)
         yhat = MLJBase.predict(pls_machine, rows=train);
         @test MLJBase.mae(yhat, Y[train]) |> mean < 1e-2
 
@@ -68,7 +68,7 @@
 		pls_machine    = MLJBase.machine(pls_pipe, X, Y)
 
         train = range(1,stop=nrows(X))
-        MLJBase.fit!(pls_machine, rows=train,force=true)
+        MLJBase.fit!(pls_machine, rows=train,verbosity=0)
         yhat = MLJBase.predict(pls_machine, rows=train);
         @test abs.(MLJBase.matrix(yhat) .- MLJBase.matrix(Y)[train,:]) |> mean < 1e-6
 
@@ -81,7 +81,7 @@
 		pls_machine    = MLJBase.machine(pls_pipe, X, Y)
 
         train = range(1,stop=nrows(X))
-        MLJBase.fit!(pls_machine, rows=train,force=true)
+        MLJBase.fit!(pls_machine, rows=train,verbosity=0)
         yhat = MLJBase.predict(pls_machine, rows=train);
         @test abs.( MLJBase.matrix(yhat) .- MLJBase.matrix(Y)[train,:]) |> mean < 1e-6
 
@@ -96,7 +96,7 @@
 		pls_machine    = MLJBase.machine(pls_pipe, X, Y)
 
         train = range(1,stop=nrows(X))
-        MLJBase.fit!(pls_machine, rows=train,force=true)
+        MLJBase.fit!(pls_machine, rows=train,verbosity=0)
         yhat = MLJBase.predict(pls_machine, rows=train);
         @test abs.( MLJBase.matrix(yhat) .- MLJBase.matrix(Y)[train,:]) |> mean < 1e-6
 
@@ -108,7 +108,7 @@
 		pls_machine    = MLJBase.machine(pls_pipe, X, Y)
 
         train = range(1,stop=nrows(X))
-        MLJBase.fit!(pls_machine, rows=train,force=true)
+        MLJBase.fit!(pls_machine, rows=train,verbosity=0)
         yhat = MLJBase.predict(pls_machine, rows=train);
         @test abs.(MLJBase.matrix(yhat) .- MLJBase.matrix(Y)[train,:]) |> mean < 1e-6
 

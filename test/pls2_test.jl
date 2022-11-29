@@ -10,7 +10,7 @@
 		pls_machine    = MLJBase.machine(pls_pipe, X, Y)
 
 		train = range(1,stop=nrows(X))
-		MLJBase.fit!(pls_machine, rows=train,force=true)
+		MLJBase.fit!(pls_machine, rows=train,verbosity=0)
 		pred = MLJBase.predict(pls_machine, rows=train);
 		pred = MLJBase.matrix(pred)
 
@@ -29,7 +29,7 @@
 		pls_machine    = MLJBase.machine(pls_pipe, X, Y)
 
         train = range(1,stop=nrows(X))
-        MLJBase.fit!(pls_machine, rows=train,force=true)
+        MLJBase.fit!(pls_machine, rows=train,verbosity=0)
         pred = MLJBase.predict(pls_machine, rows=train);
 		pred = MLJBase.matrix(pred)
 
@@ -43,7 +43,7 @@
 		pls_machine    = MLJBase.machine(pls_pipe, X, Y)
 
         train = range(1,stop=nrows(X))
-        MLJBase.fit!(pls_machine, rows=train,force=true)
+        MLJBase.fit!(pls_machine, rows=train,verbosity=0)
         pred = MLJBase.predict(pls_machine, rows=train);
 		pred = MLJBase.matrix(pred)
 
@@ -72,7 +72,7 @@ end
 		test  = range(6,stop=7)
 
 
-        MLJBase.fit!(pls_machine, rows=train,force=true)
+        MLJBase.fit!(pls_machine, rows=train,verbosity=0)
         pred = MLJBase.predict(pls_machine, rows=test);
 		pred = MLJBase.matrix(pred)
 
@@ -90,7 +90,7 @@ end
 		train = range(1,stop=5)
 		test  = range(6,stop=7)
 
-        MLJBase.fit!(pls_machine, rows=train,force=true)
+        MLJBase.fit!(pls_machine, rows=train,verbosity=0)
         pred = MLJBase.predict(pls_machine, rows=test);
 		pred = MLJBase.matrix(pred)
 
@@ -112,7 +112,7 @@ end
 		train = range(1,stop=5)
 		test  = range(6,stop=7)
 
-        MLJBase.fit!(pls_machine, rows=train,force=true)
+        MLJBase.fit!(pls_machine, rows=train,verbosity=0)
         pred = MLJBase.predict(pls_machine, rows=test);
 		pred = MLJBase.matrix(pred)
 
@@ -129,7 +129,7 @@ end
 		train = range(1,stop=5)
 		test  = range(6,stop=7)
 
-        MLJBase.fit!(pls_machine, rows=train,force=true)
+        MLJBase.fit!(pls_machine, rows=train,verbosity=0)
         pred = MLJBase.predict(pls_machine, rows=test);
 		pred = MLJBase.matrix(pred)
 
