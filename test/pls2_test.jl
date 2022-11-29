@@ -5,12 +5,11 @@
 		X        = MLJBase.table([1; 2; 3.0][:,:])
 		Y        = MLJBase.table([1 1; 2 2; 3.0 3.0])
 
-        pls_pipe       = MLJBase.@pipeline prediction_type=:deterministic Stand.Standardizer() PartialLeastSquaresRegressor.PLSRegressor(n_factors=1)  target = Stand.Standardizer()
-
+        pls_pipe  = pipe(1)
 
 		pls_machine    = MLJBase.machine(pls_pipe, X, Y)
 
-		train = range(1,stop=length(X))
+		train = range(1,stop=nrows(X))
 		MLJBase.fit!(pls_machine, rows=train,force=true)
 		pred = MLJBase.predict(pls_machine, rows=train);
 		pred = MLJBase.matrix(pred)
@@ -25,11 +24,11 @@
 		X        = MLJBase.table([1 2; 2 4; 4 6.0])
 		Y        = MLJBase.table([4 2;6 4;8 6.0])
 
-        pls_pipe       = MLJBase.@pipeline prediction_type=:deterministic Stand.Standardizer() PartialLeastSquaresRegressor.PLSRegressor(n_factors=2)  target = Stand.Standardizer()
+        pls_pipe = pipe(2)
 
 		pls_machine    = MLJBase.machine(pls_pipe, X, Y)
 
-        train = range(1,stop=length(X))
+        train = range(1,stop=nrows(X))
         MLJBase.fit!(pls_machine, rows=train,force=true)
         pred = MLJBase.predict(pls_machine, rows=train);
 		pred = MLJBase.matrix(pred)
@@ -39,11 +38,11 @@
 		X           = MLJBase.table([1 -2; 2 -4; 4 -6.0])
 		Y           = MLJBase.table([-4 -2;-6 -4;-8 -6.0])
 
-        pls_pipe       = MLJBase.@pipeline prediction_type=:deterministic Stand.Standardizer() PartialLeastSquaresRegressor.PLSRegressor(n_factors=2)  target = Stand.Standardizer()
+        pls_pipe = pipe(2)
 
 		pls_machine    = MLJBase.machine(pls_pipe, X, Y)
 
-        train = range(1,stop=length(X))
+        train = range(1,stop=nrows(X))
         MLJBase.fit!(pls_machine, rows=train,force=true)
         pred = MLJBase.predict(pls_machine, rows=train);
 		pred = MLJBase.matrix(pred)
@@ -65,7 +64,7 @@ end
 		X        = MLJBase.table([1 2;2 4;3 6;6 12;7 14.0;4 8;5 10.0])
 		Y        = MLJBase.table([2 2;4 4;6 6;12 12;14 14.0;8 8;10 10.0])
 
-        pls_pipe       = MLJBase.@pipeline prediction_type=:deterministic Stand.Standardizer() PartialLeastSquaresRegressor.PLSRegressor(n_factors=2)  target = Stand.Standardizer()
+        pls_pipe = pipe(2)
 
 		pls_machine    = MLJBase.machine(pls_pipe, X, Y)
 
@@ -84,7 +83,7 @@ end
 		Y        = MLJBase.table([2 4;4 6;6 8;12 14;14 16.0; 8 10;10 12.0])
 
 
-    	pls_pipe       = MLJBase.@pipeline prediction_type=:deterministic Stand.Standardizer() PartialLeastSquaresRegressor.PLSRegressor(n_factors=2)  target = Stand.Standardizer()
+    	pls_pipe = pipe(2)
 
 		pls_machine    = MLJBase.machine(pls_pipe, X, Y)
 
@@ -106,7 +105,7 @@ end
 		X        = MLJBase.table([1 -2;2 -4;3 -6;6 -12;7 -14.0; 4 -8;5 -10.0])
 		Y        = MLJBase.table([2 -2;4 -4;6 -6;12 -12;14 -14.0; 8 -8;10 -10.0])
 
-        pls_pipe       = MLJBase.@pipeline prediction_type=:deterministic Stand.Standardizer() PartialLeastSquaresRegressor.PLSRegressor(n_factors=2)  target = Stand.Standardizer()
+        pls_pipe = pipe(2)
 
 		pls_machine    = MLJBase.machine(pls_pipe, X, Y)
 
@@ -123,7 +122,7 @@ end
 		X        = MLJBase.table([1 -2;2 -4;3 -6;6 -12;7 -14.0; 4 -8;5 -10.0])
 		Y        = MLJBase.table([2 -4;4 -6;6 -8;12 -14;14 -16.0; 8 -10;10 -12.0])
 
-        pls_pipe       = MLJBase.@pipeline prediction_type=:deterministic Stand.Standardizer() PartialLeastSquaresRegressor.PLSRegressor(n_factors=2)  target = Stand.Standardizer()
+        pls_pipe = pipe(2)
 
 		pls_machine    = MLJBase.machine(pls_pipe, X, Y)
 

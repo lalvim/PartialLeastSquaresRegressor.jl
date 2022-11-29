@@ -13,12 +13,11 @@
         Y        = z_noisy #[:,:] #z_pure
 
 
-        pls_pipe       = MLJBase.@pipeline prediction_type=:deterministic Stand.Standardizer() PartialLeastSquaresRegressor.KPLSRegressor(n_factors=1,kernel="rbf",width=0.01)  target = Stand.Standardizer()
-
+        pls_pipe = pipe(1, kernel=true)
 
 		pls_machine    = MLJBase.machine(pls_pipe, X, Y)
 
-        train = range(1,stop=length(X))
+        train = range(1,stop=nrows(X))
         MLJBase.fit!(pls_machine, rows=train,force=true)
         yhat = MLJBase.predict(pls_machine, rows=train);
         @test MLJBase.mae(yhat, Y[train]) |> mean < 1e-2
@@ -33,12 +32,12 @@
         Y        = [-2; -4; -6.0] #[:,:]
 
 
-        pls_pipe       = MLJBase.@pipeline prediction_type=:deterministic Stand.Standardizer() PartialLeastSquaresRegressor.KPLSRegressor(n_factors=1,kernel="rbf",width=0.01)  target = Stand.Standardizer()
+        pls_pipe = pipe(1, kernel=true)
 
 		pls_machine    = MLJBase.machine(pls_pipe, X, Y)
 
 
-        train = range(1,stop=length(X))
+        train = range(1,stop=nrows(X))
         MLJBase.fit!(pls_machine, rows=train,force=true)
         yhat = MLJBase.predict(pls_machine, rows=train);
         @test MLJBase.mae(yhat, Y[train]) |> mean < 1e-2
@@ -47,11 +46,11 @@
         Y        = [2; 4; 6.0]#[:,:]
 
 
-        pls_pipe       = MLJBase.@pipeline prediction_type=:deterministic Stand.Standardizer() PartialLeastSquaresRegressor.KPLSRegressor(n_factors=1,kernel="rbf",width=0.01)  target = Stand.Standardizer()
+        pls_pipe = pipe(1, kernel=true)
 
 		pls_machine    = MLJBase.machine(pls_pipe, X, Y)
 
-        train = range(1,stop=length(X))
+        train = range(1,stop=nrows(X))
         MLJBase.fit!(pls_machine, rows=train,force=true)
         yhat = MLJBase.predict(pls_machine, rows=train);
         @test MLJBase.mae(yhat, Y[train]) |> mean < 1e-2
@@ -64,12 +63,11 @@
         X        = MLJBase.table([1; 2; 3.0][:,:])
         Y        = MLJBase.table([1 1; 2 2; 3 3.0]) #[:,:]
 
-
-        pls_pipe       = MLJBase.@pipeline prediction_type=:deterministic Stand.Standardizer() PartialLeastSquaresRegressor.KPLSRegressor(n_factors=1,kernel="rbf",width=0.01)  target = Stand.Standardizer()
+        pls_pipe = pipe(1, kernel=true)
 
 		pls_machine    = MLJBase.machine(pls_pipe, X, Y)
 
-        train = range(1,stop=length(X))
+        train = range(1,stop=nrows(X))
         MLJBase.fit!(pls_machine, rows=train,force=true)
         yhat = MLJBase.predict(pls_machine, rows=train);
         @test abs.(MLJBase.matrix(yhat) .- MLJBase.matrix(Y)[train,:]) |> mean < 1e-6
@@ -78,12 +76,11 @@
         Y        = MLJBase.table([1 -1; 2 -2; 3 -3.0])#[:,:]
 
 
-        pls_pipe       = MLJBase.@pipeline prediction_type=:deterministic Stand.Standardizer() PartialLeastSquaresRegressor.KPLSRegressor(n_factors=1,kernel="rbf",width=0.01)  target = Stand.Standardizer()
-
+        pls_pipe = pipe(1, kernel=true)
 
 		pls_machine    = MLJBase.machine(pls_pipe, X, Y)
 
-        train = range(1,stop=length(X))
+        train = range(1,stop=nrows(X))
         MLJBase.fit!(pls_machine, rows=train,force=true)
         yhat = MLJBase.predict(pls_machine, rows=train);
         @test abs.( MLJBase.matrix(yhat) .- MLJBase.matrix(Y)[train,:]) |> mean < 1e-6
@@ -94,11 +91,11 @@
         X        = MLJBase.table([1 2; 2 4; 4 6.0])
         Y        = MLJBase.table([4 2;6 4;8 6.0])#[:,:]
 
-        pls_pipe       = MLJBase.@pipeline prediction_type=:deterministic Stand.Standardizer() PartialLeastSquaresRegressor.KPLSRegressor(n_factors=1,kernel="rbf",width=0.01)  target = Stand.Standardizer()
+        pls_pipe = pipe(1, kernel=true)
 
 		pls_machine    = MLJBase.machine(pls_pipe, X, Y)
 
-        train = range(1,stop=length(X))
+        train = range(1,stop=nrows(X))
         MLJBase.fit!(pls_machine, rows=train,force=true)
         yhat = MLJBase.predict(pls_machine, rows=train);
         @test abs.( MLJBase.matrix(yhat) .- MLJBase.matrix(Y)[train,:]) |> mean < 1e-6
@@ -106,12 +103,11 @@
         X           = MLJBase.table([1 -2; 2 -4; 4 -6.0])
         Y           = MLJBase.table([-4 -2;-6 -4;-8 -6.0])#[:,:]
 
-        pls_pipe       = MLJBase.@pipeline prediction_type=:deterministic Stand.Standardizer() PartialLeastSquaresRegressor.KPLSRegressor(n_factors=1,kernel="rbf",width=0.01)  target = Stand.Standardizer()
-
+        pls_pipe = pipe(1, kernel=true)
 
 		pls_machine    = MLJBase.machine(pls_pipe, X, Y)
 
-        train = range(1,stop=length(X))
+        train = range(1,stop=nrows(X))
         MLJBase.fit!(pls_machine, rows=train,force=true)
         yhat = MLJBase.predict(pls_machine, rows=train);
         @test abs.(MLJBase.matrix(yhat) .- MLJBase.matrix(Y)[train,:]) |> mean < 1e-6
