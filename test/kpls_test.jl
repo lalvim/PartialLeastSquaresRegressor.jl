@@ -12,30 +12,23 @@
         X        = MLJBase.table(collect(x_values)[:,:])
         Y        = z_noisy #[:,:] #z_pure
 
-
         pls_pipe = pipe(1, kernel=true)
-
-		pls_machine    = MLJBase.machine(pls_pipe, X, Y)
+        pls_machine    = MLJBase.machine(pls_pipe, X, Y)
 
         train = range(1,stop=nrows(X))
         MLJBase.fit!(pls_machine, rows=train,verbosity=0)
         yhat = MLJBase.predict(pls_machine, rows=train);
         @test MLJBase.mae(yhat, Y[train]) |> mean < 1e-2
 
-
     end
 
     @testset "Test KPLS Single Target (Linear Target)" begin
 
-
         X        = MLJBase.table([1 2; 2 4; 4.0 6])
         Y        = [-2; -4; -6.0] #[:,:]
 
-
         pls_pipe = pipe(1, kernel=true)
-
-		pls_machine    = MLJBase.machine(pls_pipe, X, Y)
-
+        pls_machine    = MLJBase.machine(pls_pipe, X, Y)
 
         train = range(1,stop=nrows(X))
         MLJBase.fit!(pls_machine, rows=train,verbosity=0)
@@ -45,10 +38,8 @@
         X        = MLJBase.table([1 2; 2 4; 4.0 6])
         Y        = [2; 4; 6.0]#[:,:]
 
-
         pls_pipe = pipe(1, kernel=true)
-
-		pls_machine    = MLJBase.machine(pls_pipe, X, Y)
+        pls_machine    = MLJBase.machine(pls_pipe, X, Y)
 
         train = range(1,stop=nrows(X))
         MLJBase.fit!(pls_machine, rows=train,verbosity=0)
@@ -59,13 +50,11 @@
 
     @testset "Test KPLS Multiple Target (Linear Target)" begin
 
-
         X        = MLJBase.table([1; 2; 3.0][:,:])
         Y        = MLJBase.table([1 1; 2 2; 3 3.0]) #[:,:]
 
         pls_pipe = pipe(1, kernel=true)
-
-		pls_machine    = MLJBase.machine(pls_pipe, X, Y)
+        pls_machine    = MLJBase.machine(pls_pipe, X, Y)
 
         train = range(1,stop=nrows(X))
         MLJBase.fit!(pls_machine, rows=train,verbosity=0)
@@ -77,8 +66,7 @@
 
 
         pls_pipe = pipe(1, kernel=true)
-
-		pls_machine    = MLJBase.machine(pls_pipe, X, Y)
+        pls_machine    = MLJBase.machine(pls_pipe, X, Y)
 
         train = range(1,stop=nrows(X))
         MLJBase.fit!(pls_machine, rows=train,verbosity=0)
@@ -87,34 +75,29 @@
 
         @testset "Linear Prediction Tests " begin
 
+            X        = MLJBase.table([1 2; 2 4; 4 6.0])
+            Y        = MLJBase.table([4 2;6 4;8 6.0])#[:,:]
 
-        X        = MLJBase.table([1 2; 2 4; 4 6.0])
-        Y        = MLJBase.table([4 2;6 4;8 6.0])#[:,:]
+            pls_pipe = pipe(1, kernel=true)
+            pls_machine    = MLJBase.machine(pls_pipe, X, Y)
 
-        pls_pipe = pipe(1, kernel=true)
+            train = range(1,stop=nrows(X))
+            MLJBase.fit!(pls_machine, rows=train,verbosity=0)
+            yhat = MLJBase.predict(pls_machine, rows=train);
+            @test abs.( MLJBase.matrix(yhat) .- MLJBase.matrix(Y)[train,:]) |> mean < 1e-6
 
-		pls_machine    = MLJBase.machine(pls_pipe, X, Y)
+            X           = MLJBase.table([1 -2; 2 -4; 4 -6.0])
+            Y           = MLJBase.table([-4 -2;-6 -4;-8 -6.0])#[:,:]
 
-        train = range(1,stop=nrows(X))
-        MLJBase.fit!(pls_machine, rows=train,verbosity=0)
-        yhat = MLJBase.predict(pls_machine, rows=train);
-        @test abs.( MLJBase.matrix(yhat) .- MLJBase.matrix(Y)[train,:]) |> mean < 1e-6
+            pls_pipe = pipe(1, kernel=true)
+            pls_machine    = MLJBase.machine(pls_pipe, X, Y)
 
-        X           = MLJBase.table([1 -2; 2 -4; 4 -6.0])
-        Y           = MLJBase.table([-4 -2;-6 -4;-8 -6.0])#[:,:]
-
-        pls_pipe = pipe(1, kernel=true)
-
-		pls_machine    = MLJBase.machine(pls_pipe, X, Y)
-
-        train = range(1,stop=nrows(X))
-        MLJBase.fit!(pls_machine, rows=train,verbosity=0)
-        yhat = MLJBase.predict(pls_machine, rows=train);
-        @test abs.(MLJBase.matrix(yhat) .- MLJBase.matrix(Y)[train,:]) |> mean < 1e-6
-
+            train = range(1,stop=nrows(X))
+            MLJBase.fit!(pls_machine, rows=train,verbosity=0)
+            yhat = MLJBase.predict(pls_machine, rows=train);
+            @test abs.(MLJBase.matrix(yhat) .- MLJBase.matrix(Y)[train,:]) |> mean < 1e-6
 
         end
-
 
     end
 
