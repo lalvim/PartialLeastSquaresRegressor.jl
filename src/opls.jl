@@ -1,3 +1,9 @@
+# based on the code from https://github.com/BiRG/pyopls
+# reference:  Johan Trygg and Svante Wold. Orthogonal projections to latent structures (O-PLS). 
+#             J. Chemometrics 2002; 16: 119-128. DOI: 10.1002/cem.695
+
+
+
 ##filtering and learning - Ortogonal PLS, one feature
 function fitting(model::OPLS1Model,
     X::AbstractArray{T}, 
