@@ -27,30 +27,30 @@ PartialLeastSquaresRegressor is used with [MLJ](https://github.com/alan-turing-i
 
 ```julia
 using MLJBase, RDatasets, MLJModels
-@load PLSRegressor pkg=PartialLeastSquaresRegressor
+PLSRegressor = @load PLSRegressor pkg=PartialLeastSquaresRegressor
 
 # loading data and selecting some features
 data = dataset("datasets", "longley")[:, 2:5]
 
 # unpacking the target
-y, X = unpack(data, ==(:GNP), colname -> true)
+y, X = unpack(data, ==(:GNP))
 
 # loading the model
 regressor = PLSRegressor(n_factors=2)
 
 # building a pipeline with scaling on data
-pls_model = @pipeline Standardizer regressor target=Standardizer
+pipe = Standardizer |> regressor
+model = TransformedTargetModel(pipe, transformer=Standardizer())
 
 # a simple hould out
-train, test = partition(eachindex(y), 0.7, shuffle=true)
+(Xtrain, Xtest), (ytrain, ytest) = partition((X, y), 0.7, rng=123, multi=true)
 
-pls_machine = machine(pls_model, X, y)
+mach = machine(model, Xtest, ytest)
 
-fit!(pls_machine, rows=train)
+fit!(mach)
+yhat = predict(mach, Xtest)
 
-yhat = predict(pls_machine, rows=test)
-
-mae(yhat, y[test]) |> mean
+mae(yhat, ytest) |> mean
 ```
 
 ### Example 2
