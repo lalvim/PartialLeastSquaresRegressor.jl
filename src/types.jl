@@ -93,3 +93,30 @@ function PLSModel(X::Matrix{T},
             kernel,
             width)
 end
+
+
+################################################################################
+#### OPLS1 type
+mutable struct OPLS1Model{T<:AbstractFloat} <:PLSModel{T}
+    W_ortho::Matrix{T} # : weights orthogonal to y
+    P_ortho::Matrix{T} # : loadings orthogonal to y
+    T_ortho::Matrix{T} # : scores orthogonal to y
+
+    n_ortho_components::Int  #  
+end
+
+## OPLS1: constructor
+function OPLS1Model(X::Matrix{T},
+    Y::Vector{T},
+    n_components::Int) where T<:AbstractFloat
+
+    (nrows,ncols) = size(X)
+
+    ## Allocation
+    return OPLS1Model(
+        zeros(T, ncols, n_components), ## W_ortho
+        zeros(T, ncols, n_components), ## P_ortho
+        zeros(T, nrows, n_components), ## T_ortho
+        n_components                   ## n_components
+        )
+end
